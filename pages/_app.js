@@ -6,15 +6,18 @@ import UserProvider from '@/context/userContext';
 import Head from 'next/head';
 
 import { useState } from 'react';
-import { Layout, Menu, Breadcrumb } from 'antd';
+import { Grid, Layout, Menu, Breadcrumb } from 'antd';
 import { DesktopOutlined, PieChartOutlined, FileOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons';
 
 import HeaderClient from '@/components/HeaderClient';
+import Store from '@store/store';
 
 const { Header, Footer, Sider, Content } = Layout;
 
 export default function App({ Component, pageProps }) {
 	const [collapsed, setCollapsed] = useState(false);
+
+	const screens = Grid.useBreakpoint();
 
 	if (Component.AdminLayout) {
 		return (
@@ -50,7 +53,7 @@ export default function App({ Component, pageProps }) {
 							<Breadcrumb.Item>User</Breadcrumb.Item>
 							<Breadcrumb.Item>Bill</Breadcrumb.Item>
 						</Breadcrumb>
-						<div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
+						<div className="site-layout-background" style={{ padding: '24', minHeight: '360' }}>
 							<UserProvider>
 								<Component {...pageProps} />
 							</UserProvider>
@@ -63,7 +66,7 @@ export default function App({ Component, pageProps }) {
 	}
 
 	return (
-		<>
+		<Store>
 			<Head>
 				<title>Next.js w/ Firebase Client-Side</title>
 				<link rel="icon" href="/favicon.ico" />
@@ -71,16 +74,16 @@ export default function App({ Component, pageProps }) {
 			<Layout>
 				<nav>
 					<UserProvider>
-						<HeaderClient></HeaderClient>
+						<HeaderClient />
 					</UserProvider>
 				</nav>
 				<Content
 					style={{
 						padding: '32px',
 						alignSelf: 'center',
-						margin: '32px',
+						// margin: '32px',
 						maxWidth: '1200px',
-						width: '90%',
+						width: screens.xs ? '100vw' : '95vw',
 						backgroundColor: '#ffffff',
 					}}
 				>
@@ -90,6 +93,6 @@ export default function App({ Component, pageProps }) {
 				</Content>
 				<Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
 			</Layout>
-		</>
+		</Store>
 	);
 }

@@ -1,21 +1,8 @@
 import { useState } from 'react';
-import { Layout, Col, Row, Form, Input, InputNumber, Button, AutoComplete } from 'antd';
-
-const layout = {
-	labelCol: { span: 3 },
-	wrapperCol: { span: 16 },
-};
-const tailLayout = {
-	wrapperCol: { offset: 8, span: 16 },
-};
-
-const onFinish = (values) => {
-	console.log('Success:', values);
-};
-
-const onFinishFailed = (errorInfo) => {
-	console.log('Failed:', errorInfo);
-};
+import firebase from '@/firebase/clientApp';
+import { Grid, Layout, Col, Row, Form, Input, InputNumber, Button, AutoComplete, Select, Drawer } from 'antd';
+import { notification } from 'antd';
+import UploadImage from './uploadImage';
 
 const categories = (level1, level2) => {
 	const options = {
@@ -80,104 +67,176 @@ const categories = (level1, level2) => {
 	};
 	if (level1 && !level2) {
 		return Object.keys(options[level1]).map((item) => (
-			<AutoComplete.Option key={item} value={item}>
-				{item}
-			</AutoComplete.Option>
+			<Select.OptGroup key={item} value={item}>
+				{options[level1][item].map((item) => (
+					<Select.Option key={item} value={item}>
+						{item}
+					</Select.Option>
+				))}
+			</Select.OptGroup>
 		));
 	}
 	if (level1 && level2) {
-		console.log(options[level1][level2]);
-		return options[level1][level2].map((item) => (
-			<AutoComplete.Option key={item} value={item}>
-				{item}
-			</AutoComplete.Option>
+		return Object.keys(options[level1]).map((item) => (
+			<Select.OptGroup key={item} value={item}>
+				{options[level1][item].map((item) => (
+					<Select.Option key={item} value={item}>
+						{item}
+					</Select.Option>
+				))}
+			</Select.OptGroup>
 		));
 	}
 	if (!level1 && !level2) return;
 };
 
-export default function NewProductDialog() {
-	const [category, setCategory] = useState('');
-	const [subCategory, setSubCategory] = useState('');
+export default function NewProductDialog({ drawerOn, setdrawerOn }) {
+	const [newProduct, setNewProduct] = useState({
+		name: '',
+		description: '',
+		price: null,
+		quantity: null,
+		category: '',
+		productCode: '',
+		images: [],
+	});
+
+	const screens = Grid.useBreakpoint();
+
+	const createProduct = async () => {
+		let hasError = null;
+		try {
+			const refProducts = firebase.firestore().collection('products');
+			await refProducts.add(newProduct).then((doc) => {
+				refProducts.doc(doc.id).update({
+					id: doc.id,
+				});
+				if (newProduct.images.length > 0) {
+					newProduct.images.forEach((file, index) => {
+						const fileName = `${doc.id}-${index}.jpg`;
+						const path = `products/${doc.id}/images/${fileName}`;
+						const refImages = firebase.storage().ref().child(path);
+						refImages.put(file).then((snapshot) => {
+							snapshot.ref.getDownloadURL().then((URL) => {
+								refProducts.doc(doc.id).update({
+									images: firebase.firestore.FieldValue.arrayUnion({
+										url: URL,
+										fileName: fileName,
+									}),
+								});
+							});
+						});
+					});
+				}
+			});
+		} catch (error) {
+			notification.error({
+				message: 'Error Creating Product',
+				description: `${error}`,
+			});
+			console.error(error);
+			hasError = true;
+		} finally {
+			if (!hasError) {
+				notification.success({
+					message: 'Product Created Successfully',
+					description: `Product "${newProduct.name}" has been created successfully under the "${newProduct.category}" category.`,
+				});
+				setdrawerOn(false);
+			}
+		}
+	};
 
 	return (
-		<Form
-			{...layout}
-			name="basic"
-			initialValues={{ remember: true }}
-			onFinish={onFinish}
-			onFinishFailed={onFinishFailed}
+		<Drawer
+			placement="right"
+			closable={false}
+			onClose={() => setdrawerOn(false)}
+			visible={drawerOn}
+			width={screens.xs ? '80vw' : '30vw'}
 		>
-			<Form.Item label="Name" name="name" rules={[{ required: true, message: 'Please input your username!' }]}>
-				<Input placeholder="Name" />
-			</Form.Item>
-			<Form.Item
-				label="Description"
-				name="description"
-				rules={[{ required: true, message: 'Please input your username!' }]}
-			>
-				<Input.TextArea placeholder="Description" autoSize={{ minRows: '4', maxRows: '10' }} />
-			</Form.Item>
-			<Form.Item label="Price" name="price" rules={[{ required: true, message: 'Please input your username!' }]}>
-				<InputNumber placeholder="Price" />
-			</Form.Item>
-			<Form.Item
-				label="Quantity"
-				name="quantity"
-				rules={[{ required: true, message: 'Please input your username!' }]}
-			>
-				<InputNumber placeholder="Quantity" />
-			</Form.Item>
-			<Form.Item
-				label="Product Code"
-				name="productCode"
-				rules={[{ required: true, message: 'Please input your username!' }]}
-			>
-				<Input placeholder="Product Code" />
-			</Form.Item>
-			<Form.Item
-				label="Category"
-				name="category"
-				rules={[{ required: true, message: 'Please input your username!' }]}
-			>
-				<AutoComplete
-					value={category}
-					onChange={(value) => {
-						setSubCategory('');
-						setCategory(value);
-					}}
-					placeholder="Select category"
-					filterOption={(inputValue, option) =>
-						option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-					}
+			<Form layout="vertical" name="basic" initialValues={{ remember: true }} onFinish={createProduct}>
+				<Form.Item
+					label="Name"
+					name="name"
+					rules={[{ required: true, message: 'Please input your username!' }]}
 				>
-					{categories('Alimentos')}
-				</AutoComplete>
-			</Form.Item>
-			<Form.Item
-				label="Subcategory"
-				name="Subcategory"
-				rules={[{ required: true, message: 'Please input your username!' }]}
-			>
-				<AutoComplete
-					value={subCategory}
-					onChange={(value) => setSubCategory(value)}
-					placeholder="Select subcategory"
-					filterOption={(inputValue, option) =>
-						option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-					}
+					<Input
+						placeholder="Name"
+						value={newProduct.name}
+						onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+					/>
+				</Form.Item>
+				<Form.Item
+					label="Description"
+					name="description"
+					rules={[{ required: true, message: 'Please input your username!' }]}
 				>
-					{category ? categories('Alimentos', category) : []}
-				</AutoComplete>
-			</Form.Item>
-			<Form.Item>
-				<Button type="primary" htmlType="submit">
-					Submit
-				</Button>
-			</Form.Item>
-			<p>
-				{category} {subCategory}
-			</p>
-		</Form>
+					<Input.TextArea
+						placeholder="Description"
+						autoSize={{ minRows: '4', maxRows: '10' }}
+						value={newProduct.description}
+						onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+					/>
+				</Form.Item>
+				<Form.Item
+					label="Price"
+					name="price"
+					rules={[{ required: true, message: 'Please input your username!' }]}
+				>
+					<InputNumber
+						placeholder="Price"
+						value={newProduct.price}
+						onChange={(value) => setNewProduct({ ...newProduct, price: value })}
+					/>
+				</Form.Item>
+				<Form.Item
+					label="Quantity"
+					name="quantity"
+					rules={[{ required: true, message: 'Please input your username!' }]}
+				>
+					<InputNumber
+						placeholder="Quantity"
+						value={newProduct.quantity}
+						onChange={(value) => setNewProduct({ ...newProduct, quantity: value })}
+					/>
+				</Form.Item>
+				<Form.Item
+					label="Product Code"
+					name="productCode"
+					rules={[{ required: true, message: 'Please input your username!' }]}
+				>
+					<Input
+						placeholder="Product Code"
+						value={newProduct.productCode}
+						onChange={(e) => setNewProduct({ ...newProduct, productCode: e.target.value })}
+					/>
+				</Form.Item>
+				<Form.Item
+					label="Category"
+					name="category"
+					rules={[{ required: true, message: 'Please input your username!' }]}
+				>
+					<Select
+						showSearch
+						placeholder="Select a category"
+						value={newProduct.category}
+						onChange={(value) => {
+							setNewProduct({ ...newProduct, category: value });
+						}}
+					>
+						{categories('Alimentos')}
+					</Select>
+				</Form.Item>
+				<Form.Item>
+					<UploadImage />
+				</Form.Item>
+				<Form.Item>
+					<Button type="primary" htmlType="submit">
+						Submit
+					</Button>
+				</Form.Item>
+			</Form>
+		</Drawer>
 	);
 }
