@@ -3,6 +3,7 @@ import { Layout, Menu, Breadcrumb, Button } from 'antd';
 import { DesktopOutlined, PieChartOutlined, FileOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons';
 import ProductCard from '@/components/ProductCard';
 import NewProductDialog from '@components/admin/NewProductDialog';
+import ProductsAdmin from '@components/admin/ProductsAdmin';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -15,6 +16,7 @@ export default function Admin() {
 		<>
 			<Button onClick={() => setNewProductDrawerOn(true)}>Add</Button>
 			<NewProductDialog drawerOn={newProductDrawerOn} setdrawerOn={setNewProductDrawerOn} />
+			<ProductsAdmin />
 		</>
 	);
 }

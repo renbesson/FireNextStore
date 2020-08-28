@@ -20,7 +20,7 @@
     "postcss-preset-env": "^6.7.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-responsive": "^8.1.0"
+    "react-firebase-hooks": "^2.2.0"
   },
   "browser": {
     "fs": false,
