@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { Row, Col, Typography, Layout, Carousel, Button } from 'antd';
 import { LeftCircleTwoTone, RightCircleTwoTone } from '@ant-design/icons';
-import ProductCard from '@/components/ProductCard';
+import ProductCardSample from '@/components/ProductCardSample';
 
 const { Title } = Typography;
 
@@ -46,32 +46,32 @@ export default function BestDeals() {
 						<div>
 							<Row justify="space-around" align="middle" style={{ padding: '16px 0' }}>
 								<Col>
-									<ProductCard />
+									<ProductCardSample />
 								</Col>
 								<Col>
-									<ProductCard />
+									<ProductCardSample />
 								</Col>
 								<Col>
-									<ProductCard />
+									<ProductCardSample />
 								</Col>
 								<Col>
-									<ProductCard />
+									<ProductCardSample />
 								</Col>
 							</Row>
 						</div>
 						<div>
 							<Row justify="space-around" align="middle" style={{ padding: '16px 0' }}>
 								<Col>
-									<ProductCard />
+									<ProductCardSample />
 								</Col>
 								<Col>
-									<ProductCard />
+									<ProductCardSample />
 								</Col>
 								<Col>
-									<ProductCard />
+									<ProductCardSample />
 								</Col>
 								<Col>
-									<ProductCard />
+									<ProductCardSample />
 								</Col>
 							</Row>
 						</div>

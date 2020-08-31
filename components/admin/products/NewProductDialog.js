@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import firebase from '@/firebase/clientApp';
-import { Grid, Layout, Col, Row, Form, Input, InputNumber, Button, AutoComplete, Select, Drawer } from 'antd';
+import { Grid, Form, Input, InputNumber, Button, Select, Drawer } from 'antd';
 import { notification } from 'antd';
-import UploadImage from './uploadImage';
+import UploadImage from './UploadImage';
 
 const categories = (level1, level2) => {
 	const options = {
@@ -98,8 +98,9 @@ export default function NewProductDialog({ drawerOn, setdrawerOn }) {
 		quantity: null,
 		category: '',
 		productCode: '',
-		images: [],
 	});
+
+	const [imageList, setImageList] = useState([]);
 
 	const screens = Grid.useBreakpoint();
 
@@ -138,11 +139,11 @@ export default function NewProductDialog({ drawerOn, setdrawerOn }) {
 			hasError = true;
 		} finally {
 			if (!hasError) {
+				setdrawerOn(false);
 				notification.success({
 					message: 'Product Created Successfully',
 					description: `Product "${newProduct.name}" has been created successfully under the "${newProduct.category}" category.`,
 				});
-				setdrawerOn(false);
 			}
 		}
 	};
@@ -229,7 +230,7 @@ export default function NewProductDialog({ drawerOn, setdrawerOn }) {
 					</Select>
 				</Form.Item>
 				<Form.Item>
-					<UploadImage />
+					<UploadImage productId={} imageList={imageList} setImageList={setImageList} />
 				</Form.Item>
 				<Form.Item>
 					<Button type="primary" htmlType="submit">
@@ -237,6 +238,7 @@ export default function NewProductDialog({ drawerOn, setdrawerOn }) {
 					</Button>
 				</Form.Item>
 			</Form>
+			<p>Images: {JSON.stringify(imageList)}</p>
 		</Drawer>
 	);
 }
