@@ -1,6 +1,8 @@
+import '@/firebase/clientApp';
 import '../styles/css/antd.css';
 import '../styles/vars.css';
 import '../styles/global.css';
+import Link from 'next/link';
 
 import UserProvider from '@/context/userContext';
 import Head from 'next/head';
@@ -30,10 +32,14 @@ export default function App({ Component, pageProps }) {
 					<div className="logo" />
 					<Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" style={{ paddingTop: '5vh' }}>
 						<Menu.Item key="1" icon={<PieChartOutlined />}>
-							Option 1
+							<Link href="/admin/products/">
+								<a>Products</a>
+							</Link>
 						</Menu.Item>
 						<Menu.Item key="2" icon={<DesktopOutlined />}>
-							Option 2
+							<Link href="/admin/categories/">
+								<a>Categories</a>
+							</Link>
 						</Menu.Item>
 						<Menu.Item key="3" icon={<UserOutlined />}>
 							Option 3

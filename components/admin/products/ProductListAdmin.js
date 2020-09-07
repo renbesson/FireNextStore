@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import ProductCardAdmin from '@components/admin/products/ProductCardAdmin';
 import NewProductDialog from '@components/admin/products/NewProductDialog';
-import { Row, Col, Card, Typography, InputNumber, Button } from 'antd';
+import { Row, Col, Card } from 'antd';
 import { PlusCircleTwoTone } from '@ant-design/icons';
-
-const { Title, Text } = Typography;
 
 export default function ProductListAdmin({ products }) {
 	const [newProductDrawerOn, setNewProductDrawerOn] = useState(false);
@@ -12,7 +10,7 @@ export default function ProductListAdmin({ products }) {
 	return (
 		<>
 			<NewProductDialog drawerOn={newProductDrawerOn} setdrawerOn={setNewProductDrawerOn} />
-			<Row justify="space-around" align="middle" gutter={[16, 16]}>
+			<Row align="middle" gutter={[24, 24]}>
 				<Col>
 					<Card
 						hoverable
@@ -29,11 +27,14 @@ export default function ProductListAdmin({ products }) {
 				</Col>
 				{products &&
 					products.map((product) => {
-						return (
-							<Col key={product.id}>
-								<ProductCardAdmin productData={product} />
-							</Col>
-						);
+						// The if statement prevent a console error since the product is first created and after is injected the id in the firebase document.
+						if (product.id) {
+							return (
+								<Col key={product.id}>
+									<ProductCardAdmin productData={product} />
+								</Col>
+							);
+						} else return;
 					})}
 			</Row>
 		</>

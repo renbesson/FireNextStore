@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "4.2.1",
+    "@nandorojo/swr-firestore": "^0.10.2",
     "@next/bundle-analyzer": "^9.1.4",
     "antd": "4.6.0",
     "antd-img-crop": "^3.10.0",
@@ -20,7 +21,8 @@
     "postcss-preset-env": "^6.7.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-firebase-hooks": "^2.2.0"
+    "react-firebase-hooks": "^2.2.0",
+    "swr": "^0.3.2"
   },
   "browser": {
     "fs": false,

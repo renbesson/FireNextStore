@@ -1,11 +1,13 @@
 import firebase from '@/firebase/clientApp';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
-import ProductListAdmin from './ProductListAdmin';
+import ProductListAdmin from '@/components/admin/products/ProductListAdmin';
 import { Typography } from 'antd';
 
 const { Title, Text } = Typography;
 
-export default function ProductsAdmin() {
+indexProductsAdmin.AdminLayout = true;
+
+export default function indexProductsAdmin() {
 	if (firebase.apps.length) {
 		const [value, loading, error] = useCollectionData(firebase.firestore().collection('products'), {
 			snapshotListenOptions: { includeMetadataChanges: true },

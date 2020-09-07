@@ -1,3 +1,4 @@
+import firebase from '@/firebase/clientApp';
 import BestDeals from '@components/BestDeals';
 import MainCarousel from '@components/MainCarousel';
 import MiddleCards from '@components/MiddleCards';

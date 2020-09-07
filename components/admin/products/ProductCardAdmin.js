@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import { Layout, Row, Col, Card, InputNumber, Button, Typography, Badge } from 'antd';
-import { ShoppingCartOutlined } from '@ant-design/icons';
+import { Row, Col, Card, Typography, Badge } from 'antd';
 import EditProductDialog from '@components/admin/products/EditProductDialog';
 
-const { Meta } = Card;
 const { Title, Text } = Typography;
 
 export default function ProductCard({ productData }) {
@@ -47,11 +45,6 @@ export default function ProductCard({ productData }) {
 							</Title>
 						</Col>
 						<Col span={8} offset={8}></Col>
-					</Row>
-					<Row className={'pt-2'}>
-						<Button block color="red-6" type="primary">
-							Adicionar ao carrinho
-						</Button>
 					</Row>
 				</Card>
 			</Badge>

@@ -1,94 +1,10 @@
 import { useState } from 'react';
 import firebase from '@/firebase/clientApp';
-import { Grid, Form, Input, InputNumber, Button, Select, Drawer, Image } from 'antd';
-import { notification } from 'antd';
+import { Grid, Form, Input, InputNumber, Button, Drawer } from 'antd';
+import { notification, Card } from 'antd';
 import UploadImage from './UploadImage';
-
-const categories = (level1, level2) => {
-	const options = {
-		Alimentos: {
-			'Básico da despensa': [
-				'Cafés, chás e achocolatados',
-				'Açúcar e adoçante',
-				'Óleos e azeites',
-				'Sopas e cremes',
-				'Kits e cestas',
-				'Farináceos',
-				'Massas',
-				'Grãos e cereais',
-			],
-			'Biscoitos, salgadinhos e snacks': ['Salgadinhos e snacks', 'Biscoitos e bolachas'],
-			'Carnes e aves': ['Aves', 'Carnes', 'Peixes'],
-			Congelados: [
-				'Legumes congelados',
-				'Petiscos e salgados',
-				'Polpas e frutas congeladas',
-				'Pratos prontos',
-				'Sobremesas prontas',
-				'Hambúrgueres e almôndegas',
-				'Outros congelados',
-			],
-			'Doces e sobremesas': ['Bomboniere', 'Compotas e frutas', 'Sorvetes', 'Outros doces'],
-			'Enlatados e conservas': [
-				'Creme de leite',
-				'Leite condensado',
-				'Atum e sardinha',
-				'Azeitonas',
-				'Palmito',
-				'Milho',
-				'Ervilha',
-				'Cogumelos',
-				'Outras conservas',
-				'Outros enlatados',
-				'Patês',
-				'Legumes enlatados',
-			],
-			Frios: [
-				'Linguiças e salsichas',
-				'Mortadelas, presuntos e apresuntados',
-				'Salame e copa',
-				'Peito de peru, blanquet e frango',
-				'Outros frios',
-			],
-			'Frutas, legumes e verduras': ['Frutas secas', 'Frutas frescas', 'Legumes', 'Verduras'],
-			'Molhos, temperos e condimentos': ['Molhos e condimentos', 'Sal', 'Caldos e realçadores de sabor'],
-			Ovos: ['Ovos de galinha', 'Ovos de codorna', 'Ovos de galinhas livres', 'Outros'],
-			'Padaria e confeitaria': ['Padaria', 'Confeitaria'],
-			'Queijos e laticínios': ['Laticínios', 'Queijos'],
-			Rotisserie: [
-				'Carnes e Peixes',
-				'Guarnições e acompanhamentos',
-				'Legumes e vegetais',
-				'Pratos resfriados',
-				'Outros itens de rotisserie',
-			],
-			'Sementes e oleaginosas': ['Sementes', 'Amendoim', 'Castanhas', 'Nozes', 'Outros'],
-		},
-	};
-	if (level1 && !level2) {
-		return Object.keys(options[level1]).map((item) => (
-			<Select.OptGroup key={item} value={item}>
-				{options[level1][item].map((item) => (
-					<Select.Option key={item} value={item}>
-						{item}
-					</Select.Option>
-				))}
-			</Select.OptGroup>
-		));
-	}
-	if (level1 && level2) {
-		return Object.keys(options[level1]).map((item) => (
-			<Select.OptGroup key={item} value={item}>
-				{options[level1][item].map((item) => (
-					<Select.Option key={item} value={item}>
-						{item}
-					</Select.Option>
-				))}
-			</Select.OptGroup>
-		));
-	}
-	if (!level1 && !level2) return;
-};
+import CategoriesTreeSelect from '../shared/CategoriesTreeSelect';
+import { CloseCircleTwoTone } from '@ant-design/icons';
 
 const imgStyle = {
 	display: 'table',
@@ -102,20 +18,19 @@ const imgStyle = {
 	backgroundColor: '#fafafa',
 	border: '1px dashed #d9d9d9',
 	borderRadius: '2px',
-	cursor: 'pointer',
 	transition: 'border-color 0.3s ease',
 };
 
 export default function EditProductDialog({ productData, drawerOn, setdrawerOn }) {
 	const [editedProduct, setEditedProduct] = useState({});
+	const refProducts = firebase.firestore().collection('products');
+	const refImages = firebase.storage().ref();
 
 	const screens = Grid.useBreakpoint();
 
 	const editProduct = async () => {
 		let hasError = null;
 		try {
-			const refProducts = firebase.firestore().collection('products');
-			const refImages = firebase.storage().ref();
 			await refProducts.doc(productData.id).update(editedProduct);
 		} catch (error) {
 			notification.error({
@@ -136,7 +51,88 @@ export default function EditProductDialog({ productData, drawerOn, setdrawerOn }
 	};
 
 	const Images = () => {
-		return productData.images.map((image) => <img src={image.url} style={imgStyle} key={image.fileName} />);
+		return productData.images.map((image) => (
+			<Card
+				bodyStyle={{ padding: 0 }}
+				style={imgStyle}
+				key={image.fileName}
+				cover={<img src={image.url} style={{ padding: 1 }} />}
+			>
+				<CloseCircleTwoTone
+					style={{ position: 'absolute', right: 0, top: 0, fontSize: '1.4rem' }}
+					onClick={() => deleteImage(image.fileName)}
+				/>
+			</Card>
+		));
+	};
+
+	const deleteImage = async (fileName) => {
+		let hasError = null;
+		const path = `products/${productData.id}/images/${fileName}`;
+		try {
+			refImages
+				.child(path)
+				.delete()
+				.then(() => {
+					const imageItem = productData.images.find((image) => image.fileName === fileName);
+					refProducts.doc(productData.id).update({
+						images: firebase.firestore.FieldValue.arrayRemove(imageItem),
+					});
+				});
+		} catch (error) {
+			notification.error({
+				message: 'Error Deleting Image',
+				description: `${error}`,
+			});
+			console.error(error);
+			hasError = true;
+		} finally {
+			if (!hasError) {
+				notification.success({
+					message: 'Image Deleted Successfully',
+					description: `Image "${fileName}" has been deleted successfully.`,
+				});
+			}
+		}
+	};
+
+	const deleteProduct = async () => {
+		let hasError = null;
+		try {
+			const refProducts = firebase.firestore().collection('products');
+			await refProducts.doc(productData.id).delete().then(() => {
+				if (productData.images.length > 0) {
+					productData.images.forEach((image) => {
+						refImages
+							.child(`products/${productData.id}/images/${image.fileName}`)
+							.delete()
+							.catch((error) => {
+								notification.error({
+									message: `Error Deleting Product's image`,
+									description: `${error}`,
+								});
+								alert(`Error deleting product's image!`);
+								console.error(error);
+							});
+					});
+				}
+			});
+		} catch (error) {
+			notification.error({
+				message: 'Error Deleting Product',
+				description: `${error}`,
+			});
+			console.error(error);
+			hasError = true;
+		} finally {
+			if (!hasError) {
+				await setdrawerOn(false);
+				notification.success({
+					message: 'Product Created Successfully',
+					description: `Product "${productData.name}" has been deleted successfully.`,
+				});
+			}
+		}
 	};
 
 	return (
@@ -150,14 +146,14 @@ export default function EditProductDialog({ productData, drawerOn, setdrawerOn }
 		>
 			<Form
 				layout="vertical"
-				name="basic"
+				name="editProductForm"
 				initialValues={{
 					['name']: productData ? productData.name : '',
 					['description']: productData ? productData.description : '',
 					['price']: productData ? productData.price : '',
 					['quantity']: productData ? productData.quantity : '',
 					['productCode']: productData ? productData.productCode : '',
-					['category']: productData ? productData.category : '',
+					['category']: productData ? productData.category : [],
 					['images']: productData ? productData.images : [],
 				}}
 				onFinish={editProduct}
@@ -231,14 +227,10 @@ export default function EditProductDialog({ productData, drawerOn, setdrawerOn }
 					name="category"
 					rules={[{ required: true, message: 'Please input your username!' }]}
 				>
-					<Select
-						showSearch
-						placeholder="Select a category"
+					<CategoriesTreeSelect
 						value={editedProduct.category === undefined ? productData.category : editedProduct.category}
 						onChange={(value) => setEditedProduct({ ...editedProduct, category: value })}
-					>
-						{categories('Alimentos')}
-					</Select>
+					/>
 				</Form.Item>
 				<Images />
 				<Form.Item>
@@ -248,6 +240,9 @@ export default function EditProductDialog({ productData, drawerOn, setdrawerOn }
 				<Form.Item>
 					<Button type="primary" htmlType="submit">
 						Submit
+					</Button>
+					<Button type="secondary" onClick={deleteProduct}>
+						Delete
 					</Button>
 				</Form.Item>
 			</Form>
