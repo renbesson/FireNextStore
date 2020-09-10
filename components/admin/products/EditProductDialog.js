@@ -44,7 +44,7 @@ export default function EditProductDialog({ productData, drawerOn, setdrawerOn }
 				setdrawerOn(false);
 				notification.success({
 					message: 'Product Edited Successfully',
-					description: `Product "${editedProduct.name}" has been edited successfully.`,
+					description: `Product "${editedProduct.title}" has been edited successfully.`,
 				});
 			}
 		}
@@ -129,7 +129,7 @@ export default function EditProductDialog({ productData, drawerOn, setdrawerOn }
 				await setdrawerOn(false);
 				notification.success({
 					message: 'Product Created Successfully',
-					description: `Product "${productData.name}" has been deleted successfully.`,
+					description: `Product "${productData.title}" has been deleted successfully.`,
 				});
 			}
 		}
@@ -148,7 +148,7 @@ export default function EditProductDialog({ productData, drawerOn, setdrawerOn }
 				layout="vertical"
 				name="editProductForm"
 				initialValues={{
-					['name']: productData ? productData.name : '',
+					['title']: productData ? productData.title : '',
 					['description']: productData ? productData.description : '',
 					['price']: productData ? productData.price : '',
 					['quantity']: productData ? productData.quantity : '',
@@ -159,14 +159,14 @@ export default function EditProductDialog({ productData, drawerOn, setdrawerOn }
 				onFinish={editProduct}
 			>
 				<Form.Item
-					label="Name"
-					name="name"
+					label="Title"
+					name="title"
 					rules={[{ required: true, message: 'Please input your username!' }]}
 				>
 					<Input
-						placeholder="Name"
-						value={editedProduct.name}
-						onChange={(e) => setEditedProduct({ ...editedProduct, name: e.target.value })}
+						placeholder="Title"
+						value={editedProduct.title}
+						onChange={(e) => setEditedProduct({ ...editedProduct, title: e.target.value })}
 					/>
 				</Form.Item>
 				<Form.Item

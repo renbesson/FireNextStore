@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import firebase from '@/firebase/clientApp';
 import { useUser } from '../context/userContext';
-import { Grid, Layout, Row, Col, Card, Image, InputNumber, Button, notification } from 'antd';
+import { Grid, Layout, Row, Col, Card, Image, InputNumber, Button, notification, Badge } from 'antd';
 import SearchBar from '@/components/SearchBar';
 import { UserOutlined, HeartOutlined, SnippetsOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import SignInDrawer from '@/components/SignInDrawer';
 import SignUpDrawer from '@/components/SignUpDrawer';
+import Link from 'next/link';
 
-const { Header, Footer, Sider, Content } = Layout;
+const { Header } = Layout;
 
 export default function HeaderClient() {
 	const { loadingUser, user } = useUser();
@@ -24,7 +25,7 @@ export default function HeaderClient() {
 				icon={<UserOutlined style={{ color: '#ffffff', fontSize: '2rem' }} />}
 				onClick={user === null ? () => setSignInDrawerOn(true) : alreadySignedInNotification}
 			>
-				Entre ou Cadastre-se
+				Sign In/ Sign Up
 			</Button>
 		);
 	};
@@ -36,7 +37,7 @@ export default function HeaderClient() {
 				type="text"
 				icon={<UserOutlined style={{ color: '#ffffff', fontSize: '2rem' }} />}
 			>
-				Minha Conta
+				My Account
 			</Button>
 		);
 	};
@@ -48,7 +49,7 @@ export default function HeaderClient() {
 				type="text"
 				icon={<HeartOutlined style={{ color: '#ffffff', fontSize: '2rem' }} />}
 			>
-				Favoritos
+				Favorites
 			</Button>
 		);
 	};
@@ -60,20 +61,28 @@ export default function HeaderClient() {
 				type="text"
 				icon={<SnippetsOutlined style={{ color: '#ffffff', fontSize: '2rem' }} />}
 			>
-				Lista de Compras
+				Shopping Lists
 			</Button>
 		);
 	};
 
 	const CartButton = () => {
 		return (
-			<Button
-				style={{ color: '#ffffff', fontSize: '0.75rem' }}
-				type="text"
-				icon={<ShoppingCartOutlined style={{ color: '#ffffff', fontSize: '2rem' }} />}
+			// <Link href="/cart">
+			<Badge
+				count={user && user.cart && user.cart.length}
+				offset={[-43, 10]}
+				style={{ backgroundColor: '#52c41a' }}
 			>
-				Carrinho
-			</Button>
+				<Button
+					style={{ color: '#ffffff', fontSize: '0.75rem' }}
+					type="text"
+					icon={<ShoppingCartOutlined style={{ color: '#ffffff', fontSize: '2rem' }} />}
+				>
+					Cart
+				</Button>
+			</Badge>
+			// </Link>
 		);
 	};
 

@@ -12,7 +12,7 @@ import { Grid, Layout, Menu, Breadcrumb } from 'antd';
 import { DesktopOutlined, PieChartOutlined, FileOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons';
 
 import HeaderClient from '@/components/HeaderClient';
-import Store from '@store/store';
+import StoreProvider from '@store/storeContext';
 
 const { Header, Footer, Sider, Content } = Layout;
 
@@ -72,7 +72,7 @@ export default function App({ Component, pageProps }) {
 	}
 
 	return (
-		<Store>
+		<StoreProvider>
 			<Head>
 				<title>Next.js w/ Firebase Client-Side</title>
 				<link rel="icon" href="/favicon.ico" />
@@ -99,6 +99,6 @@ export default function App({ Component, pageProps }) {
 				</Content>
 				<Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
 			</Layout>
-		</Store>
+		</StoreProvider>
 	);
 }

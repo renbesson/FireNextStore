@@ -1,52 +1,96 @@
-import Link from 'next/link';
-import { useRouter } from 'next/router';
+import firebase from '@/firebase/clientApp';
+import { useUser } from '@/context/userContext';
+import { useState, useEffect } from 'react';
+import Breadcrumbs from '@/components/pd/Breadcrumbs';
+import ClientCarousel from '@components/shared/ClientCarousel';
+import { Col, Row, Typography, Button, InputNumber } from 'antd';
 import useSWR from 'swr';
-import { Breadcrumb } from 'antd';
-import {
-	useDocument,
-	useCollection,
-	revalidateDocument,
-	revalidateCollection,
-	// these all update BOTH Firestore & the local cache ⚡️
-	set, // set a firestore document
-	update, // update a firestore document
-	fuego, // get the firebase instance used by this lib
-} from '@nandorojo/swr-firestore';
 
-export default function ProductPage() {
-	const router = useRouter();
-	const { pid } = router.query;
-	const { product, error } = useDocument(`users/${pid}`);
+ProductPage.getInitialProps = ({ query }) => {
+	return {
+		pid: query.pid,
+	};
+};
 
-	if (!product) {
-		return 'Loading... ' + pid + error;
+const fetcher = async (...args) => {
+	const res = await fetch(...args);
+
+	return res.json();
+};
+
+export default function ProductPage({ pid }) {
+	const { data: product, error: productError } = useSWR(`/api/pd/${pid}`, fetcher);
+	const [quantity, setQuantity] = useState(1);
+	const { user } = useUser();
+	const urlsArray =
+		product && product.images ? product.images.map((image) => image.url) : ['/images/600px-No_image_available.png'];
+
+	if (productError) {
+		return <h3>{productError}</h3>;
 	}
 
-	if (error) {
-		return <p>{error}</p>;
-	}
+	const putToCart = () => {
+		const refUsers = firebase.firestore().collection('users');
+		const item = user.cart.find((item) => item.pid === pid);
+		//when the product is not in the cart
+		if (item !== undefined) {
+			if (!user.cart.some((item) => item.quantity === quantity)) {
+				refUsers.doc(user.uid).update({
+					cart: firebase.firestore.FieldValue.arrayRemove(item),
+				});
+				refUsers.doc(user.uid).update({
+					cart: firebase.firestore.FieldValue.arrayUnion({
+						pid,
+						quantity,
+					}),
+				});
+			}
+		} else {
+			refUsers.doc(user.uid).update({
+				cart: firebase.firestore.FieldValue.arrayUnion({
+					pid,
+					quantity,
+				}),
+			});
+		}
+	};
 
-	return (
-		<div>
-			{product.category && (
-				<Breadcrumb>
-					<Breadcrumb.Item>
-						<Link href="/">
-							<a>{product.category[0]}</a>
-						</Link>
-					</Breadcrumb.Item>
-					<Breadcrumb.Item>
-						<Link href="/">
-							<a>{product.category[1]}</a>
-						</Link>
-					</Breadcrumb.Item>
-					<Breadcrumb.Item>
-						<Link href="/">
-							<a>{product.category[2]}</a>
-						</Link>
-					</Breadcrumb.Item>
-				</Breadcrumb>
-			)}
-		</div>
-	);
+	if (product) {
+		return (
+			<>
+				<Row>
+					<Col>
+						<Breadcrumbs category={product.category} />
+					</Col>
+				</Row>
+				<Row justify="space-between">
+					<Col lg={8}>
+						<ClientCarousel urls={urlsArray} width={400} height={400} arrowSize="3rem" />
+					</Col>
+					<Col lg={14}>
+						<Row>
+							<Col>
+								<Typography.Title>{product.title}</Typography.Title>
+							</Col>
+						</Row>
+						<Row justify="end">
+							<Col lg={8}>
+								<InputNumber
+									style={{ width: 56 }}
+									min={1}
+									max={10}
+									defaultValue={1}
+									onChange={(value) => setQuantity(value)}
+								/>
+								<Button block type="primary" onClick={putToCart}>
+									Add to Cart
+								</Button>
+								<Button block>Add to Shopping List</Button>
+							</Col>
+						</Row>
+					</Col>
+				</Row>
+			</>
+		);
+	} else return <h3>Loading...</h3>;
 }

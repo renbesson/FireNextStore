@@ -34,7 +34,7 @@ export default function ProductCard({ productData }) {
 					onClick={() => setEditedProductDrawerOn(true)}
 				>
 					<Row>
-						<Text>{productData.name}</Text>
+						<Text>{productData.title}</Text>
 					</Row>
 					<Row className={'pt-2'}>
 						<Col span={8}>

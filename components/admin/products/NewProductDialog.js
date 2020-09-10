@@ -55,7 +55,7 @@ export default function NewProductDialog({ drawerOn, setdrawerOn }) {
 				setdrawerOn(false);
 				notification.success({
 					message: 'Product Created Successfully',
-					description: `Product "${newProduct.name}" has been created successfully under the "${newProduct.category}" category.`,
+					description: `Product "${newProduct.title}" has been created successfully under the "${newProduct.category}" category.`,
 				});
 			}
 		}
@@ -77,9 +77,9 @@ export default function NewProductDialog({ drawerOn, setdrawerOn }) {
 					rules={[{ required: true, message: 'Please input your username!' }]}
 				>
 					<Input
-						placeholder="Name"
-						value={newProduct.name}
-						onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+						placeholder="Title"
+						value={newProduct.title}
+						onChange={(e) => setNewProduct({ ...newProduct, title: e.target.value })}
 					/>
 				</Form.Item>
 				<Form.Item
@@ -90,7 +90,7 @@ export default function NewProductDialog({ drawerOn, setdrawerOn }) {
 					<Input.TextArea
 						placeholder="Description"
 						autoSize={{ minRows: '4', maxRows: '10' }}
-						value={newProduct.name}
+						value={newProduct.description}
 						onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
 					/>
 				</Form.Item>
