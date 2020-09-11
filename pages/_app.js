@@ -12,7 +12,7 @@ import { Grid, Layout, Menu, Breadcrumb } from 'antd';
 import { DesktopOutlined, PieChartOutlined, FileOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons';
 
 import HeaderClient from '@/components/HeaderClient';
-import StoreProvider from '@store/storeContext';
+import StoreProvider from '@context/storeContext';
 
 const { Header, Footer, Sider, Content } = Layout;
 

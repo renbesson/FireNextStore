@@ -1,10 +1,11 @@
 import firebase from '@/firebase/clientApp';
 import { useUser } from '@/context/userContext';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import Breadcrumbs from '@/components/pd/Breadcrumbs';
 import ClientCarousel from '@components/shared/ClientCarousel';
 import { Col, Row, Typography, Button, InputNumber } from 'antd';
 import useSWR from 'swr';
+import { Context } from '@/context/storeContext';
 
 ProductPage.getInitialProps = ({ query }) => {
 	return {
@@ -14,14 +15,15 @@ ProductPage.getInitialProps = ({ query }) => {
 
 const fetcher = async (...args) => {
 	const res = await fetch(...args);
-
 	return res.json();
 };
 
 export default function ProductPage({ pid }) {
-	const { data: product, error: productError } = useSWR(`/api/pd/${pid}`, fetcher);
-	const [quantity, setQuantity] = useState(1);
 	const { user } = useUser();
+	const { data: product, error: productError } = useSWR(`/api/pd/${pid}`, fetcher);
+	const [state, dispatch] = useContext(Context);
+	const [quantity, setQuantity] = useState(1);
+
 	const urlsArray =
 		product && product.images ? product.images.map((image) => image.url) : ['/images/600px-No_image_available.png'];
 

@@ -29,9 +29,9 @@ export default function UploadImage({ productId }) {
 	};
 
 	const customUpload = async ({ file: originFileObj }) => {
-		const path = `products/${productId}/images/${originFileObj.title}`;
+		const path = `products/${productId}/images/${originFileObj.name}`;
 		refImages.child(path);
-		const hasError = false;
+		let hasError = false;
 		try {
 			refImages
 				.child(path)
@@ -43,7 +43,7 @@ export default function UploadImage({ productId }) {
 							refProducts.doc(productId).update({
 								images: firebase.firestore.FieldValue.arrayUnion({
 									url: URL,
-									fileName: originFileObj.title,
+									fileName: originFileObj.name,
 								}),
 							});
 						})
@@ -60,7 +60,7 @@ export default function UploadImage({ productId }) {
 			if (!hasError) {
 				notification.success({
 					message: 'Image Upload',
-					description: `Image "${originFileObj.title}" uploaded successfully.`,
+					description: `Image "${originFileObj.name}" uploaded successfully.`,
 				});
 			}
 			setImageList([]);
