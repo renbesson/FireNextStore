@@ -6,29 +6,24 @@ import ClientCarousel from '@components/shared/ClientCarousel';
 import { Col, Row, Typography, Button, InputNumber } from 'antd';
 import useSWR from 'swr';
 import { Context } from '@/context/storeContext';
+import { useDocumentSnap } from 'hooks/firebaseHooks';
 
 ProductPage.getInitialProps = ({ query }) => {
 	return {
 		pid: query.pid,
 	};
 };
-
-const fetcher = async (...args) => {
-	const res = await fetch(...args);
-	return res.json();
-};
-
 export default function ProductPage({ pid }) {
 	const { user } = useUser();
-	const { data: product, error: productError } = useSWR(`/api/pd/${pid}`, fetcher);
+	const [product, error, loading] = useDocumentSnap(firebase.firestore().collection('products').doc(pid));
 	const [state, dispatch] = useContext(Context);
 	const [quantity, setQuantity] = useState(1);
 
 	const urlsArray =
 		product && product.images ? product.images.map((image) => image.url) : ['/images/600px-No_image_available.png'];
 
-	if (productError) {
-		return <h3>{productError}</h3>;
+	if (error) {
+		return <h3>{error}</h3>;
 	}
 
 	const putToCart = () => {

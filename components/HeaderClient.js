@@ -32,13 +32,15 @@ export default function HeaderClient() {
 
 	const MyAccountButton = () => {
 		return (
-			<Button
-				style={{ color: '#ffffff', fontSize: '0.75rem' }}
-				type="text"
-				icon={<UserOutlined style={{ color: '#ffffff', fontSize: '2rem' }} />}
-			>
-				My Account
-			</Button>
+			<Link href="/myAccount">
+				<Button
+					style={{ color: '#ffffff', fontSize: '0.75rem' }}
+					type="text"
+					icon={<UserOutlined style={{ color: '#ffffff', fontSize: '2rem' }} />}
+				>
+					My Account
+				</Button>
+			</Link>
 		);
 	};
 
@@ -68,21 +70,21 @@ export default function HeaderClient() {
 
 	const CartButton = () => {
 		return (
-			// <Link href="/cart">
 			<Badge
 				count={user && user.cart && user.cart.length}
 				offset={[-43, 10]}
 				style={{ backgroundColor: '#52c41a' }}
 			>
-				<Button
-					style={{ color: '#ffffff', fontSize: '0.75rem' }}
-					type="text"
-					icon={<ShoppingCartOutlined style={{ color: '#ffffff', fontSize: '2rem' }} />}
-				>
-					Cart
-				</Button>
+				<Link href="/cart">
+					<Button
+						style={{ color: '#ffffff', fontSize: '0.75rem' }}
+						type="text"
+						icon={<ShoppingCartOutlined style={{ color: '#ffffff', fontSize: '2rem' }} />}
+					>
+						Cart
+					</Button>
+				</Link>
 			</Badge>
-			// </Link>
 		);
 	};
 
@@ -143,11 +145,13 @@ export default function HeaderClient() {
 			/>
 			<Row justify="space-between" align="middle">
 				<Col span={3}>
-					<img
-						style={{ minHeight: '48px', height: '10vh', padding: '10px' }}
-						alt="Logo"
-						src="/images/logo.png"
-					/>
+					<Link href="/">
+						<img
+							style={{ minHeight: '48px', height: '10vh', padding: '10px', cursor: 'pointer' }}
+							alt="Logo"
+							src="/images/logo.png"
+						/>
+					</Link>
 				</Col>
 				<Col xs={24} lg={8}>
 					<SearchBar />

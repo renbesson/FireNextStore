@@ -147,7 +147,6 @@ export default function NewProductDialog({ drawerOn, setdrawerOn }) {
 						Submit
 					</Button>
 				</Form.Item>
-				<p>{JSON.stringify(newProduct)}</p>
 			</Form>
 		</Drawer>
 	);

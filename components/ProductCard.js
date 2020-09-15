@@ -1,7 +1,6 @@
 import { Layout, Row, Col, Card, InputNumber, Button, Typography, Badge } from 'antd';
 import { ShoppingCartOutlined } from '@ant-design/icons';
 
-const { Meta } = Card;
 const { Title, Text } = Typography;
 
 export default function ProductCard({ productData }) {

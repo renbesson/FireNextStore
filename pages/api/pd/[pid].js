@@ -1,6 +1,7 @@
 import firebase from '@/firebase/clientApp';
 
 export default (req, res) => {
+	console.log(req);
 	firebase
 		.firestore()
 		.collection('products')
