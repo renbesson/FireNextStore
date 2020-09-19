@@ -88,7 +88,7 @@ export default function App({ Component, pageProps }) {
 						padding: '32px',
 						alignSelf: 'center',
 						// margin: '32px',
-						maxWidth: '1200px',
+						maxWidth: screens.xs ? '100vw' : '1200px',
 						width: screens.xs ? '100vw' : '95vw',
 						backgroundColor: '#ffffff',
 					}}

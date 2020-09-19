@@ -22,7 +22,6 @@ export default function cart() {
 							console.error('Collection not Found!');
 						} else {
 							querySnapshot.docChanges().forEach((change) => {
-								console.log('Changes: ', change);
 								if (change.type === 'added') {
 									console.log('added');
 									if (!products.some((item) => item.id === change.doc.id)) {

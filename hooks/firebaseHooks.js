@@ -32,21 +32,19 @@ export function useCollectionSnap(query) {
 		setLoading(true);
 		const unsubscribe = query.onSnapshot(
 			(querySnapshot) => {
-				console.log(querySnapshot);
 				try {
 					if (querySnapshot.empty) {
 						console.error('Collection not Found!');
 						setLoading(false);
 					} else {
 						querySnapshot.docChanges().forEach((change) => {
-							console.log('Changes: ', change);
 							if (change.type === 'added') {
-								console.log('added');
+								// console.log('added');
 								if (!data.some((item) => item.id === change.doc.id)) {
 									setData((prevData) => [...prevData, change.doc.data()]);
 								}
 							} else if (change.type === 'modified') {
-								console.log('modified');
+								// console.log('modified');
 								setData((prevData) => {
 									let newData = [...prevData];
 									const productIndex = newData.findIndex((item) => item.id === change.doc.id);
@@ -54,7 +52,7 @@ export function useCollectionSnap(query) {
 									return newData;
 								});
 							} else if (change.type === 'removed') {
-								console.log('removed');
+								// console.log('removed');
 								setData((prevData) => {
 									let newData = [...prevData];
 									const productIndex = newData.findIndex((item) => item.id === change.doc.id);
