@@ -1,8 +1,8 @@
 import firebase from '@/firebase/clientApp';
 import { useState, useEffect } from 'react';
-import { useUser } from '../context/userContext';
+import { useUser } from '../../context/userContext';
 import { useCollectionSnap, useDocumentSnap } from 'hooks/firebaseHooks';
-import ProductInCartCard from '@/components/ProductInCartCard';
+import ProductInCartCard from '@pages/cart/ProductInCartCard';
 import { Row, Col, Card } from 'antd';
 
 export default function cart() {
@@ -22,27 +22,12 @@ export default function cart() {
 							console.error('Collection not Found!');
 						} else {
 							querySnapshot.docChanges().forEach((change) => {
+								console.log(change);
 								if (change.type === 'added') {
 									console.log('added');
 									if (!products.some((item) => item.id === change.doc.id)) {
 										setProducts((prevProducts) => [...prevProducts, change.doc.data()]);
 									}
-								} else if (change.type === 'modified') {
-									console.log('modified');
-									setProducts((prevProducts) => {
-										let newProducts = [...prevProducts];
-										const productIndex = newProducts.findIndex((item) => item.id === change.doc.id);
-										newProducts.splice(productIndex, 1, change.doc.data());
-										return newProducts;
-									});
-								} else if (change.type === 'removed') {
-									console.log('removed');
-									setProducts((prevProducts) => {
-										let newProducts = [...prevProducts];
-										const productIndex = newProducts.findIndex((item) => item.id === change.doc.id);
-										newProducts.splice(productIndex, 1);
-										return newProducts;
-									});
 								}
 							});
 						}
@@ -66,8 +51,8 @@ export default function cart() {
 						// The if statement prevent a console error since the product is first created and after is injected the id in the firebase document.
 						if (product.id) {
 							return (
-								<Col span={16} key={product.id}>
-									<ProductInCartCard productData={product} />
+								<Col xs={24} lg={16} key={product.id}>
+									<ProductInCartCard productData={product} user={user} />
 								</Col>
 							);
 						} else return;

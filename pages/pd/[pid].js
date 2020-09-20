@@ -13,10 +13,10 @@ ProductPage.getInitialProps = ({ query }) => {
 		pid: query.pid,
 	};
 };
+
 export default function ProductPage({ pid }) {
 	const { user } = useUser();
 	const [product, error, loading] = useDocumentSnap(firebase.firestore().collection('products').doc(pid));
-	const [state, dispatch] = useContext(Context);
 	const [quantity, setQuantity] = useState(1);
 
 	const urlsArray =

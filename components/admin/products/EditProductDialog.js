@@ -22,7 +22,7 @@ const imgStyle = {
 };
 
 export default function EditProductDialog({ productData, drawerOn, setdrawerOn }) {
-	const [editedProduct, setEditedProduct] = useState({});
+	const [editedProduct, setEditedProduct] = useState({ dateModified: firebase.firestore.Timestamp.now() });
 	const refProducts = firebase.firestore().collection('products');
 	const refImages = firebase.storage().ref();
 
@@ -100,23 +100,26 @@ export default function EditProductDialog({ productData, drawerOn, setdrawerOn }
 		let hasError = null;
 		try {
 			const refProducts = firebase.firestore().collection('products');
-			await refProducts.doc(productData.id).delete().then(() => {
-				if (productData.images.length > 0) {
-					productData.images.forEach((image) => {
-						refImages
-							.child(`products/${productData.id}/images/${image.fileName}`)
-							.delete()
-							.catch((error) => {
-								notification.error({
-									message: `Error Deleting Product's image`,
-									description: `${error}`,
+			await refProducts
+				.doc(productData.id)
+				.delete()
+				.then(() => {
+					if (productData.images.length > 0) {
+						productData.images.forEach((image) => {
+							refImages
+								.child(`products/${productData.id}/images/${image.fileName}`)
+								.delete()
+								.catch((error) => {
+									notification.error({
+										message: `Error Deleting Product's image`,
+										description: `${error}`,
+									});
+									alert(`Error deleting product's image!`);
+									console.error(error);
 								});
-								alert(`Error deleting product's image!`);
-								console.error(error);
-							});
-					});
-				}
-			});
+						});
+					}
+				});
 		} catch (error) {
 			notification.error({
 				message: 'Error Deleting Product',

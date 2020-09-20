@@ -29,6 +29,8 @@ export default function NewProductDialog({ drawerOn, setdrawerOn }) {
 		category: [],
 		productCode: '',
 		images: [],
+		dateCreated: firebase.firestore.Timestamp.now(),
+		dateModified: null,
 	});
 
 	const screens = Grid.useBreakpoint();

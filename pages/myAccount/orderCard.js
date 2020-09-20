@@ -70,10 +70,22 @@ export default function OrderCard({ orderData }) {
 				<Row justify="center">
 					<Col span={24}>
 						<Steps current={orderData.step} progressDot direction={screens.xs ? 'vertical' : 'horizontal'}>
-							<Step title="Order Received" description="08/aug/2020 12:45" />
-							<Step title="Preparing" description="08/aug/2020 13:02" />
-							<Step title="Out For Delivery" description="08/aug/2020 13:36" />
-							<Step title="Delivered" description="08/aug/2020 14:48" />
+							<Step
+								title="Order Received"
+								// description={orderData.dates.receivedOn.toDate().toLocaleString('en-US')}
+							/>
+							<Step
+								title="Preparing"
+								// description={orderData.dates.preparedOn.toDate().toLocaleString('en-US')}
+							/>
+							<Step
+								title="Out For Delivery"
+								// description={orderData.dates.outForDeliveryOn.toDate().toLocaleString('en-US')}
+							/>
+							<Step
+								title="Delivered"
+								// description={orderData.dates.deliveredOn.toDate().toLocaleString('en-US')}
+							/>
 						</Steps>
 					</Col>
 				</Row>
