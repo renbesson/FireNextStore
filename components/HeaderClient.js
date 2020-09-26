@@ -1,12 +1,16 @@
 import { useState } from 'react';
 import firebase from '@/firebase/clientApp';
 import { useUser } from '../context/userContext';
-import { Grid, Layout, Row, Col, Card, Image, InputNumber, Button, notification, Badge } from 'antd';
+import { Grid, Layout, Row, Col, Button, notification, Badge, Menu } from 'antd';
 import SearchBar from '@/components/SearchBar';
-import { UserOutlined, HeartOutlined, SnippetsOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import { UserOutlined, HeartOutlined } from '@ant-design/icons';
+import { SnippetsOutlined, ShoppingCartOutlined, AppstoreOutlined } from '@ant-design/icons';
 import SignInDrawer from '@/components/SignInDrawer';
 import SignUpDrawer from '@/components/SignUpDrawer';
 import Link from 'next/link';
+import SubMenu from 'antd/lib/menu/SubMenu';
+import { useDocument } from '@nandorojo/swr-firestore';
+import { useRouter } from 'next/router';
 
 const { Header } = Layout;
 
@@ -14,6 +18,8 @@ export default function HeaderClient() {
 	const { loadingUser, user } = useUser();
 	const [signInDrawerOn, setSignInDrawerOn] = useState(false);
 	const [signUpDrawerOn, setSignUpDrawerOn] = useState(false);
+	const { data: categories, error } = useDocument('misc/categories');
+	const router = useRouter();
 
 	const screens = Grid.useBreakpoint();
 
@@ -130,7 +136,7 @@ export default function HeaderClient() {
 				margin: 'auto',
 				width: screens.xs ? '100vw' : '95vw',
 				maxWidth: '1200px',
-				minHeight: screens.xs ? '25vh' : '10vh',
+				minHeight: screens.xs ? '25vh' : '15vh',
 			}}
 		>
 			<SignInDrawer
@@ -163,6 +169,36 @@ export default function HeaderClient() {
 					<ShoppingListButton />
 					<CartButton />
 					{!loadingUser && user ? <SignOutButton /> : null}
+				</Col>
+			</Row>
+			<Row>
+				<Col>
+					<Menu
+						mode="horizontal"
+						onClick={({ key }) => router.push(`/pd/search/${key}?sField=category&oField=price&orderBy=asc`)}
+					>
+						<SubMenu key="sub2" icon={<AppstoreOutlined />} title="Categories">
+							{categories &&
+								Object.keys(categories).map((categoryLevel1) => {
+									//If statement prevents to map the variables id, exists, and hasPendingWrites.
+									if (categories[categoryLevel1] instanceof Object) {
+										return (
+											<SubMenu key={categoryLevel1} title={categoryLevel1}>
+												{Object.keys(categories[categoryLevel1]).map((categoryLevel2) => {
+													return (
+														<SubMenu key={categoryLevel2} title={categoryLevel2}>
+															{categories[categoryLevel1][categoryLevel2].map((item) => {
+																return <Menu.Item key={item}>{item}</Menu.Item>;
+															})}
+														</SubMenu>
+													);
+												})}
+											</SubMenu>
+										);
+									}
+								})}
+						</SubMenu>
+					</Menu>
 				</Col>
 			</Row>
 		</Header>

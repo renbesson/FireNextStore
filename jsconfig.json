@@ -6,7 +6,8 @@
 			"@/components/*": ["components/*"],
 			"@/pages/*": ["pages/*"],
 			"@/context/*": ["context/*"],
-			"@/firebase/*": ["firebase/*"]
+			"@/firebase/*": ["firebase/*"],
+			"@/utils/*": ["utils/*"]
 		}
 	}
 }

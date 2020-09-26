@@ -19,8 +19,8 @@ export default function UserContextComp({ children }) {
 						.doc(`users/${uid}`)
 						.onSnapshot((doc) => {
 							setUser((prevUser) => {
-								const { cart } = doc.data();
-								return { ...prevUser, cart };
+								const { cart, orders } = doc.data();
+								return { ...prevUser, cart, orders };
 							});
 						});
 					setUser((prevUser) => {

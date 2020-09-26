@@ -30,9 +30,9 @@ export default function ProductListAdmin({ products }) {
 				{products &&
 					products.map((product) => {
 						// The if statement prevent a console error since the product is first created and after is injected the id in the firebase document.
-						if (product.id) {
+						if (product.pid) {
 							return (
-								<Col key={product.id}>
+								<Col key={product.pid}>
 									<ProductCardAdmin productData={product} />
 								</Col>
 							);

@@ -6,13 +6,13 @@ import { useState } from 'react';
 const { Title, Text } = Typography;
 
 export default function ProductInCartCard({ productData, user }) {
-	const itemInCart = user.cart.find((item) => item.pid === productData.id);
+	const itemInCart = user.cart.find((item) => item.pid === productData.pid);
 	const [newQuantity, setNewQuantity] = useState(itemInCart ? itemInCart.quantity : undefined);
 
 	const updateCart = () => {
 		try {
 			const refUsers = firebase.firestore().collection('users');
-			if (!user.cart.some((item) => item.quantity === newQuantity)) {
+			if (itemInCart.quantity !== newQuantity) {
 				refUsers.doc(user.uid).update({
 					cart: firebase.firestore.FieldValue.arrayRemove(itemInCart),
 				});
@@ -20,7 +20,7 @@ export default function ProductInCartCard({ productData, user }) {
 					.doc(user.uid)
 					.update({
 						cart: firebase.firestore.FieldValue.arrayUnion({
-							pid: productData.id,
+							pid: productData.pid,
 							quantity: newQuantity,
 						}),
 					})
@@ -91,7 +91,7 @@ export default function ProductInCartCard({ productData, user }) {
 					<Row justify="space-between" className={'p-2'}>
 						<Col>
 							<Title level={4}>
-								{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
+								{new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(
 									productData.price
 								)}
 							</Title>

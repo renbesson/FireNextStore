@@ -39,7 +39,7 @@ export default function ProductCard({ productData }) {
 					<Row className={'pt-2'}>
 						<Col span={8}>
 							<Title level={4}>
-								{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
+								{new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(
 									productData.price
 								)}
 							</Title>

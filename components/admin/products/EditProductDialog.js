@@ -31,7 +31,7 @@ export default function EditProductDialog({ productData, drawerOn, setdrawerOn }
 	const editProduct = async () => {
 		let hasError = null;
 		try {
-			await refProducts.doc(productData.id).update(editedProduct);
+			await refProducts.doc(productData.pid).update(editedProduct);
 		} catch (error) {
 			notification.error({
 				message: 'Error Editing Product',
@@ -68,14 +68,14 @@ export default function EditProductDialog({ productData, drawerOn, setdrawerOn }
 
 	const deleteImage = async (fileName) => {
 		let hasError = null;
-		const path = `products/${productData.id}/images/${fileName}`;
+		const path = `products/${productData.pid}/images/${fileName}`;
 		try {
 			refImages
 				.child(path)
 				.delete()
 				.then(() => {
 					const imageItem = productData.images.find((image) => image.fileName === fileName);
-					refProducts.doc(productData.id).update({
+					refProducts.doc(productData.pid).update({
 						images: firebase.firestore.FieldValue.arrayRemove(imageItem),
 					});
 				});
@@ -101,13 +101,13 @@ export default function EditProductDialog({ productData, drawerOn, setdrawerOn }
 		try {
 			const refProducts = firebase.firestore().collection('products');
 			await refProducts
-				.doc(productData.id)
+				.doc(productData.pid)
 				.delete()
 				.then(() => {
 					if (productData.images.length > 0) {
 						productData.images.forEach((image) => {
 							refImages
-								.child(`products/${productData.id}/images/${image.fileName}`)
+								.child(`products/${productData.pid}/images/${image.fileName}`)
 								.delete()
 								.catch((error) => {
 									notification.error({
@@ -237,7 +237,7 @@ export default function EditProductDialog({ productData, drawerOn, setdrawerOn }
 				</Form.Item>
 				<Images />
 				<Form.Item>
-					<UploadImage productId={productData.id} />
+					<UploadImage productId={productData.pid} />
 				</Form.Item>
 
 				<Form.Item>

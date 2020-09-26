@@ -1,11 +1,9 @@
 import firebase from '@/firebase/clientApp';
 import { useUser } from '@/context/userContext';
-import { useState, useEffect, useContext } from 'react';
-import Breadcrumbs from '@/components/pd/Breadcrumbs';
+import { useState } from 'react';
+import Breadcrumbs from '@pages/pd/Breadcrumbs';
 import ClientCarousel from '@components/shared/ClientCarousel';
 import { Col, Row, Typography, Button, InputNumber } from 'antd';
-import useSWR from 'swr';
-import { Context } from '@/context/storeContext';
 import { useDocumentSnap } from 'hooks/firebaseHooks';
 
 ProductPage.getInitialProps = ({ query }) => {
@@ -22,20 +20,25 @@ export default function ProductPage({ pid }) {
 	const urlsArray =
 		product && product.images ? product.images.map((image) => image.url) : ['/images/600px-No_image_available.png'];
 
-	if (error) {
-		return <h3>{error}</h3>;
-	}
-
-	const putToCart = () => {
+	const addToCart = async () => {
 		const refUsers = firebase.firestore().collection('users');
-		const item = user.cart.find((item) => item.pid === pid);
+
+		// Error prevention case cart doesn't exist
+		if (!user.cart) {
+			await refUsers.doc(user.uid).update({
+				cart: [],
+			});
+		}
+
+		const itemInCart = await user.cart.find((item) => item.pid === pid);
+
 		//when the product is not in the cart
-		if (item !== undefined) {
-			if (!user.cart.some((item) => item.quantity === quantity)) {
-				refUsers.doc(user.uid).update({
-					cart: firebase.firestore.FieldValue.arrayRemove(item),
+		if (itemInCart !== undefined) {
+			if (itemInCart.quantity !== quantity) {
+				await refUsers.doc(user.uid).update({
+					cart: firebase.firestore.FieldValue.arrayRemove(itemInCart),
 				});
-				refUsers.doc(user.uid).update({
+				await refUsers.doc(user.uid).update({
 					cart: firebase.firestore.FieldValue.arrayUnion({
 						pid,
 						quantity,
@@ -43,7 +46,7 @@ export default function ProductPage({ pid }) {
 				});
 			}
 		} else {
-			refUsers.doc(user.uid).update({
+			await refUsers.doc(user.uid).update({
 				cart: firebase.firestore.FieldValue.arrayUnion({
 					pid,
 					quantity,
@@ -51,6 +54,10 @@ export default function ProductPage({ pid }) {
 			});
 		}
 	};
+
+	if (error) {
+		return <h3>{error}</h3>;
+	}
 
 	if (product) {
 		return (
@@ -79,7 +86,7 @@ export default function ProductPage({ pid }) {
 									defaultValue={1}
 									onChange={(value) => setQuantity(value)}
 								/>
-								<Button block type="primary" onClick={putToCart}>
+								<Button block type="primary" onClick={addToCart}>
 									Add to Cart
 								</Button>
 								<Button block>Add to Shopping List</Button>

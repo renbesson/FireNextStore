@@ -41,7 +41,7 @@ export default function NewProductDialog({ drawerOn, setdrawerOn }) {
 			const refProducts = firebase.firestore().collection('products');
 			await refProducts.add(newProduct).then((doc) => {
 				refProducts.doc(doc.id).update({
-					id: doc.id,
+					pid: doc.id,
 				});
 			});
 		} catch (error) {

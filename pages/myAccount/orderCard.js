@@ -2,6 +2,7 @@ import { Row, Col, Card, Typography, Grid, Button, Divider, Steps, List } from '
 import { ShoppingCartOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import Avatar from 'antd/lib/avatar/avatar';
+import Link from 'next/link';
 
 const { Title, Text } = Typography;
 const { Step } = Steps;
@@ -60,8 +61,10 @@ export default function OrderCard({ orderData }) {
 						<Row>
 							<Col>
 								<Text strong>
-									{orderData.items.length} Itens - R${' '}
-									{orderData.items.reduce((total, item) => item.price + total, 0)}
+									{orderData.items.length} Itens - Total{' '}
+									{new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(
+										orderData.items.reduce((total, item) => item.price + total, 0)
+									)}
 								</Text>
 							</Col>
 						</Row>
@@ -91,32 +94,44 @@ export default function OrderCard({ orderData }) {
 				</Row>
 				<Row className={'pt-2'} justify="center">
 					{!showItems && (
-						<Button type="link" size="large" onClick={() => setShowItems(true)}>
-							Order Details
-						</Button>
+						<Col>
+							<Button type="link" size="large" onClick={() => setShowItems(true)}>
+								Order Details
+							</Button>
+						</Col>
 					)}
 					{showItems && (
-						<List
-							itemLayout="horizontal"
-							dataSource={orderData.items}
-							renderItem={(item) => (
-								<List.Item>
-									<List.Item.Meta
-										avatar={
-											<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-										}
-										title={<a href="https://ant.design">{item.title}</a>}
-										description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-									/>
-								</List.Item>
-							)}
-						/>
+						<Col span={24}>
+							<List
+								itemLayout="horizontal"
+								dataSource={orderData.items}
+								renderItem={(item) => (
+									<List.Item>
+										<List.Item.Meta
+											avatar={<Avatar src={item.imageUrl} />}
+											title={
+												<Link href={`/pd/${item.pid}`}>
+													<a>{item.title}</a>
+												</Link>
+											}
+											description={`Quantity: ${item.quantity} | Price: ${new Intl.NumberFormat(
+												'en-CA',
+												{
+													style: 'currency',
+													currency: 'CAD',
+												}
+											).format(item.price)}`}
+										/>
+									</List.Item>
+								)}
+							/>
+						</Col>
 					)}
 				</Row>
 			</Card>
 			<style global jsx>
 				{`
-					.root .capitalize {
+					.capitalize {
 						text-transform: capitalize;
 					}
 				`}
