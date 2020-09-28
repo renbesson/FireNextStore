@@ -85,7 +85,7 @@ export default function ProductInCartCard({ productData, user }) {
 					</Row>
 					<Row>
 						<Col>
-							<Text>Code: {productData.productCode}</Text>
+							<Text>Code: {productData.sku}</Text>
 						</Col>
 					</Row>
 					<Row justify="space-between" className={'p-2'}>

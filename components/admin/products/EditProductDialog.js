@@ -153,9 +153,10 @@ export default function EditProductDialog({ productData, drawerOn, setdrawerOn }
 				initialValues={{
 					['title']: productData ? productData.title : '',
 					['description']: productData ? productData.description : '',
+					['priceBase']: productData ? productData.priceBase : '',
 					['price']: productData ? productData.price : '',
 					['quantity']: productData ? productData.quantity : '',
-					['productCode']: productData ? productData.productCode : '',
+					['sku']: productData ? productData.sku : '',
 					['category']: productData ? productData.category : [],
 					['images']: productData ? productData.images : [],
 				}}
@@ -189,12 +190,23 @@ export default function EditProductDialog({ productData, drawerOn, setdrawerOn }
 					/>
 				</Form.Item>
 				<Form.Item
-					label="Price"
+					label="Base Price"
+					name="priceBase"
+					rules={[{ required: true, message: 'Please input your username!' }]}
+				>
+					<InputNumber
+						placeholder="Base Price"
+						value={editedProduct.priceBase === undefined ? productData.priceBase : editedProduct.priceBase}
+						onChange={(value) => setEditedProduct({ ...editedProduct, priceBase: value })}
+					/>
+				</Form.Item>
+				<Form.Item
+					label=" CurrentPrice"
 					name="price"
 					rules={[{ required: true, message: 'Please input your username!' }]}
 				>
 					<InputNumber
-						placeholder="Price"
+						placeholder=" Current Price"
 						value={editedProduct.price === undefined ? productData.price : editedProduct.price}
 						onChange={(value) => setEditedProduct({ ...editedProduct, price: value })}
 					/>
@@ -212,17 +224,17 @@ export default function EditProductDialog({ productData, drawerOn, setdrawerOn }
 				</Form.Item>
 				<Form.Item
 					label="Product Code"
-					name="productCode"
+					name="sku"
 					rules={[{ required: true, message: 'Please input your username!' }]}
 				>
 					<Input
 						placeholder="Product Code"
 						value={
-							editedProduct.productCode === undefined
-								? productData.productCode
-								: editedProduct.productCode
+							editedProduct.sku === undefined
+								? productData.sku
+								: editedProduct.sku
 						}
-						onChange={(e) => setEditedProduct({ ...editedProduct, productCode: e.target.value })}
+						onChange={(e) => setEditedProduct({ ...editedProduct, sku: e.target.value })}
 					/>
 				</Form.Item>
 				<Form.Item

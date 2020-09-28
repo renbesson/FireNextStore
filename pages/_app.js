@@ -96,26 +96,43 @@ export default function App({ Component, pageProps }) {
 					<link rel="icon" href="/favicon.ico" />
 				</Head>
 				<Layout>
-					<nav>
+					<Header
+						style={{
+							padding: '0px',
+							alignSelf: 'center',
+							maxWidth: screens.xs ? '100vw' : '1200px',
+							width: screens.xs ? '100vw' : '95vw',
+							minHeight: screens.xs ? '25vh' : '15vh',
+						}}
+					>
 						<UserProvider>
 							<HeaderClient />
 						</UserProvider>
-					</nav>
+					</Header>
 					<Content
 						style={{
 							padding: '32px',
 							alignSelf: 'center',
-							// margin: '32px',
 							maxWidth: screens.xs ? '100vw' : '1200px',
 							width: screens.xs ? '100vw' : '95vw',
 							backgroundColor: '#ffffff',
+							minHeight: screens.xs ? '45vh' : '75vh',
 						}}
 					>
 						<UserProvider>
 							<Component {...pageProps} />
 						</UserProvider>
 					</Content>
-					<Footer style={{ textAlign: 'center' }}>
+					<Footer
+						style={{
+							padding: '0px',
+							alignSelf: 'center',
+							maxWidth: screens.xs ? '100vw' : '1200px',
+							width: screens.xs ? '100vw' : '95vw',
+							backgroundColor: '#ffffff',
+							minHeight: screens.xs ? '25vh' : '10vh',
+						}}
+					>
 						<ClientFooter />
 					</Footer>
 				</Layout>

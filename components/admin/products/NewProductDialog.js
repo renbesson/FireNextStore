@@ -24,10 +24,11 @@ export default function NewProductDialog({ drawerOn, setdrawerOn }) {
 	const [newProduct, setNewProduct] = useState({
 		name: '',
 		description: '',
+		priceBase: null,
 		price: null,
 		quantity: null,
 		category: [],
-		productCode: '',
+		sku: '',
 		images: [],
 		dateCreated: firebase.firestore.Timestamp.now(),
 		dateModified: null,
@@ -97,12 +98,23 @@ export default function NewProductDialog({ drawerOn, setdrawerOn }) {
 					/>
 				</Form.Item>
 				<Form.Item
-					label="Price"
+					label="Base Price"
+					name="priceBase"
+					rules={[{ required: true, message: 'Please input your username!' }]}
+				>
+					<InputNumber
+						placeholder="Base Price"
+						value={newProduct.priceBase}
+						onChange={(value) => setNewProduct({ ...newProduct, priceBase: value })}
+					/>
+				</Form.Item>
+				<Form.Item
+					label="Current Price"
 					name="price"
 					rules={[{ required: true, message: 'Please input your username!' }]}
 				>
 					<InputNumber
-						placeholder="Price"
+						placeholder="Current Price"
 						value={newProduct.price}
 						onChange={(value) => setNewProduct({ ...newProduct, price: value })}
 					/>
@@ -120,13 +132,13 @@ export default function NewProductDialog({ drawerOn, setdrawerOn }) {
 				</Form.Item>
 				<Form.Item
 					label="Product Code"
-					name="productCode"
+					name="sku"
 					rules={[{ required: true, message: 'Please input your username!' }]}
 				>
 					<Input
 						placeholder="Product Code"
-						value={newProduct.productCode}
-						onChange={(e) => setNewProduct({ ...newProduct, productCode: e.target.value })}
+						value={newProduct.sku}
+						onChange={(e) => setNewProduct({ ...newProduct, sku: e.target.value })}
 					/>
 				</Form.Item>
 				<Form.Item

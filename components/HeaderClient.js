@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import firebase from '@/firebase/clientApp';
 import { useUser } from '../context/userContext';
-import { Grid, Layout, Row, Col, Button, notification, Badge, Menu } from 'antd';
+import { Grid, Layout, Row, Col, Button, notification, Badge, Menu, Typography } from 'antd';
 import SearchBar from '@/components/SearchBar';
-import { UserOutlined, HeartOutlined } from '@ant-design/icons';
+import { UserOutlined, HeartOutlined, LogoutOutlined } from '@ant-design/icons';
 import { SnippetsOutlined, ShoppingCartOutlined, AppstoreOutlined } from '@ant-design/icons';
 import SignInDrawer from '@/components/SignInDrawer';
 import SignUpDrawer from '@/components/SignUpDrawer';
@@ -12,8 +12,7 @@ import SubMenu from 'antd/lib/menu/SubMenu';
 import { useDocument } from '@nandorojo/swr-firestore';
 import { useRouter } from 'next/router';
 
-const { Header } = Layout;
-
+const { Text } = Typography;
 export default function HeaderClient() {
 	const { loadingUser, user } = useUser();
 	const [signInDrawerOn, setSignInDrawerOn] = useState(false);
@@ -23,89 +22,19 @@ export default function HeaderClient() {
 
 	const screens = Grid.useBreakpoint();
 
-	const SignInUpButton = () => {
-		return (
-			<Button
-				style={{ color: '#ffffff', fontSize: '0.75rem' }}
-				type="text"
-				icon={<UserOutlined style={{ color: '#ffffff', fontSize: '2rem' }} />}
-				onClick={user === null ? () => setSignInDrawerOn(true) : alreadySignedInNotification}
-			>
-				Sign In/ Sign Up
-			</Button>
-		);
+	const headerButton = {
+		display: 'flex',
+		flexDirection: 'column',
+		width: '76px',
+		lineHeight: '28px',
+		cursor: 'pointer',
+	};
+	const headerButtonIcon = {
+		color: '#fff',
+		fontSize: '2rem',
 	};
 
-	const MyAccountButton = () => {
-		return (
-			<Link href="/myAccount">
-				<Button
-					style={{ color: '#ffffff', fontSize: '0.75rem' }}
-					type="text"
-					icon={<UserOutlined style={{ color: '#ffffff', fontSize: '2rem' }} />}
-				>
-					My Account
-				</Button>
-			</Link>
-		);
-	};
-
-	const FavoritesButton = () => {
-		return (
-			<Button
-				style={{ color: '#ffffff', fontSize: '0.75rem' }}
-				type="text"
-				icon={<HeartOutlined style={{ color: '#ffffff', fontSize: '2rem' }} />}
-			>
-				Favorites
-			</Button>
-		);
-	};
-
-	const ShoppingListButton = () => {
-		return (
-			<Button
-				style={{ color: '#ffffff', fontSize: '0.75rem' }}
-				type="text"
-				icon={<SnippetsOutlined style={{ color: '#ffffff', fontSize: '2rem' }} />}
-			>
-				Shopping Lists
-			</Button>
-		);
-	};
-
-	const CartButton = () => {
-		return (
-			<Badge
-				count={user && user.cart && user.cart.length}
-				offset={[-43, 10]}
-				style={{ backgroundColor: '#52c41a' }}
-			>
-				<Link href="/cart">
-					<Button
-						style={{ color: '#ffffff', fontSize: '0.75rem' }}
-						type="text"
-						icon={<ShoppingCartOutlined style={{ color: '#ffffff', fontSize: '2rem' }} />}
-					>
-						Cart
-					</Button>
-				</Link>
-			</Badge>
-		);
-	};
-
-	const SignOutButton = () => {
-		return (
-			<Button
-				style={{ color: '#ffffff', fontSize: '0.75rem' }}
-				type="text"
-				icon={<ShoppingCartOutlined style={{ color: '#ffffff', fontSize: '2rem' }} />}
-				onClick={onSignOut}
-			>
-				Sign Out
-			</Button>
-		);
-	};
+	const headerButtonText = { color: '#fff', alignSelf: 'center' };
 
 	const onSignOut = () => {
 		firebase
@@ -130,15 +59,75 @@ export default function HeaderClient() {
 		});
 	};
 
+	const SignInUpButton = () => {
+		return (
+			<div
+				style={headerButton}
+				onClick={user === null ? () => setSignInDrawerOn(true) : alreadySignedInNotification}
+			>
+				<UserOutlined style={headerButtonIcon} />
+				<Text style={headerButtonText}>Sign In/Up</Text>
+			</div>
+		);
+	};
+
+	const MyAccountButton = () => {
+		return (
+			<Link href="/myAccount">
+				<div style={headerButton} onClick={(value) => console.log(value)}>
+					<UserOutlined style={headerButtonIcon} />
+					<Text style={headerButtonText}>My Account</Text>
+				</div>
+			</Link>
+		);
+	};
+
+	const FavoritesButton = () => {
+		return (
+			<div style={headerButton} onClick={(value) => console.log(value)}>
+				<HeartOutlined style={headerButtonIcon} />
+				<Text style={headerButtonText}>Favorites</Text>
+			</div>
+		);
+	};
+
+	const ShoppingListButton = () => {
+		return (
+			<div style={headerButton} onClick={(value) => console.log(value)}>
+				<SnippetsOutlined style={headerButtonIcon} />
+				<Text style={headerButtonText}>My Lists</Text>
+			</div>
+		);
+	};
+
+	const CartButton = () => {
+		return (
+			<Badge
+				count={user && user.cart && user.cart.length}
+				offset={[-20, 5]}
+				style={{ backgroundColor: '#52c41a' }}
+			>
+				<Link href="/cart">
+					<div style={headerButton} onClick={(value) => console.log(value)}>
+						<ShoppingCartOutlined style={headerButtonIcon} />
+						<Text style={headerButtonText}>Cart</Text>
+					</div>
+				</Link>
+			</Badge>
+		);
+	};
+
+	const SignOutButton = () => {
+		return (
+			<div style={headerButton} onClick={onSignOut}>
+				<LogoutOutlined style={headerButtonIcon} />
+				<Text style={headerButtonText}>Sign Out</Text>
+			</div>
+		);
+	};
+
 	return (
-		<Header
-			style={{
-				margin: 'auto',
-				width: screens.xs ? '100vw' : '95vw',
-				maxWidth: '1200px',
-				minHeight: screens.xs ? '25vh' : '15vh',
-			}}
-		>
+		<>
 			<SignInDrawer
 				drawerOn={signInDrawerOn}
 				setdrawerOn={setSignInDrawerOn}
@@ -149,7 +138,7 @@ export default function HeaderClient() {
 				setdrawerOn={setSignUpDrawerOn}
 				setOtherDrawerOn={setSignInDrawerOn}
 			/>
-			<Row justify="space-between" align="middle">
+			<Row className={'px-3'} justify="space-between" align="middle">
 				<Col span={3}>
 					<Link href="/">
 						<img
@@ -162,16 +151,23 @@ export default function HeaderClient() {
 				<Col xs={24} lg={8}>
 					<SearchBar />
 				</Col>
+				<Col>{!loadingUser && user === null ? <SignInUpButton /> : null}</Col>
+				<Col>{!loadingUser && user ? <MyAccountButton /> : null}</Col>
 				<Col>
-					{!loadingUser && user === null ? <SignInUpButton /> : null}
-					{!loadingUser && user ? <MyAccountButton /> : null}
-					<FavoritesButton />
-					<ShoppingListButton />
 					<CartButton />
-					{!loadingUser && user ? <SignOutButton /> : null}
 				</Col>
+				<Col>
+					<FavoritesButton />
+				</Col>
+				<Col>
+					<ShoppingListButton />
+				</Col>
+				<Col>{!loadingUser && user ? <SignOutButton /> : null}</Col>
 			</Row>
-			<Row>
+			<Row
+				justify="space-around"
+				style={{ backgroundColor: '#fff', borderTop: '1px solid gray', borderBottom: '1px solid gray' }}
+			>
 				<Col>
 					<Menu
 						mode="horizontal"
@@ -179,28 +175,50 @@ export default function HeaderClient() {
 					>
 						<SubMenu key="sub2" icon={<AppstoreOutlined />} title="Categories">
 							{categories &&
-								Object.keys(categories).map((categoryLevel1) => {
-									//If statement prevents to map the variables id, exists, and hasPendingWrites.
-									if (categories[categoryLevel1] instanceof Object) {
-										return (
-											<SubMenu key={categoryLevel1} title={categoryLevel1}>
-												{Object.keys(categories[categoryLevel1]).map((categoryLevel2) => {
-													return (
-														<SubMenu key={categoryLevel2} title={categoryLevel2}>
-															{categories[categoryLevel1][categoryLevel2].map((item) => {
-																return <Menu.Item key={item}>{item}</Menu.Item>;
-															})}
-														</SubMenu>
-													);
-												})}
-											</SubMenu>
-										);
-									}
-								})}
+								Object.keys(categories)
+									.sort()
+									.map((categoryLevel1) => {
+										//If statement prevents to map the variables id, exists, and hasPendingWrites.
+										if (categories[categoryLevel1] instanceof Object) {
+											return (
+												<SubMenu key={categoryLevel1} title={categoryLevel1}>
+													{Object.keys(categories[categoryLevel1])
+														.sort()
+														.map((categoryLevel2) => {
+															return (
+																<SubMenu key={categoryLevel2} title={categoryLevel2}>
+																	{categories[categoryLevel1][categoryLevel2]
+																		.sort()
+																		.map((item) => {
+																			return (
+																				<Menu.Item key={item}>{item}</Menu.Item>
+																			);
+																		})}
+																</SubMenu>
+															);
+														})}
+												</SubMenu>
+											);
+										}
+									})}
 						</SubMenu>
 					</Menu>
 				</Col>
+				<Col>
+					<Button type="link">Nossa Loja</Button>
+				</Col>
+				<Col>
+					<Button type="link">Fale Pelo Zap</Button>
+				</Col>
+				<Col>
+					<Button type="link">Encarte</Button>
+				</Col>
+				<Col>
+					<Button type="link" style={{ fontWeight: 'bold', color: 'blue' }}>
+						Ofertas do Dia!
+					</Button>
+				</Col>
 			</Row>
-		</Header>
+		</>
 	);
 }
