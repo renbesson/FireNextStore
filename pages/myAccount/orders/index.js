@@ -1,6 +1,10 @@
 import { Typography, Button, Row, Col } from 'antd';
 import { UserOutlined, BoxPlotOutlined, HeartOutlined, SnippetsOutlined, AimOutlined } from '@ant-design/icons';
+import OrderCard from '@pages/myAccount/OrderCard';
 import Link from 'next/link';
+import { useUser } from '@/context/userContext';
+
+const { Text, Title } = Typography;
 
 const MyAccountButtons = () => {
 	const buttons = [
@@ -29,6 +33,8 @@ const MyAccountButtons = () => {
 };
 
 export default function myAccount() {
+	const { user } = useUser();
+
 	return (
 		<Row justify="space-between">
 			<Col
@@ -40,7 +46,16 @@ export default function myAccount() {
 				<MyAccountButtons />
 			</Col>
 			<Col xs={24} lg={18}>
-				<h3>Working in Progress...</h3>
+				{user &&
+					user.orders &&
+					user.orders.map((orderData) => (
+						<Row justify="end" key={orderData.orderNumber}>
+							<Col className={'mb-5'} span={24}>
+								<OrderCard orderData={orderData} />
+							</Col>
+						</Row>
+					))}
+				{user && user.orders && !user.orders.length > 0 && <Title level={3}>You have no orders</Title>}
 			</Col>
 		</Row>
 	);

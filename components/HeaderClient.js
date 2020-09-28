@@ -61,24 +61,36 @@ export default function HeaderClient() {
 
 	const SignInUpButton = () => {
 		return (
-			<div
-				style={headerButton}
-				onClick={user === null ? () => setSignInDrawerOn(true) : alreadySignedInNotification}
-			>
-				<UserOutlined style={headerButtonIcon} />
-				<Text style={headerButtonText}>Sign In/Up</Text>
-			</div>
+			<Menu mode="horizontal" theme="dark" style={{ backgroundColor: '#ec3237' }}>
+				<Menu.Item
+					key="setting:1"
+					onClick={user === null ? () => setSignInDrawerOn(true) : alreadySignedInNotification}
+					icon={<UserOutlined style={headerButtonIcon} />}
+				>
+					Sign In/Up
+				</Menu.Item>
+			</Menu>
 		);
 	};
 
 	const MyAccountButton = () => {
 		return (
-			<Link href="/myAccount">
-				<div style={headerButton} onClick={(value) => console.log(value)}>
-					<UserOutlined style={headerButtonIcon} />
-					<Text style={headerButtonText}>My Account</Text>
-				</div>
-			</Link>
+			<Menu mode="horizontal" theme="dark" style={{ backgroundColor: '#ec3237' }}>
+				<SubMenu key="SubMenu" icon={<UserOutlined style={headerButtonIcon} />} title={user.displayName}>
+					<Menu.Item key="setting:1" onClick={() => router.push('/myAccount/account')}>
+						Account
+					</Menu.Item>
+					<Menu.Item key="setting:2" onClick={() => router.push('/myAccount/orders')}>
+						Orders
+					</Menu.Item>
+					<Menu.Item key="setting:3" onClick={() => router.push('/myAccount/addresses')}>
+						Addresses
+					</Menu.Item>
+					<Menu.Item key="setting:4" onClick={onSignOut}>
+						Sigh Out
+					</Menu.Item>
+				</SubMenu>
+			</Menu>
 		);
 	};
 
@@ -114,15 +126,6 @@ export default function HeaderClient() {
 					</div>
 				</Link>
 			</Badge>
-		);
-	};
-
-	const SignOutButton = () => {
-		return (
-			<div style={headerButton} onClick={onSignOut}>
-				<LogoutOutlined style={headerButtonIcon} />
-				<Text style={headerButtonText}>Sign Out</Text>
-			</div>
 		);
 	};
 
@@ -162,7 +165,6 @@ export default function HeaderClient() {
 				<Col>
 					<ShoppingListButton />
 				</Col>
-				<Col>{!loadingUser && user ? <SignOutButton /> : null}</Col>
 			</Row>
 			<Row
 				justify="space-around"
