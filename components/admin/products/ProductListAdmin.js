@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import ProductCardAdmin from '@components/admin/products/ProductCardAdmin';
-import NewProductDialog from '@components/admin/products/NewProductDialog';
+import NewProductDrawer from '@components/admin/products/NewProductDrawer';
 import { Row, Col, Card } from 'antd';
 import { PlusCircleTwoTone } from '@ant-design/icons';
 
@@ -9,7 +9,7 @@ export default function ProductListAdmin({ products }) {
 
 	return (
 		<>
-			<NewProductDialog drawerOn={newProductDrawerOn} setdrawerOn={setNewProductDrawerOn} />
+			<NewProductDrawer drawerOn={newProductDrawerOn} setdrawerOn={setNewProductDrawerOn} />
 			<Row align="middle" gutter={[24, 24]}>
 				<Col>
 					{products.length && (

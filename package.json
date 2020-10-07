@@ -23,6 +23,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-firebase-hooks": "^2.2.0",
+    "react-number-format": "^4.4.1",
     "reactfire": "^2.0.3",
     "swr": "^0.3.2"
   },

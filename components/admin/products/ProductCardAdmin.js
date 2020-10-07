@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Row, Col, Card, Typography, Badge } from 'antd';
-import EditProductDialog from '@components/admin/products/EditProductDialog';
+import EditProductDrawer from '@components/admin/products/EditProductDrawer';
 
 const { Title, Text } = Typography;
 
@@ -9,7 +9,7 @@ export default function ProductCard({ productData }) {
 
 	return (
 		<>
-			<EditProductDialog
+			<EditProductDrawer
 				drawerOn={editedProductDrawerOn}
 				setdrawerOn={setEditedProductDrawerOn}
 				productData={productData}

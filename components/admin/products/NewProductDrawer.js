@@ -19,7 +19,7 @@ const imgStyle = {
 	transition: 'border-color 0.3s ease',
 };
 
-export default function NewProductDialog({ drawerOn, setdrawerOn }) {
+export default function NewProductDrawer({ drawerOn, setdrawerOn }) {
 	const [form] = Form.useForm();
 	const [newProduct, setNewProduct] = useState({
 		name: '',
@@ -31,7 +31,7 @@ export default function NewProductDialog({ drawerOn, setdrawerOn }) {
 		sku: '',
 		images: [],
 		dateCreated: firebase.firestore.Timestamp.now(),
-		dateModified: null,
+		dateModified: firebase.firestore.Timestamp.now(),
 	});
 
 	const screens = Grid.useBreakpoint();
@@ -73,10 +73,10 @@ export default function NewProductDialog({ drawerOn, setdrawerOn }) {
 			visible={drawerOn}
 			width={screens.xs ? '80vw' : '30vw'}
 		>
-			<Form layout="vertical" name="editProductForm" form={form} onFinish={createProduct}>
+			<Form layout="vertical" name="newProductForm" form={form} onFinish={createProduct}>
 				<Form.Item
-					label="Name"
-					name="name"
+					label="Title"
+					name="title"
 					rules={[{ required: true, message: 'Please input your username!' }]}
 				>
 					<Input

@@ -28,7 +28,7 @@ const MyAccountButtons = () => {
 	));
 };
 
-export default function myAccount() {
+export default function MyAccountLayout({ children }) {
 	return (
 		<Row justify="space-between">
 			<Col
@@ -40,7 +40,7 @@ export default function myAccount() {
 				<MyAccountButtons />
 			</Col>
 			<Col xs={24} lg={18}>
-				<h3>Working in Progress...</h3>
+				{children}
 			</Col>
 		</Row>
 	);

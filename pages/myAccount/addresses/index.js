@@ -1,47 +1,62 @@
-import { Typography, Button, Row, Col } from 'antd';
-import { UserOutlined, BoxPlotOutlined, HeartOutlined, SnippetsOutlined, AimOutlined } from '@ant-design/icons';
-import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { useUser } from '@/context/userContext';
+import MyAccountLayout from '@pages/myAccount/MyAccountLayout';
+import { Button, Card, Col, Row } from 'antd';
+import NewAddressDrawer from '@pages/myAccount/addresses/NewAddressDrawer';
+import EditAddressDrawer from '@pages/myAccount/addresses/EditAddressDrawer';
+import { PlusCircleTwoTone } from '@ant-design/icons';
 
-const MyAccountButtons = () => {
-	const buttons = [
-		{ title: 'Account', icon: <UserOutlined style={{ fontSize: '2rem' }} />, link: '/myAccount/account' },
-		{ title: 'Orders', icon: <BoxPlotOutlined style={{ fontSize: '2rem' }} />, link: '/myAccount/orders' },
-		{ title: 'Addresses', icon: <AimOutlined style={{ fontSize: '2rem' }} />, link: '/myAccount/addresses' },
-		{ title: 'My Favorites', icon: <HeartOutlined style={{ fontSize: '2rem' }} />, link: '/myAccount/myFavorites' },
-		{
-			title: 'My Lists',
-			icon: <SnippetsOutlined style={{ fontSize: '2rem' }} />,
-			link: '/myAccount/myLists',
-		},
-	];
+export default function account() {
+	const { loadingUser, user } = useUser();
+	const [newAddressDrawerOn, setNewAddressDrawerOn] = useState(false);
+	const [editAddressDrawerOn, setEditAddressDrawerOn] = useState(false);
+	const [editedAddress, setEditedAddress] = useState({});
 
-	return buttons.map((button) => (
-		<Row key={button.title}>
-			<Col>
-				<Link href={button.link}>
-					<Button type="link" icon={button.icon} size="large" className={'mb-2'}>
-						{button.title}
-					</Button>
-				</Link>
-			</Col>
-		</Row>
-	));
-};
+	const selectAddress = async (value) => {
+		await setEditedAddress(user.addresses.find((item) => item.addressNickname === value));
+		await setEditAddressDrawerOn(true);
+	};
 
-export default function myAccount() {
 	return (
-		<Row justify="space-between">
-			<Col
-				xs={24}
-				lg={4}
-				style={{ minWidth: '250px', borderRight: '2px solid black', borderBottom: '2px solid black' }}
-			>
-				<Typography.Title className={'mb-3'}>My Account</Typography.Title>
-				<MyAccountButtons />
-			</Col>
-			<Col xs={24} lg={18}>
-				<h3>Working in Progress...</h3>
-			</Col>
-		</Row>
+		<MyAccountLayout>
+			<NewAddressDrawer drawerOn={newAddressDrawerOn} setDrawerOn={setNewAddressDrawerOn} />
+			<EditAddressDrawer
+				drawerOn={editAddressDrawerOn}
+				setDrawerOn={setEditAddressDrawerOn}
+				address={editedAddress}
+			/>
+			<Row justify="space-around">
+				<Col>
+					<Button onClick={() => setNewAddressDrawerOn(true)}>New Address</Button>
+				</Col>
+				{user &&
+					user.addresses &&
+					user.addresses.map((address) => {
+						return (
+							<Col key={address.addressNickname}>
+								<Card
+									hoverable
+									style={{ width: 200, height: 200, textAlign: 'center' }}
+									cover={
+										<PlusCircleTwoTone
+											style={{
+												fontSize: '5rem',
+												margin: 'auto',
+												paddingTop: '50px',
+												paddingBottom: '50px',
+											}}
+											twoToneColor="#ec3237"
+										/>
+									}
+									bodyStyle={{ padding: 0 }}
+									onClick={() => selectAddress(address.addressNickname)}
+								>
+									{address.addressNickname}
+								</Card>
+							</Col>
+						);
+					})}
+			</Row>
+		</MyAccountLayout>
 	);
 }

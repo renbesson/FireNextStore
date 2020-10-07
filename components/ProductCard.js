@@ -4,6 +4,7 @@ import { Layout, Row, Col, Card, InputNumber, Button, Typography, Badge } from '
 import { ShoppingCartOutlined } from '@ant-design/icons';
 import firebase from '@/firebase/clientApp';
 import { useUser } from '@/context/userContext';
+import { useDocument } from '@nandorojo/swr-firestore';
 
 const { Title, Text } = Typography;
 
@@ -11,13 +12,12 @@ export default function ProductCard({ productData }) {
 	const router = useRouter();
 	const { user } = useUser();
 	const [quantity, setQuantity] = useState(1);
+	const { update } = useDocument(`users/${user.uid}`);
 
 	const addToCart = async () => {
-		const refUsers = firebase.firestore().collection('users');
-
 		// Error prevention case cart doesn't exist
 		if (!user.cart) {
-			await refUsers.doc(user.uid).update({
+			await update({
 				cart: [],
 			});
 		}
@@ -27,10 +27,10 @@ export default function ProductCard({ productData }) {
 		//when the product is not in the cart
 		if (itemInCart !== undefined) {
 			if (itemInCart.quantity !== quantity) {
-				await refUsers.doc(user.uid).update({
+				await update({
 					cart: firebase.firestore.FieldValue.arrayRemove(itemInCart),
 				});
-				await refUsers.doc(user.uid).update({
+				await update({
 					cart: firebase.firestore.FieldValue.arrayUnion({
 						pid: productData.pid,
 						quantity,
@@ -38,7 +38,7 @@ export default function ProductCard({ productData }) {
 				});
 			}
 		} else {
-			await refUsers.doc(user.uid).update({
+			await update({
 				cart: firebase.firestore.FieldValue.arrayUnion({
 					pid: productData.pid,
 					quantity,

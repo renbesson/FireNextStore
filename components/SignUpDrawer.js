@@ -29,6 +29,8 @@ export default function SignInDrawer({ drawerOn, setdrawerOn, setOtherDrawerOn }
 					displayName: `${newUser.fName} ${newUser.lName}`,
 					shoppingLists: [],
 					cart: [],
+					orders: [],
+					addresses: [],
 				};
 				firebase.firestore().collection('users').doc(res.user.uid).set(userObj);
 				setdrawerOn(false);

@@ -119,12 +119,10 @@ export default function HeaderClient() {
 				offset={[-20, 5]}
 				style={{ backgroundColor: '#52c41a' }}
 			>
-				<Link href="/cart">
-					<div style={headerButton} onClick={(value) => console.log(value)}>
-						<ShoppingCartOutlined style={headerButtonIcon} />
-						<Text style={headerButtonText}>Cart</Text>
-					</div>
-				</Link>
+				<div style={headerButton} onClick={() => router.push('/cart')}>
+					<ShoppingCartOutlined style={headerButtonIcon} />
+					<Text style={headerButtonText}>Cart</Text>
+				</div>
 			</Badge>
 		);
 	};

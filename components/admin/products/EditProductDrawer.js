@@ -21,7 +21,7 @@ const imgStyle = {
 	transition: 'border-color 0.3s ease',
 };
 
-export default function EditProductDialog({ productData, drawerOn, setdrawerOn }) {
+export default function EditProductDrawer({ productData, drawerOn, setdrawerOn }) {
 	const [editedProduct, setEditedProduct] = useState({ dateModified: firebase.firestore.Timestamp.now() });
 	const refProducts = firebase.firestore().collection('products');
 	const refImages = firebase.storage().ref();
@@ -169,7 +169,6 @@ export default function EditProductDialog({ productData, drawerOn, setdrawerOn }
 				>
 					<Input
 						placeholder="Title"
-						value={editedProduct.title}
 						onChange={(e) => setEditedProduct({ ...editedProduct, title: e.target.value })}
 					/>
 				</Form.Item>
@@ -181,11 +180,6 @@ export default function EditProductDialog({ productData, drawerOn, setdrawerOn }
 					<Input.TextArea
 						placeholder="Description"
 						autoSize={{ minRows: '4', maxRows: '10' }}
-						value={
-							editedProduct.description === undefined
-								? productData.description
-								: editedProduct.description
-						}
 						onChange={(e) => setEditedProduct({ ...editedProduct, description: e.target.value })}
 					/>
 				</Form.Item>
@@ -196,7 +190,6 @@ export default function EditProductDialog({ productData, drawerOn, setdrawerOn }
 				>
 					<InputNumber
 						placeholder="Base Price"
-						value={editedProduct.priceBase === undefined ? productData.priceBase : editedProduct.priceBase}
 						onChange={(value) => setEditedProduct({ ...editedProduct, priceBase: value })}
 					/>
 				</Form.Item>
@@ -207,7 +200,6 @@ export default function EditProductDialog({ productData, drawerOn, setdrawerOn }
 				>
 					<InputNumber
 						placeholder=" Current Price"
-						value={editedProduct.price === undefined ? productData.price : editedProduct.price}
 						onChange={(value) => setEditedProduct({ ...editedProduct, price: value })}
 					/>
 				</Form.Item>
@@ -218,7 +210,6 @@ export default function EditProductDialog({ productData, drawerOn, setdrawerOn }
 				>
 					<InputNumber
 						placeholder="Quantity"
-						value={editedProduct.quantity === undefined ? productData.quantity : editedProduct.quantity}
 						onChange={(value) => setEditedProduct({ ...editedProduct, quantity: value })}
 					/>
 				</Form.Item>
@@ -229,11 +220,6 @@ export default function EditProductDialog({ productData, drawerOn, setdrawerOn }
 				>
 					<Input
 						placeholder="Product Code"
-						value={
-							editedProduct.sku === undefined
-								? productData.sku
-								: editedProduct.sku
-						}
 						onChange={(e) => setEditedProduct({ ...editedProduct, sku: e.target.value })}
 					/>
 				</Form.Item>
@@ -243,7 +229,6 @@ export default function EditProductDialog({ productData, drawerOn, setdrawerOn }
 					rules={[{ required: true, message: 'Please input your username!' }]}
 				>
 					<CategoriesTreeSelect
-						value={editedProduct.category === undefined ? productData.category : editedProduct.category}
 						onChange={(value) => setEditedProduct({ ...editedProduct, category: value })}
 					/>
 				</Form.Item>
@@ -261,6 +246,7 @@ export default function EditProductDialog({ productData, drawerOn, setdrawerOn }
 					</Button>
 				</Form.Item>
 			</Form>
+			{JSON.stringify(editedProduct)}
 		</Drawer>
 	);
 }
