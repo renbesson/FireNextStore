@@ -51,6 +51,7 @@ export default function EditAddressDrawer({ drawerOn, setDrawerOn, address }) {
 				notification.warning({
 					message: 'Address Has No Change',
 					description: `Address "${editedAddress.addressNickname}" has no change to update.`,
+					style: { backgroundColor: 'rgba(255, 255, 255, .75)', backdropFilter: 'blur(5px)' },
 				});
 			}
 			if (!hasError && hasChange) {
@@ -58,6 +59,7 @@ export default function EditAddressDrawer({ drawerOn, setDrawerOn, address }) {
 				notification.success({
 					message: 'Address Changed Successfully',
 					description: `Address "${editedAddress.addressNickname}" has been changed successfully.`,
+					style: { backgroundColor: 'rgba(255, 255, 255, .75)', backdropFilter: 'blur(5px)' },
 				});
 				setDrawerOn(false);
 			}
@@ -99,6 +101,7 @@ export default function EditAddressDrawer({ drawerOn, setDrawerOn, address }) {
 			width={screens.xs ? '80vw' : '30vw'}
 			forceRender={true}
 			destroyOnClose={true}
+			style={{ backgroundColor: 'rgba(255, 255, 255, .15)', backdropFilter: 'blur(5px)' }}
 		>
 			<Form layout="vertical" name="newProductForm" form={form} onFinish={editAddress}>
 				<Form.Item

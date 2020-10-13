@@ -9,7 +9,7 @@ const { Title } = Typography;
 export default function cart() {
 	const { user } = useUser();
 	const pids = user && user.cart ? user.cart.map(({ pid }) => pid) : undefined;
-	const { data: products, error } = useCollection('products', {
+	const { data: products, error } = useCollection(pids ? 'products' : null, {
 		listen: true,
 		where: [['pid', 'in', pids]],
 	});

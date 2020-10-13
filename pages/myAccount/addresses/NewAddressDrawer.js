@@ -41,6 +41,7 @@ export default function NewAddressDrawer({ drawerOn, setDrawerOn }) {
 				notification.warning({
 					message: 'Address Already Exists',
 					description: `Address "${newAddress.addressNickname}" already exists.`,
+					style: { backgroundColor: 'rgba(230, 230, 50, .15)', backdropFilter: 'blur(5px)' },
 				});
 			}
 			if (hasMoreThanFive) {
@@ -55,6 +56,7 @@ export default function NewAddressDrawer({ drawerOn, setDrawerOn }) {
 				notification.success({
 					message: 'Address Created Successfully',
 					description: `Address "${newAddress.addressNickname}" has been created successfully.`,
+					style: { backgroundColor: 'rgba(0, 255, 0, .15)', backdropFilter: 'blur(5px)' },
 				});
 			}
 		}
@@ -68,6 +70,7 @@ export default function NewAddressDrawer({ drawerOn, setDrawerOn }) {
 			onClose={() => setDrawerOn(false)}
 			visible={drawerOn}
 			width={screens.xs ? '80vw' : '30vw'}
+			style={{ backgroundColor: 'rgba(255, 255, 255, .15)', backdropFilter: 'blur(5px)' }}
 		>
 			<Form layout="vertical" name="newAddressForm" form={form} onFinish={createAddress}>
 				<Form.Item

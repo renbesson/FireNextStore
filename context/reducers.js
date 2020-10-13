@@ -1,19 +1,20 @@
 const Reducer = (state, action) => {
 	switch (action.type) {
-		case 'SET_POSTS':
+		case 'SET_ITEM':
 			return {
 				...state,
-				posts: action.payload,
+				products: action.payload,
 			};
-		case 'ADD_POST':
+		case 'ADD_ITEM':
+			console.log(action);
 			return {
 				...state,
-				posts: state.posts.concat(action.payload),
+				products: state.products.concat(action.product),
 			};
-		case 'REMOVE_POST':
+		case 'REMOVE_ITEM':
 			return {
 				...state,
-				posts: state.posts.filter((post) => post.id !== action.payload),
+				products: state.products.filter((item) => item.id !== action.payload),
 			};
 		case 'SET_ERROR':
 			return {

@@ -146,6 +146,7 @@ export default function EditProductDrawer({ productData, drawerOn, setdrawerOn }
 			onClose={() => setdrawerOn(false)}
 			visible={drawerOn}
 			width={screens.xs ? '80vw' : '30vw'}
+			style={{ backgroundColor: 'rgba(255, 255, 255, .15)', backdropFilter: 'blur(5px)' }}
 		>
 			<Form
 				layout="vertical"

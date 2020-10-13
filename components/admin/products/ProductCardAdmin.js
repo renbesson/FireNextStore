@@ -2,10 +2,16 @@ import { useState } from 'react';
 import { Row, Col, Card, Typography, Badge } from 'antd';
 import EditProductDrawer from '@components/admin/products/EditProductDrawer';
 
-const { Title, Text } = Typography;
+const { Title, Text, Paragraph } = Typography;
 
 export default function ProductCard({ productData }) {
 	const [editedProductDrawerOn, setEditedProductDrawerOn] = useState(false);
+
+	const calcPercentageDiff = (baseVal, currentVal) => {
+		const diff = baseVal - currentVal;
+		const percentage = (diff / baseVal) * 100;
+		return percentage;
+	};
 
 	return (
 		<>
@@ -14,7 +20,17 @@ export default function ProductCard({ productData }) {
 				setdrawerOn={setEditedProductDrawerOn}
 				productData={productData}
 			/>
-			<Badge count={'-15%'}>
+			<Badge
+				style={{
+					width: '35px',
+					height: '35px',
+					fontWeight: 'bold',
+					borderRadius: '35px',
+					lineHeight: '35px',
+					paddingLeft: '3px',
+				}}
+				count={`-${parseInt(((productData.priceBase - productData.price) / productData.priceBase) * 100)}%`}
+			>
 				<Card
 					hoverable
 					style={{ width: 200, height: 270 }}
@@ -34,10 +50,12 @@ export default function ProductCard({ productData }) {
 					onClick={() => setEditedProductDrawerOn(true)}
 				>
 					<Row>
-						<Text>{productData.title}</Text>
+						<Paragraph ellipsis={{ rows: 2 }}>
+							{productData.title}
+						</Paragraph>
 					</Row>
 					<Row className={'pt-2'}>
-						<Col span={8}>
+						<Col>
 							<Title level={4}>
 								{new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(
 									productData.price

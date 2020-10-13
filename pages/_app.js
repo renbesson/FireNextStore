@@ -103,6 +103,7 @@ export default function App({ Component, pageProps }) {
 							maxWidth: screens.xs ? '100vw' : '1200px',
 							width: '100vw',
 							minHeight: screens.xs ? '25vh' : '15vh',
+							borderRadius: '5px',
 						}}
 					>
 						<UserProvider>
@@ -111,11 +112,10 @@ export default function App({ Component, pageProps }) {
 					</Header>
 					<Content
 						style={{
-							padding: '32px',
+							padding: '16px',
 							alignSelf: 'center',
 							maxWidth: screens.xs ? '100vw' : '1200px',
 							width: '100vw',
-							backgroundColor: '#ffffff',
 							minHeight: screens.xs ? '45vh' : '75vh',
 						}}
 					>
@@ -129,7 +129,6 @@ export default function App({ Component, pageProps }) {
 							alignSelf: 'center',
 							maxWidth: screens.xs ? '100vw' : '1200px',
 							width: '100vw',
-							backgroundColor: '#ffffff',
 							minHeight: screens.xs ? '25vh' : '10vh',
 						}}
 					>

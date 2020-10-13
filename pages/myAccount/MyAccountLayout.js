@@ -7,7 +7,7 @@ const MyAccountButtons = () => {
 		{ title: 'Account', icon: <UserOutlined style={{ fontSize: '2rem' }} />, link: '/myAccount/account' },
 		{ title: 'Orders', icon: <BoxPlotOutlined style={{ fontSize: '2rem' }} />, link: '/myAccount/orders' },
 		{ title: 'Addresses', icon: <AimOutlined style={{ fontSize: '2rem' }} />, link: '/myAccount/addresses' },
-		{ title: 'My Favorites', icon: <HeartOutlined style={{ fontSize: '2rem' }} />, link: '/myAccount/myFavorites' },
+		{ title: 'Favorites', icon: <HeartOutlined style={{ fontSize: '2rem' }} />, link: '/myAccount/favorites' },
 		{
 			title: 'My Lists',
 			icon: <SnippetsOutlined style={{ fontSize: '2rem' }} />,

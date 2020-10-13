@@ -52,9 +52,19 @@ export default function CategoriesTreeSelect({ value, onChange }) {
 		return () => {};
 	}, []);
 
+	function filter(inputValue, path) {
+		return path.some((option) => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
+	}
+
 	return (
 		<>
-			<Cascader showSearch value={value} options={treeData} placeholder="Please select" onChange={onChange} />
+			<Cascader
+				showSearch={{ filter }}
+				value={value}
+				options={treeData}
+				placeholder="Please select"
+				onChange={onChange}
+			/>
 		</>
 	);
 }

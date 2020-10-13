@@ -12,7 +12,7 @@ export default function SearchBar() {
 			size="large"
 			style={{ width: '100%', border: '2px white solid', borderRadius: '8px' }}
 			placeholder="input search text"
-			onSearch={(value) => router.push(`/pd/search/${value}`)}
+			onSearch={(value) => router.push(`/pd/search/${value}?sField=category&oField=price&orderBy=asc`)}
 			enterButton
 		/>
 	);

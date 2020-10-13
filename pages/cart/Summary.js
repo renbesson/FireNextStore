@@ -1,6 +1,8 @@
 import { Button, Card, Col, InputNumber, notification, Row, Select, Typography } from 'antd';
 import firebase from '@/firebase/clientApp';
 import React, { useState } from 'react';
+import Form from 'antd/lib/form/Form';
+import { useRouter } from 'next/router';
 
 const { Title, Text } = Typography;
 
@@ -9,35 +11,55 @@ const { Option } = Select;
 export default function Summary({ productsData, user }) {
 	const getQuantity = (pid) => user && user.cart && user.cart.find((item) => item.pid === pid).quantity;
 	const [addressSelected, setAddressSelected] = useState(null);
+	const router = useRouter();
 
 	const placeOrder = () => {
 		const refUsers = firebase.firestore().collection('users');
 
 		if (user && user.cart && user.cart.length > 0) {
-			refUsers.doc(user.uid).update({
-				orders: firebase.firestore.FieldValue.arrayUnion({
-					orderNumber: 4521323,
-					dates: {
-						createdOn: firebase.firestore.Timestamp.now(),
-						receivedOn: null,
-						preparedOn: null,
-						outForDeliveryOn: null,
-						deliveredOn: null,
-					},
-					status: 'processing',
-					step: 0,
-					deliveryAddress: user.addresses[addressSelected],
-					items: productsData.map((product) => {
-						return {
-							title: product.title,
-							price: product.price,
-							pid: product.pid,
-							imageUrl: product.images[0].url,
-							quantity: getQuantity(product.pid),
-						};
+			refUsers
+				.doc(user.uid)
+				.update({
+					orders: firebase.firestore.FieldValue.arrayUnion({
+						orderNumber: 4521323,
+						dates: {
+							createdOn: firebase.firestore.Timestamp.now(),
+							receivedOn: null,
+							preparedOn: null,
+							outForDeliveryOn: null,
+							deliveredOn: null,
+						},
+						status: 'processing',
+						step: 0,
+						deliveryAddress: {
+							addressNickname: user.addresses[addressSelected].addressNickname,
+							streetAddress: user.addresses[addressSelected].streetAddress,
+							city: user.addresses[addressSelected].city,
+							postalCode: user.addresses[addressSelected].postalCode,
+						},
+						items: productsData.map((product) => {
+							return {
+								title: product.title,
+								price: product.price,
+								pid: product.pid,
+								imageUrl: product.images[0].url,
+								quantity: getQuantity(product.pid),
+							};
+						}),
 					}),
-				}),
-			});
+				})
+				.then(
+					notification.success({
+						message: 'Order Placed Successfully',
+						description: `Order "${'4521323'}" has been placed successfully.`,
+					})
+				)
+				.catch((error) => {
+					notification.error({
+						message: 'Error Placing Order',
+						description: `${error}`,
+					});
+				});
 			refUsers.doc(user.uid).update({
 				cart: [],
 			});
@@ -51,35 +73,43 @@ export default function Summary({ productsData, user }) {
 
 	return (
 		<Card style={{ width: '100%' }} bodyStyle={{ padding: '1rem' }}>
-			<Row>
-				<Col span={24} className={'m-2'}>
+			<Form onFinish={placeOrder}>
+				<Form.Item
+					name="deliveryAddress"
+					rules={[{ required: true, message: 'Please select the delivery address.' }]}
+				>
 					<Select
-						style={{ minWidth: '50%' }}
-						defaultValue={'Select the delivery Address'}
-						onSelect={(value) => setAddressSelected(value)}
+						placeholder="Select the delivery Address"
+						onChange={(value) =>
+							value === 'none' ? router.push('/myAccount/addresses') : setAddressSelected(value)
+						}
 					>
 						{user &&
 							user.addresses &&
 							user.addresses.map(({ addressNickname }, index) => (
 								<Option key={index}>{addressNickname}</Option>
 							))}
+						<Option style={{ color: 'red' }} value={'none'}>
+							Create New Address
+						</Option>
 					</Select>
-				</Col>
-				<Col span={24} className={'m-2'}>
+				</Form.Item>
+				<Form.Item>
 					<Text>
 						<b>Delivery Address: </b>
-						{addressSelected && user && user.addresses
-							? `${user.addresses[addressSelected].streetAddress}, ${user.addresses[addressSelected].city}, ${user.addresses[addressSelected].postalCode}`
-							: 'Select delivery address above...'}
+						{addressSelected &&
+							user &&
+							user.addresses &&
+							`${user.addresses[addressSelected].streetAddress}, ${user.addresses[addressSelected].city}, ${user.addresses[addressSelected].postalCode}`}
 					</Text>
-				</Col>
-				<Col span={24} className={'m-2'}>
+				</Form.Item>
+				<Form.Item>
 					<Text>
 						<b>Total Items: </b>
 						{user && user.cart && user.cart.reduce((total, item) => item.quantity + total, 0)}
 					</Text>
-				</Col>
-				<Col span={24} className={'m-2'}>
+				</Form.Item>
+				<Form.Item>
 					<Text>
 						<b>Total: </b>
 						{productsData &&
@@ -87,13 +117,13 @@ export default function Summary({ productsData, user }) {
 								productsData.reduce((total, item) => item.price * getQuantity(item.pid) + total, 0)
 							)}
 					</Text>
-				</Col>
-				<Col span={24} className={'m-2'}>
-					<Button type="primary" onClick={placeOrder}>
+				</Form.Item>
+				<Form.Item>
+					<Button type="primary" htmlType="submit">
 						Checkout
 					</Button>
-				</Col>
-			</Row>
+				</Form.Item>
+			</Form>
 		</Card>
 	);
 }

@@ -3,8 +3,10 @@ import { useState } from 'react';
 import { useUser } from '@/context/userContext';
 import { Grid, Drawer, Avatar, Typography, Form, Input, Button, notification } from 'antd';
 import { LockOutlined } from '@ant-design/icons';
+import { useRouter } from 'next/router';
 
 export default function SignInDrawer({ drawerOn, setdrawerOn, setOtherDrawerOn }) {
+	const router = useRouter();
 	const { loadingUser, user } = useUser();
 	const [newUser, setNewUser] = useState({
 		fName: '',
@@ -25,8 +27,9 @@ export default function SignInDrawer({ drawerOn, setdrawerOn, setOtherDrawerOn }
 				});
 				const userObj = {
 					uid: res.user.uid,
-					email: res.user.email,
 					displayName: `${newUser.fName} ${newUser.lName}`,
+					email: res.user.email,
+					phoneNumber: '',
 					shoppingLists: [],
 					cart: [],
 					orders: [],
@@ -38,6 +41,8 @@ export default function SignInDrawer({ drawerOn, setdrawerOn, setOtherDrawerOn }
 					message: 'Signed Up Successfully',
 					description: `User "${newUser.fName} ${newUser.lName}" has been created successfully wth the email "${res.user.email}".`,
 				});
+				// Refreshes the page to reload the userContext.js to get the new user's info.
+				setTimeout(() => router.reload(), 500);
 			})
 			.catch((error) => {
 				notification.error({
@@ -61,6 +66,7 @@ export default function SignInDrawer({ drawerOn, setdrawerOn, setOtherDrawerOn }
 				onClose={() => setdrawerOn(false)}
 				visible={drawerOn}
 				width={screens.xs ? '80vw' : '30vw'}
+				style={{ backgroundColor: 'rgba(255, 255, 255, .15)', backdropFilter: 'blur(5px)' }}
 			>
 				<Avatar>
 					<LockOutlined />

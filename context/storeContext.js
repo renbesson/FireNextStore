@@ -1,5 +1,5 @@
 import React, { createContext, useReducer } from 'react';
-import Reducer from '@/context/Reducer';
+import reducers from '@context/reducers';
 
 const initialState = {
 	products: [],
@@ -8,7 +8,7 @@ const initialState = {
 };
 
 const StoreContext = ({ children }) => {
-	const [state, dispatch] = useReducer(Reducer, initialState);
+	const [state, dispatch] = useReducer(reducers, initialState);
 	return <Context.Provider value={[state, dispatch]}>{children}</Context.Provider>;
 };
 

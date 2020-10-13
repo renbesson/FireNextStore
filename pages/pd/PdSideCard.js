@@ -1,22 +1,19 @@
-import { useState, useContext } from 'react';
-import { useRouter } from 'next/router';
+import { useState } from 'react';
 import firebase from '@/firebase/clientApp';
 import { useUser } from '@/context/userContext';
 import { useDocument } from '@nandorojo/swr-firestore';
-import { Row, Col, Card, InputNumber, Button, Typography, Badge, notification } from 'antd';
+import { Button, Card, Col, Divider, Input, InputNumber, notification, Row, Typography } from 'antd';
 import { ShoppingCartOutlined } from '@ant-design/icons';
-import { addToCart } from '@/utils/sharedFunctions';
-import { Context } from '@/context/storeContext';
+import NumberFormat from 'react-number-format';
 
-const { Title, Text, Paragraph } = Typography;
+const { Text, Title } = Typography;
 
-export default function ProductCard({ productData }) {
-	const router = useRouter();
+export default function PdSideCard({ productData }) {
 	const { user } = useUser();
 	const [quantity, setQuantity] = useState(1);
-	const [state, dispatch] = useContext(Context);
+	const { update } = useDocument(user && `users/${user.uid}`);
 
-	/* 	const addToCart = async () => {
+	const addToCart = async () => {
 		if (!user) {
 			const localCart = JSON.parse(localStorage.getItem('cart'));
 			const alreadyInCart = localCart && localCart.find(({ pid }) => pid === productData.pid);
@@ -33,7 +30,9 @@ export default function ProductCard({ productData }) {
 					])
 				);
 			} else if (alreadyInCart) {
+				console.log('alreadyInCart');
 				const newArray = localCart.filter(({ pid }) => pid !== productData.pid);
+				console.log(newArray);
 				localStorage.setItem(
 					'cart',
 					JSON.stringify([
@@ -114,74 +113,53 @@ export default function ProductCard({ productData }) {
 				}
 			}
 		}
-	}; */
+	};
 
 	return (
-		<Badge
-			style={{
-				width: '35px',
-				height: '35px',
-				fontWeight: 'bold',
-				borderRadius: '35px',
-				lineHeight: '35px',
-				paddingLeft: '3px',
-			}}
-			count={`-${parseInt(((productData.priceBase - productData.price) / productData.priceBase) * 100)}%`}
-		>
-			<Card
-				hoverable
-				style={{ width: 180, height: 300 }}
-				cover={
-					<img
-						className={'pt-3'}
-						style={{ width: 150, height: 150, margin: 'auto' }}
-						alt="example"
-						src={
-							productData.images.length
-								? productData.images[0].url
-								: '/images/600px-No_image_available.png'
-						}
-						onClick={() => router.push(`/pd/${productData.pid}`)}
+		<Card style={{ minHeight: '350px' }}>
+			<Row>
+				<Col>
+					<Title className={'m-0'} level={2}>
+						{new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(
+							productData.price
+						)}
+					</Title>
+					<Text>SKU: {productData.sku}</Text>
+				</Col>
+			</Row>
+			<Divider />
+			<Row justify="center">
+				<Col>
+					<NumberFormat
+						customInput={Input}
+						format="###-###"
+						mask="_"
+						placeholder="Postal Code"
+						onChange={(e) => console.log(e.target.value)}
 					/>
-				}
-				bodyStyle={{ padding: '0 1rem 1rem 1rem' }}
-			>
-				<Row>
-					<Paragraph ellipsis={{ rows: 2 }}>{productData.title}</Paragraph>
-				</Row>
-				<Row justify="space-between">
-					<Col span={16} className={'m-0'}>
-						<Title level={4}>
-							{new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(
-								productData.price
-							)}
-						</Title>
-					</Col>
-					<Col span={8}>
-						<InputNumber
-							style={{ width: 56 }}
-							min={1}
-							max={10}
-							defaultValue={1}
-							onChange={(value) => setQuantity(value)}
-						/>
-					</Col>
-				</Row>
-				<Row>
-					<Button
-						block
-						color="red-6"
-						type="primary"
-						onClick={() => addToCart(productData, quantity, user ? user.uid : null, dispatch)}
-					>
+				</Col>
+			</Row>
+			<Divider />
+			<Row justify="center">
+				<Col>
+					<InputNumber
+						style={{ width: 56 }}
+						min={1}
+						max={10}
+						size="large"
+						defaultValue={1}
+						onChange={(value) => setQuantity(value)}
+					/>
+				</Col>
+				<Col>
+					<Button size="large" block color="red-6" type="primary" onClick={addToCart}>
 						<ShoppingCartOutlined />
 						{user && user.cart && user.cart.find(({ pid }) => pid === productData.pid)
 							? 'Edit Cart'
 							: 'Add to Cart'}
 					</Button>
-				</Row>
-				<p>State: {JSON.stringify(state)}</p>
-			</Card>
-		</Badge>
+				</Col>
+			</Row>
+		</Card>
 	);
 }

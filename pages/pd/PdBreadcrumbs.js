@@ -5,7 +5,7 @@ export default function Breadcrumbs({ category }) {
 	return (
 		<>
 			{category && (
-				<Breadcrumb>
+				<Breadcrumb className={'py-2'}>
 					<Breadcrumb.Item>
 						<Link href={`/pd/search/${category[0]}?sField=category&oField=price&orderBy=asc`}>
 							<a>{category[0]}</a>

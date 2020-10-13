@@ -115,7 +115,16 @@ export default function HeaderClient() {
 	const CartButton = () => {
 		return (
 			<Badge
-				count={user && user.cart && user.cart.length}
+				suppressHydrationWarning={true}
+				count={
+					typeof window !== 'undefined'
+						? user && user.cart
+							? user.cart.length
+							: localStorage.getItem('cart')
+							? JSON.parse(localStorage.getItem('cart')).length
+							: null
+						: null
+				}
 				offset={[-20, 5]}
 				style={{ backgroundColor: '#52c41a' }}
 			>
