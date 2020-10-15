@@ -1,8 +1,9 @@
 import { Button, Card, Col, InputNumber, notification, Row, Select, Typography } from 'antd';
 import firebase from '@/firebase/clientApp';
-import React, { useState } from 'react';
+import { useState, useContext } from 'react';
 import Form from 'antd/lib/form/Form';
 import { useRouter } from 'next/router';
+import { Context } from '@/context/storeContext';
 
 const { Title, Text } = Typography;
 
@@ -12,6 +13,7 @@ export default function Summary({ productsData, user }) {
 	const getQuantity = (pid) => user && user.cart && user.cart.find((item) => item.pid === pid).quantity;
 	const [addressSelected, setAddressSelected] = useState(null);
 	const router = useRouter();
+	const [state, dispatch] = useContext(Context);
 
 	const placeOrder = () => {
 		const refUsers = firebase.firestore().collection('users');
@@ -81,7 +83,9 @@ export default function Summary({ productsData, user }) {
 					<Select
 						placeholder="Select the delivery Address"
 						onChange={(value) =>
-							value === 'none' ? router.push('/myAccount/addresses') : setAddressSelected(value)
+							value === 'none'
+								? dispatch({ type: 'TOGGLE_BOOLEAN', boolean: 'newAddressDrawerOn' })
+								: setAddressSelected(value)
 						}
 					>
 						{user &&

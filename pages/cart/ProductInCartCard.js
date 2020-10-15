@@ -1,67 +1,16 @@
 import firebase from '@/firebase/clientApp';
+import { removeFromCart, updateToCart } from '@utils/sharedFunctions';
 import { Row, Col, Card, Typography, InputNumber, Button, notification } from 'antd';
 import Form from 'antd/lib/form/Form';
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 
 const { Title, Text } = Typography;
 
 export default function ProductInCartCard({ productData, user }) {
 	const itemInCart = user.cart.find((item) => item.pid === productData.pid);
-	const [newQuantity, setNewQuantity] = useState(itemInCart ? itemInCart.quantity : undefined);
-
-	const updateCart = () => {
-		try {
-			const refUsers = firebase.firestore().collection('users');
-			if (itemInCart.quantity !== newQuantity) {
-				refUsers.doc(user.uid).update({
-					cart: firebase.firestore.FieldValue.arrayRemove(itemInCart),
-				});
-				refUsers
-					.doc(user.uid)
-					.update({
-						cart: firebase.firestore.FieldValue.arrayUnion({
-							pid: productData.pid,
-							quantity: newQuantity,
-						}),
-					})
-					.then(() => {
-						notification.success({
-							message: 'Cart Updated Successfully',
-							description: `Product "${productData.title}" has been successfully updated to the cart.`,
-						});
-					});
-			}
-		} catch (error) {
-			notification.error({
-				message: 'Cart Not Updated',
-				description: `${error}`,
-			});
-		}
-	};
-
-	const removeFromCart = () => {
-		try {
-			const refUsers = firebase.firestore().collection('users');
-			if (user.cart.find((item) => item === itemInCart)) {
-				refUsers
-					.doc(user.uid)
-					.update({
-						cart: firebase.firestore.FieldValue.arrayRemove(itemInCart),
-					})
-					.then(() => {
-						notification.success({
-							message: 'Cart Updated Successfully',
-							description: `Product "${productData.title}" has been successfully removed from the cart.`,
-						});
-					});
-			}
-		} catch (error) {
-			notification.error({
-				message: 'Cart Not Updated',
-				description: `${error}`,
-			});
-		}
-	};
+	const [quantity, setQuantity] = useState(itemInCart ? itemInCart.quantity : undefined);
+	const router = useRouter();
 
 	return (
 		<Card hoverable style={{ width: '100%' }} bodyStyle={{ padding: '0 1rem 1rem 1rem' }}>
@@ -80,7 +29,9 @@ export default function ProductInCartCard({ productData, user }) {
 				<Col className={'m-2'}>
 					<Row>
 						<Col>
-							<Text>{productData.title}</Text>
+							<Button className={'p-0'} type="link" onClick={() => router.push(`/pd/${productData.pid}`)}>
+								{productData.title}
+							</Button>
 						</Col>
 					</Row>
 					<Row>
@@ -99,19 +50,29 @@ export default function ProductInCartCard({ productData, user }) {
 						<Col>
 							<InputNumber
 								style={{ width: 56 }}
-								onChange={(value) => setNewQuantity(value)}
+								onChange={(value) => setQuantity(value)}
 								min={1}
 								max={10}
-								value={newQuantity}
-								defaultValue={newQuantity}
+								value={quantity}
+								defaultValue={quantity}
 							/>
 
-							<Button onClick={updateCart}>Update</Button>
+							<Button
+								onClick={() =>
+									updateToCart(productData, itemInCart.quantity, quantity, user && user.uid)
+								}
+							>
+								Update
+							</Button>
 						</Col>
 					</Row>
 					<Row>
 						<Col>
-							<Button block type="primary" onClick={removeFromCart}>
+							<Button
+								block
+								type="primary"
+								onClick={() => removeFromCart(productData, itemInCart, user && user.uid)}
+							>
 								Remove from Cart
 							</Button>
 						</Col>

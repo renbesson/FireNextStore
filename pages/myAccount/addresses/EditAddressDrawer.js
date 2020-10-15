@@ -1,13 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import firebase from '@/firebase/clientApp';
 import { useUser } from '@/context/userContext';
 import { Form, Input, Button, notification, Drawer, Grid } from 'antd';
+import { Context } from '@/context/storeContext';
 
-export default function EditAddressDrawer({ drawerOn, setDrawerOn, address }) {
+export default function EditAddressDrawer({ address }) {
 	const { loadingUser, user } = useUser();
 	const [form] = Form.useForm();
 	const [editedAddress, setEditedAddress] = useState(address);
 	const refUsers = firebase.firestore().collection('users');
+	const [state, dispatch] = useContext(Context);
+
 	const selectedAddress = user && user.addresses && user.addresses.find((item) => item === address);
 
 	const screens = Grid.useBreakpoint();
@@ -61,7 +64,7 @@ export default function EditAddressDrawer({ drawerOn, setDrawerOn, address }) {
 					description: `Address "${editedAddress.addressNickname}" has been changed successfully.`,
 					style: { backgroundColor: 'rgba(255, 255, 255, .75)', backdropFilter: 'blur(5px)' },
 				});
-				setDrawerOn(false);
+				dispatch({ type: 'TOGGLE_BOOLEAN', boolean: 'editAddressDrawerOn' });
 			}
 		}
 	};
@@ -86,7 +89,7 @@ export default function EditAddressDrawer({ drawerOn, setDrawerOn, address }) {
 					message: 'Address Updated Successfully',
 					description: `Address "${editedAddress.addressNickname}" has been updated successfully.`,
 				});
-				setDrawerOn(false);
+				dispatch({ type: 'TOGGLE_BOOLEAN', boolean: 'editAddressDrawerOn' });
 			}
 		}
 	};
@@ -96,8 +99,8 @@ export default function EditAddressDrawer({ drawerOn, setDrawerOn, address }) {
 			title="Edit Address"
 			placement="right"
 			closable={false}
-			onClose={() => setDrawerOn(false)}
-			visible={drawerOn}
+			onClose={() => dispatch({ type: 'TOGGLE_BOOLEAN', boolean: 'editAddressDrawerOn' })}
+			visible={state.editAddressDrawerOn}
 			width={screens.xs ? '80vw' : '30vw'}
 			forceRender={true}
 			destroyOnClose={true}

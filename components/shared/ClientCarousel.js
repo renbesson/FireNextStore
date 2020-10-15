@@ -54,7 +54,7 @@ export default function MainCarousel({ autoplay, urls, width, height, arrowSize 
 				{urls.map((url) => {
 					return (
 						<div key={url}>
-							<img src={url} style={contentStyle} />
+							<Image src={url} style={{ cursor: 'pointer' }} />
 						</div>
 					);
 				})}

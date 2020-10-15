@@ -1,13 +1,15 @@
 import firebase from '@/firebase/clientApp';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useUser } from '@/context/userContext';
 import { Grid, Drawer, Avatar, Typography, Form, Input, Button, notification } from 'antd';
 import { LockOutlined } from '@ant-design/icons';
+import { Context } from '@/context/storeContext';
 
-export default function SignInDrawer({ drawerOn, setdrawerOn, setOtherDrawerOn }) {
+export default function SignInDrawer() {
 	const { loadingUser, user } = useUser();
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
+	const [state, dispatch] = useContext(Context);
 
 	const screens = Grid.useBreakpoint();
 
@@ -16,7 +18,7 @@ export default function SignInDrawer({ drawerOn, setdrawerOn, setOtherDrawerOn }
 			.auth()
 			.signInWithEmailAndPassword(email, password)
 			.then((res) => {
-				setdrawerOn(false);
+				dispatch({ type: 'TOGGLE_BOOLEAN', boolean: 'signInDrawerOn' });
 				notification.success({
 					message: 'Signed In Successfully',
 					description: `User "${res.user.displayName}" signed in successfully wth the email "${res.user.email}".`,
@@ -31,8 +33,8 @@ export default function SignInDrawer({ drawerOn, setdrawerOn, setOtherDrawerOn }
 	};
 
 	const toggleDrawers = () => {
-		setdrawerOn(false);
-		setOtherDrawerOn(true);
+		dispatch({ type: 'TOGGLE_BOOLEAN', boolean: 'signInDrawerOn' });
+		dispatch({ type: 'TOGGLE_BOOLEAN', boolean: 'signUpDrawerOn' });
 	};
 
 	// Finishes firebase onAuthStateChanged and didn't find any user
@@ -41,8 +43,8 @@ export default function SignInDrawer({ drawerOn, setdrawerOn, setOtherDrawerOn }
 			<Drawer
 				placement="right"
 				closable={false}
-				onClose={() => setdrawerOn(false)}
-				visible={drawerOn}
+				onClose={() => dispatch({ type: 'TOGGLE_BOOLEAN', boolean: 'signInDrawerOn' })}
+				visible={state.signInDrawerOn}
 				width={screens.xs ? '80vw' : '30vw'}
 				style={{ backgroundColor: 'rgba(255, 255, 255, .15)', backdropFilter: 'blur(5px)' }}
 			>

@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useState, useContext } from 'react';
 import { useUser } from '@/context/userContext';
 import MyAccountLayout from '@pages/myAccount/MyAccountLayout';
 import { Button, Card, Col, Row, Typography } from 'antd';
-import NewAddressDrawer from '@pages/myAccount/addresses/NewAddressDrawer';
 import EditAddressDrawer from '@pages/myAccount/addresses/EditAddressDrawer';
 import { HomeTwoTone, PlusCircleTwoTone } from '@ant-design/icons';
+import { Context } from '@/context/storeContext';
 
 const { Title, Text } = Typography;
 
@@ -13,20 +13,16 @@ export default function account() {
 	const [newAddressDrawerOn, setNewAddressDrawerOn] = useState(false);
 	const [editAddressDrawerOn, setEditAddressDrawerOn] = useState(false);
 	const [editedAddress, setEditedAddress] = useState({});
+	const [state, dispatch] = useContext(Context);
 
 	const selectAddress = async (value) => {
 		await setEditedAddress(user.addresses.find((item) => item.addressNickname === value));
-		await setEditAddressDrawerOn(true);
+		dispatch({ type: 'TOGGLE_BOOLEAN', boolean: 'editAddressDrawerOn' });
 	};
 
 	return (
 		<MyAccountLayout>
-			<NewAddressDrawer drawerOn={newAddressDrawerOn} setDrawerOn={setNewAddressDrawerOn} />
-			<EditAddressDrawer
-				drawerOn={editAddressDrawerOn}
-				setDrawerOn={setEditAddressDrawerOn}
-				address={editedAddress}
-			/>
+			<EditAddressDrawer address={editedAddress} />
 			<Row>
 				<Col>
 					<Title level={3}>Addresses</Title>
@@ -49,7 +45,7 @@ export default function account() {
 							/>
 						}
 						bodyStyle={{ padding: 0 }}
-						onClick={() => setNewAddressDrawerOn(true)}
+						onClick={() => dispatch({ type: 'TOGGLE_BOOLEAN', boolean: 'newAddressDrawerOn' })}
 					>
 						<Title level={4}>New Address</Title>
 					</Card>

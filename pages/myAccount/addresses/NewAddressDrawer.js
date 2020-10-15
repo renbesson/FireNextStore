@@ -1,12 +1,14 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import firebase from '@/firebase/clientApp';
 import { Grid, Form, Input, InputNumber, Button, Drawer } from 'antd';
 import { notification } from 'antd';
 import { useUser } from '@/context/userContext';
+import { Context } from '@/context/storeContext';
 
-export default function NewAddressDrawer({ drawerOn, setDrawerOn }) {
+export default function NewAddressDrawer() {
 	const { loadingUser, user } = useUser();
 	const [form] = Form.useForm();
+	const [state, dispatch] = useContext(Context);
 	const [newAddress, setNewAddress] = useState({
 		addressNickname: ',',
 		streetAddress: '',
@@ -52,7 +54,7 @@ export default function NewAddressDrawer({ drawerOn, setDrawerOn }) {
 			}
 			if (!hasError && inexistent && !hasMoreThanFive) {
 				form.resetFields();
-				setDrawerOn(false);
+				dispatch({ type: 'TOGGLE_BOOLEAN', boolean: 'newAddressDrawerOn' })
 				notification.success({
 					message: 'Address Created Successfully',
 					description: `Address "${newAddress.addressNickname}" has been created successfully.`,
@@ -67,8 +69,8 @@ export default function NewAddressDrawer({ drawerOn, setDrawerOn }) {
 			title="Create Address"
 			placement="right"
 			closable={false}
-			onClose={() => setDrawerOn(false)}
-			visible={drawerOn}
+			onClose={() => dispatch({ type: 'TOGGLE_BOOLEAN', boolean: 'newAddressDrawerOn' })}
+			visible={state.newAddressDrawerOn}
 			width={screens.xs ? '80vw' : '30vw'}
 			style={{ backgroundColor: 'rgba(255, 255, 255, .15)', backdropFilter: 'blur(5px)' }}
 		>

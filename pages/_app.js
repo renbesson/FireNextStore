@@ -42,39 +42,41 @@ export default function App({ Component, pageProps }) {
 				<Layout style={{ minHeight: '100vh' }}>
 					<Sider
 						collapsible
+						collapsedWidth={64}
 						collapsed={collapsed}
 						onCollapse={() => setCollapsed((prevCollapsed) => !prevCollapsed)}
 					>
 						<div className="logo" />
-						<Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" style={{ paddingTop: '5vh' }}>
-							<Menu.Item key="1" icon={<PieChartOutlined />}>
+						<Menu
+							theme="dark"
+							defaultSelectedKeys={['1']}
+							mode="inline"
+							style={{ paddingTop: '5vh', width: collapsed ? '64px' : null }}
+						>
+							<Menu.Item key="1" className={'p-0'} icon={<PieChartOutlined style={{ width: '64px' }} />}>
 								<Link href="/admin/products/">
 									<a>Products</a>
 								</Link>
 							</Menu.Item>
-							<Menu.Item key="2" icon={<DesktopOutlined />}>
+							<Menu.Item key="2" className={'p-0'} icon={<DesktopOutlined style={{ width: '64px' }} />}>
 								<Link href="/admin/categories/">
 									<a>Categories</a>
 								</Link>
 							</Menu.Item>
-							<Menu.Item key="3" icon={<UserOutlined />}>
+							<Menu.Item key="3" className={'p-0'} icon={<UserOutlined style={{ width: '64px' }} />}>
 								Option 3
 							</Menu.Item>
-							<Menu.Item key="4" icon={<TeamOutlined />}>
+							<Menu.Item key="4" className={'p-0'} icon={<TeamOutlined style={{ width: '64px' }} />}>
 								Option 4
 							</Menu.Item>
-							<Menu.Item key="5" icon={<FileOutlined />}>
+							<Menu.Item key="5" className={'p-0'} icon={<FileOutlined style={{ width: '64px' }} />}>
 								Option 5
 							</Menu.Item>
 						</Menu>
 					</Sider>
 					<Layout className="site-layout">
 						<Header className="site-layout-background" style={{ padding: 0, height: '5vh' }} />
-						<Content style={{ margin: '0 16px' }}>
-							<Breadcrumb style={{ margin: '16px 0' }}>
-								<Breadcrumb.Item>User</Breadcrumb.Item>
-								<Breadcrumb.Item>Bill</Breadcrumb.Item>
-							</Breadcrumb>
+						<Content style={{ margin: '32px' }}>
 							<div className="site-layout-background" style={{ padding: '24', minHeight: '360' }}>
 								<UserProvider>
 									<Component {...pageProps} />
@@ -112,7 +114,7 @@ export default function App({ Component, pageProps }) {
 					</Header>
 					<Content
 						style={{
-							padding: '16px',
+							margin: '32px',
 							alignSelf: 'center',
 							maxWidth: screens.xs ? '100vw' : '1200px',
 							width: '100vw',

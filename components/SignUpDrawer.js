@@ -1,13 +1,15 @@
 import firebase from '@/firebase/clientApp';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useUser } from '@/context/userContext';
 import { Grid, Drawer, Avatar, Typography, Form, Input, Button, notification } from 'antd';
 import { LockOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
+import { Context } from '@/context/storeContext';
 
-export default function SignInDrawer({ drawerOn, setdrawerOn, setOtherDrawerOn }) {
+export default function SignInDrawer() {
 	const router = useRouter();
 	const { loadingUser, user } = useUser();
+	const [state, dispatch] = useContext(Context);
 	const [newUser, setNewUser] = useState({
 		fName: '',
 		lName: '',
@@ -36,7 +38,7 @@ export default function SignInDrawer({ drawerOn, setdrawerOn, setOtherDrawerOn }
 					addresses: [],
 				};
 				firebase.firestore().collection('users').doc(res.user.uid).set(userObj);
-				setdrawerOn(false);
+				dispatch({ type: 'TOGGLE_BOOLEAN', boolean: 'signUpDrawerOn' });
 				notification.success({
 					message: 'Signed Up Successfully',
 					description: `User "${newUser.fName} ${newUser.lName}" has been created successfully wth the email "${res.user.email}".`,
@@ -52,9 +54,9 @@ export default function SignInDrawer({ drawerOn, setdrawerOn, setOtherDrawerOn }
 			});
 	};
 
-	const toggleDrawers = () => {
-		setdrawerOn(false);
-		setOtherDrawerOn(true);
+	const toggleDrawers = async () => {
+		await dispatch({ type: 'TOGGLE_BOOLEAN', boolean: 'signUpDrawerOn' });
+		await dispatch({ type: 'TOGGLE_BOOLEAN', boolean: 'signInDrawerOn' });
 	};
 
 	// Finishes firebase onAuthStateChanged and didn't find any user
@@ -63,8 +65,8 @@ export default function SignInDrawer({ drawerOn, setdrawerOn, setOtherDrawerOn }
 			<Drawer
 				placement="right"
 				closable={false}
-				onClose={() => setdrawerOn(false)}
-				visible={drawerOn}
+				onClose={() => dispatch({ type: 'TOGGLE_BOOLEAN', boolean: 'signUpDrawerOn' })}
+				visible={state.signUpDrawerOn}
 				width={screens.xs ? '80vw' : '30vw'}
 				style={{ backgroundColor: 'rgba(255, 255, 255, .15)', backdropFilter: 'blur(5px)' }}
 			>
@@ -72,7 +74,7 @@ export default function SignInDrawer({ drawerOn, setdrawerOn, setOtherDrawerOn }
 					<LockOutlined />
 				</Avatar>
 				<Typography component="h1" variant="h5">
-					Sign in
+					Sign Up
 				</Typography>
 
 				<Form layout="vertical" onFinish={createUser}>

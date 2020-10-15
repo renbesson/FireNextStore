@@ -2,8 +2,10 @@ import React, { createContext, useReducer } from 'react';
 import reducers from '@context/reducers';
 
 const initialState = {
-	products: [],
-	product: {},
+	signInDrawerOn: false,
+	signUpDrawerOn: false,
+	newAddressDrawerOn: false,
+	editAddressDrawerOn: false,
 	error: null,
 };
 

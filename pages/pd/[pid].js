@@ -1,12 +1,10 @@
-import firebase from '@/firebase/clientApp';
 import { useUser } from '@/context/userContext';
-import { useState } from 'react';
 import Breadcrumbs from '@pages/pd/PdBreadcrumbs';
-import ClientCarousel from '@components/shared/ClientCarousel';
-import { Col, Row, Typography, Button, InputNumber } from 'antd';
+import { Col, Row } from 'antd';
 import { useDocument } from '@nandorojo/swr-firestore';
 import PdMainCard from '@pages/pd/PdMainCard';
 import PdSideCard from './PdSideCard';
+import PdDescription from './PdDescription';
 
 ProductPage.getInitialProps = ({ query }) => {
 	return {
@@ -31,11 +29,16 @@ export default function ProductPage({ pid }) {
 					</Col>
 				</Row>
 				<Row justify="space-between">
-					<Col span={16}>
+					<Col span={18}>
 						<PdMainCard productData={product} />
 					</Col>
-					<Col span={6}>
+					<Col span={5}>
 						<PdSideCard productData={product} />
+					</Col>
+				</Row>
+				<Row>
+					<Col span={24}>
+						<PdDescription productData={product} />
 					</Col>
 				</Row>
 			</>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import firebase from '@/firebase/clientApp';
-import { Grid, Form, Input, InputNumber, Button, Drawer } from 'antd';
+import { Grid, Form, Input, InputNumber, Button, Drawer, Popconfirm } from 'antd';
 import { notification, Card } from 'antd';
 import UploadImage from './UploadImage';
 import CategoriesTreeSelect from '../shared/CategoriesTreeSelect';
@@ -242,12 +242,18 @@ export default function EditProductDrawer({ productData, drawerOn, setdrawerOn }
 					<Button type="primary" htmlType="submit">
 						Submit
 					</Button>
-					<Button type="secondary" onClick={deleteProduct}>
-						Delete
-					</Button>
+
+					<Popconfirm
+						title={`Are you sure delete this ${productData.title}?`}
+						onConfirm={deleteProduct}
+						// onCancel={}
+						okText="Yes"
+						cancelText="No"
+					>
+						<Button type="secondary">Delete</Button>
+					</Popconfirm>
 				</Form.Item>
 			</Form>
-			{JSON.stringify(editedProduct)}
 		</Drawer>
 	);
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import firebase from '@/firebase/clientApp';
 import { useUser } from '../context/userContext';
 import { Grid, Layout, Row, Col, Button, notification, Badge, Menu, Typography } from 'antd';
@@ -7,18 +7,19 @@ import { UserOutlined, HeartOutlined, LogoutOutlined } from '@ant-design/icons';
 import { SnippetsOutlined, ShoppingCartOutlined, AppstoreOutlined } from '@ant-design/icons';
 import SignInDrawer from '@/components/SignInDrawer';
 import SignUpDrawer from '@/components/SignUpDrawer';
+import NewAddressDrawer from '@pages/myAccount/addresses/NewAddressDrawer';
 import Link from 'next/link';
 import SubMenu from 'antd/lib/menu/SubMenu';
 import { useDocument } from '@nandorojo/swr-firestore';
 import { useRouter } from 'next/router';
+import { Context } from '@/context/storeContext';
 
 const { Text } = Typography;
 export default function HeaderClient() {
 	const { loadingUser, user } = useUser();
-	const [signInDrawerOn, setSignInDrawerOn] = useState(false);
-	const [signUpDrawerOn, setSignUpDrawerOn] = useState(false);
 	const { data: categories, error } = useDocument('misc/categories');
 	const router = useRouter();
+	const [state, dispatch] = useContext(Context);
 
 	const screens = Grid.useBreakpoint();
 
@@ -64,7 +65,11 @@ export default function HeaderClient() {
 			<Menu mode="horizontal" theme="dark" style={{ backgroundColor: '#ec3237' }}>
 				<Menu.Item
 					key="setting:1"
-					onClick={user === null ? () => setSignInDrawerOn(true) : alreadySignedInNotification}
+					onClick={
+						user === null
+							? () => dispatch({ type: 'TOGGLE_BOOLEAN', boolean: 'signInDrawerOn' })
+							: alreadySignedInNotification
+					}
 					icon={<UserOutlined style={headerButtonIcon} />}
 				>
 					Sign In/Up
@@ -115,16 +120,7 @@ export default function HeaderClient() {
 	const CartButton = () => {
 		return (
 			<Badge
-				suppressHydrationWarning={true}
-				count={
-					typeof window !== 'undefined'
-						? user && user.cart
-							? user.cart.length
-							: localStorage.getItem('cart')
-							? JSON.parse(localStorage.getItem('cart')).length
-							: null
-						: null
-				}
+				count={user && user.cart && user.cart.length}
 				offset={[-20, 5]}
 				style={{ backgroundColor: '#52c41a' }}
 			>
@@ -138,16 +134,9 @@ export default function HeaderClient() {
 
 	return (
 		<>
-			<SignInDrawer
-				drawerOn={signInDrawerOn}
-				setdrawerOn={setSignInDrawerOn}
-				setOtherDrawerOn={setSignUpDrawerOn}
-			/>
-			<SignUpDrawer
-				drawerOn={signUpDrawerOn}
-				setdrawerOn={setSignUpDrawerOn}
-				setOtherDrawerOn={setSignInDrawerOn}
-			/>
+			<SignInDrawer />
+			<SignUpDrawer />
+			<NewAddressDrawer />
 			<Row className={'px-3'} justify="space-between" align="middle">
 				<Col span={3}>
 					<Link href="/">
