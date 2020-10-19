@@ -5,6 +5,7 @@ import { useDocument } from '@nandorojo/swr-firestore';
 import PdMainCard from '@pages/pd/PdMainCard';
 import PdSideCard from './PdSideCard';
 import PdDescription from './PdDescription';
+import BestDeals from '@components/BestDeals';
 
 ProductPage.getInitialProps = ({ query }) => {
 	return {
@@ -23,24 +24,25 @@ export default function ProductPage({ pid }) {
 	if (product) {
 		return (
 			<>
-				<Row>
-					<Col>
+				<Row gutter={[24, 24]}>
+					<Col span={24}>
 						<Breadcrumbs category={product.category} />
 					</Col>
 				</Row>
-				<Row justify="space-between">
-					<Col span={18}>
+				<Row justify="space-between" gutter={[24, 24]}>
+					<Col xs={24} lg={18}>
 						<PdMainCard productData={product} />
 					</Col>
-					<Col span={5}>
+					<Col xs={24} lg={6}>
 						<PdSideCard productData={product} />
 					</Col>
 				</Row>
-				<Row>
+				<Row gutter={[24, 24]}>
 					<Col span={24}>
 						<PdDescription productData={product} />
 					</Col>
 				</Row>
+				<BestDeals />
 			</>
 		);
 	} else return <h3>Loading...</h3>;

@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import ProductCard from '@components/ProductCard';
-import { Col, Divider, Row, Select, Space, Switch, Typography } from 'antd';
+import { Card, Col, Divider, Row, Select, Space, Switch, Typography } from 'antd';
 import { useCollection } from '@nandorojo/swr-firestore';
 
 const { Text, Title } = Typography;
@@ -53,7 +53,7 @@ export default function categoriesSearch() {
 	};
 
 	return (
-		<>
+		<Card>
 			<Row justify="space-between">
 				<Col>
 					<Title level={2} className={'m-0'}>
@@ -69,6 +69,6 @@ export default function categoriesSearch() {
 			<Row align="middle" gutter={[24, 24]}>
 				{products && <ProductsList />}
 			</Row>
-		</>
+		</Card>
 	);
 }

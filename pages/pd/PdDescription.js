@@ -11,7 +11,7 @@ const { Text, Title } = Typography;
 
 export default function PdDescription({ productData }) {
 	return (
-		<Card style={{ minHeight: '350px', marginTop: '48px', marginBottom: '48px' }}>
+		<Card style={{ minHeight: '350px' }}>
 			<Row>
 				<Title level={2}>Description</Title>
 			</Row>

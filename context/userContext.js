@@ -8,7 +8,7 @@ export default function UserContextComp({ children }) {
 
 	useEffect(() => {
 		// Listen authenticated user
-		const unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
+		const unsubscriber = firebase.auth().onAuthStateChanged(async (user) => {
 			try {
 				if (user) {
 					// User is signed in.
@@ -35,7 +35,7 @@ export default function UserContextComp({ children }) {
 		});
 
 		// Unsubscribe auth listener on unmount
-		return () => unsubscribe();
+		return () => unsubscriber();
 	}, []);
 
 	return <UserContext.Provider value={{ user, setUser, loadingUser }}>{children}</UserContext.Provider>;

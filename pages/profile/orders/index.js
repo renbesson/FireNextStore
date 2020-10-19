@@ -1,6 +1,6 @@
 import { Typography, Row, Col } from 'antd';
-import MyAccountLayout from '@pages/myAccount/MyAccountLayout';
-import OrderCard from '@pages/myAccount/orders/orderCard';
+import ProfileLayout from '@pages/profile/ProfileLayout';
+import OrderCard from '@pages/profile/orders/orderCard';
 import { useUser } from '@/context/userContext';
 
 const { Text, Title } = Typography;
@@ -9,7 +9,7 @@ export default function orders() {
 	const { user } = useUser();
 
 	return (
-		<MyAccountLayout>
+		<ProfileLayout>
 			<Row>
 				<Col>
 					<Title level={3}>Orders</Title>
@@ -24,7 +24,7 @@ export default function orders() {
 						</Col>
 					</Row>
 				))}
-			{user && user.orders && !user.orders.length > 0 && <Title level={3}>You have no orders</Title>}
-		</MyAccountLayout>
+			{user && user.orders && !user.orders.length > 0 && <Title level={5}>You have no orders</Title>}
+		</ProfileLayout>
 	);
 }

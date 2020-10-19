@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import firebase from '@/firebase/clientApp';
 import { useUser } from '@/context/userContext';
-import MyAccountLayout from '@pages/myAccount/MyAccountLayout';
+import ProfileLayout from '@pages/profile/ProfileLayout';
 import { Form, Input, Row, Col, Space, Button, notification, Typography } from 'antd';
 import NumberFormat from 'react-number-format';
 
@@ -75,7 +75,7 @@ export default function account() {
 	};
 
 	return (
-		<MyAccountLayout>
+		<ProfileLayout>
 			<Row>
 				<Col>
 					<Title level={3}>Account</Title>
@@ -133,6 +133,6 @@ export default function account() {
 					</Row>
 				</Form>
 			)}
-		</MyAccountLayout>
+		</ProfileLayout>
 	);
 }

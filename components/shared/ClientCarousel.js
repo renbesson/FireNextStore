@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { Row, Col, Carousel, Image } from 'antd';
 import { LeftCircleTwoTone, RightCircleTwoTone } from '@ant-design/icons';
 
-export default function MainCarousel({ autoplay, urls, width, height, arrowSize }) {
+export default function ClientCarousel({ autoplay, urls, width, height, arrowSize }) {
 	const carouselRef = useRef(null);
 
 	const contentStyle = {

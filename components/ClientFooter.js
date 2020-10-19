@@ -1,23 +1,25 @@
-import { Layout, Button, Col, Row, Typography, Space } from 'antd';
+import { Grid, Layout, Button, Col, Row, Typography, Space } from 'antd';
 import { FacebookFilled, InstagramFilled, TwitterSquareFilled } from '@ant-design/icons';
 
 const { Text, Title } = Typography;
 const { Header, Footer, Sider, Content } = Layout;
 
 export default function ClientFooter() {
+	const screens = Grid.useBreakpoint();
+
 	return (
 		<>
 			<Row align="middle" justify="space-around" style={{ backgroundColor: 'lightGray', height: '40px' }}>
-				<Col>
+				<Col xs={24} lg={6}>
 					<Button type="link">Central de atendimento (21) 3365-8155</Button>
 				</Col>
-				<Col>
+				<Col xs={24} lg={6}>
 					<Button type="link">Whatsapp (21) 9 7240-7680</Button>
 				</Col>
-				<Col>
+				<Col xs={24} lg={6}>
 					<Button type="link">Nossa Loja</Button>
 				</Col>
-				<Col>
+				<Col xs={24} lg={6}>
 					<Button type="link">Ajuda</Button>
 				</Col>
 			</Row>

@@ -65,7 +65,7 @@ export default function PdSideCard({ productData }) {
 			</Row>
 			<Divider />
 			<Row justify="center">
-				<Col>
+				<Col lg={7} xs={24}>
 					<InputNumber
 						style={{ width: 56 }}
 						min={1}
@@ -75,7 +75,7 @@ export default function PdSideCard({ productData }) {
 						onChange={(value) => setQuantity(value)}
 					/>
 				</Col>
-				<Col>
+				<Col lg={17} xs={24}>
 					<Button
 						size="large"
 						block

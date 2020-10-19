@@ -54,7 +54,7 @@ export default function NewAddressDrawer() {
 			}
 			if (!hasError && inexistent && !hasMoreThanFive) {
 				form.resetFields();
-				dispatch({ type: 'TOGGLE_BOOLEAN', boolean: 'newAddressDrawerOn' })
+				dispatch({ type: 'TOGGLE_BOOLEAN', boolean: 'newAddressDrawerOn' });
 				notification.success({
 					message: 'Address Created Successfully',
 					description: `Address "${newAddress.addressNickname}" has been created successfully.`,

@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import firebase from '@/firebase/clientApp';
 import { useUser } from '@/context/userContext';
 import { Row, Col, Card, InputNumber, Button, Typography, Badge, notification, Image } from 'antd';
-import { HeartFilled, HeartOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import { HeartFilled, HeartOutlined, HeartTwoTone, ShoppingCartOutlined } from '@ant-design/icons';
 import { addToCart, favoriteSet, updateToCart } from '@/utils/sharedFunctions';
 
 const { Title, Text, Paragraph } = Typography;
@@ -18,32 +18,30 @@ export default function ProductCard({ productData }) {
 
 	return (
 		<Badge
+			offset={[-19, 19]}
 			style={{
 				width: '35px',
 				height: '35px',
 				fontWeight: 'bold',
-				borderRadius: '35px',
+				borderRadius: '5px',
 				lineHeight: '35px',
 				paddingLeft: '3px',
 			}}
 			count={`-${parseInt(((productData.priceBase - productData.price) / productData.priceBase) * 100)}%`}
 		>
-			<Card hoverable style={{ width: 200 }} bodyStyle={{ padding: '1rem' }}>
-				<Row>
-					<Col>
-						<Button
-							onClick={() => favoriteSet(productData, isFavorite, user && user.uid)}
-							type="link"
-							icon={
-								isFavorite ? (
-									<HeartFilled style={{ fontSize: '1.3rem' }} />
-								) : (
-									<HeartOutlined style={{ fontSize: '1.3rem' }} />
-								)
-							}
-						></Button>
-					</Col>
-				</Row>
+			<Card hoverable style={{ width: 212 }} bodyStyle={{ padding: '1rem' }}>
+				<Button
+					style={{ position: 'absolute', zIndex: '1200' }}
+					onClick={() => favoriteSet(productData, isFavorite, user && user.uid)}
+					type="link"
+					icon={
+						isFavorite ? (
+							<HeartFilled style={{ fontSize: '2rem', color: 'red' }} />
+						) : (
+							<HeartOutlined style={{ fontSize: '2rem', color: 'red' }} />
+						)
+					}
+				></Button>
 				<Row>
 					<Col>
 						<Image
@@ -64,7 +62,7 @@ export default function ProductCard({ productData }) {
 					</Paragraph>
 				</Row>
 				<Row justify="space-between">
-					<Col span={16} className={'m-0'}>
+					<Col span={10} className={'m-0'}>
 						<Title level={4}>
 							{new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(
 								productData.price
@@ -80,26 +78,24 @@ export default function ProductCard({ productData }) {
 							onChange={(value) => setQuantity(value)}
 						/>
 					</Col>
-				</Row>
-				<Row>
-					<Button
-						block
-						color="red-6"
-						type="primary"
-						onClick={() =>
-							itemInCart
-								? itemInCart && itemInCart.quantity === quantity
-									? notification.warning({
-											message: 'Product Already in the Cart',
-											description: `Product "${productData.title}" is already in the cart with this quantity.`,
-									  })
-									: updateToCart(productData, itemInCart.quantity, quantity, user && user.uid)
-								: addToCart(productData, quantity, user && user.uid)
-						}
-					>
-						<ShoppingCartOutlined />
-						{user && user.cart && itemInCart ? 'Update Cart' : 'Add to Cart'}
-					</Button>
+					<Col span={6}>
+						<Button
+							color="red-6"
+							type="primary"
+							onClick={() =>
+								itemInCart
+									? itemInCart && itemInCart.quantity === quantity
+										? notification.warning({
+												message: 'Product Already in the Cart',
+												description: `Product "${productData.title}" is already in the cart with this quantity.`,
+										  })
+										: updateToCart(productData, itemInCart.quantity, quantity, user && user.uid)
+									: addToCart(productData, quantity, user && user.uid)
+							}
+						>
+							<ShoppingCartOutlined />
+						</Button>
+					</Col>
 				</Row>
 			</Card>
 		</Badge>

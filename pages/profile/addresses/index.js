@@ -1,8 +1,8 @@
 import { useState, useContext } from 'react';
 import { useUser } from '@/context/userContext';
-import MyAccountLayout from '@pages/myAccount/MyAccountLayout';
+import ProfileLayout from '@pages/profile/ProfileLayout';
 import { Button, Card, Col, Row, Typography } from 'antd';
-import EditAddressDrawer from '@pages/myAccount/addresses/EditAddressDrawer';
+import EditAddressDrawer from '@pages/profile/addresses/EditAddressDrawer';
 import { HomeTwoTone, PlusCircleTwoTone } from '@ant-design/icons';
 import { Context } from '@/context/storeContext';
 
@@ -21,14 +21,14 @@ export default function account() {
 	};
 
 	return (
-		<MyAccountLayout>
+		<ProfileLayout>
 			<EditAddressDrawer address={editedAddress} />
 			<Row>
 				<Col>
 					<Title level={3}>Addresses</Title>
 				</Col>
 			</Row>
-			<Row justify="space-around">
+			<Row align="middle" gutter={[24, 24]}>
 				<Col>
 					<Card
 						hoverable
@@ -79,6 +79,6 @@ export default function account() {
 						);
 					})}
 			</Row>
-		</MyAccountLayout>
+		</ProfileLayout>
 	);
 }
