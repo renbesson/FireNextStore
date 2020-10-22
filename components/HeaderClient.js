@@ -1,25 +1,21 @@
-import { useState, useContext } from 'react';
+import { useContext } from 'react';
 import firebase from '@/firebase/clientApp';
 import { useUser } from '../context/userContext';
-import { Grid, Layout, Row, Col, Button, notification, Badge, Menu, Typography, Image, Space } from 'antd';
+import { Grid, Row, Col, notification, Badge, Menu, Typography, Image } from 'antd';
 import SearchBar from '@/components/SearchBar';
-import { UserOutlined, HeartOutlined, LogoutOutlined } from '@ant-design/icons';
-import { SnippetsOutlined, ShoppingCartOutlined, AppstoreOutlined } from '@ant-design/icons';
+import { UserOutlined, HeartOutlined } from '@ant-design/icons';
+import { SnippetsOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import SignInDrawer from '@/components/SignInDrawer';
 import SignUpDrawer from '@/components/SignUpDrawer';
 import NewAddressDrawer from '@pages/profile/addresses/NewAddressDrawer';
-import Link from 'next/link';
 import SubMenu from 'antd/lib/menu/SubMenu';
-import { useDocument } from '@nandorojo/swr-firestore';
 import { useRouter } from 'next/router';
 import { Context } from '@/context/storeContext';
 
 const { Text } = Typography;
-const { Header, Footer, Sider, Content } = Layout;
 
 export default function HeaderClient() {
 	const { loadingUser, user } = useUser();
-	const { data: categories, error } = useDocument('misc/categories');
 	const router = useRouter();
 	const [state, dispatch] = useContext(Context);
 
