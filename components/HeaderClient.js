@@ -64,7 +64,7 @@ export default function HeaderClient() {
 
 	// ++ Buttons --
 	const SignInUpButton = (
-		<Menu mode="horizontal" theme="dark" style={{ backgroundColor: '#ec3237' }}>
+		<Menu theme="dark" mode="horizontal">
 			<Menu.Item
 				key="0"
 				onClick={
@@ -80,7 +80,7 @@ export default function HeaderClient() {
 	);
 
 	const ProfileButton = (
-		<Menu theme="dark" mode="horizontal" style={{ backgroundColor: '#ec3237' }}>
+		<Menu theme="dark" mode="horizontal">
 			<SubMenu key="SubMenu" icon={<UserOutlined style={headerButtonIcon} />} title={user && user.displayName}>
 				<Menu.Item key="1" onClick={() => router.push('/profile/account')}>
 					Account

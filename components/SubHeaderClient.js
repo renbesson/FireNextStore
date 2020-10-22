@@ -1,19 +1,12 @@
-import { useContext } from 'react';
-import { useUser } from '../context/userContext';
-import { Grid, Layout, Row, Col, Button, Menu, Typography } from 'antd';
+import { Grid, Row, Col, Button, Menu, Typography } from 'antd';
 import { AppstoreOutlined } from '@ant-design/icons';
 import SubMenu from 'antd/lib/menu/SubMenu';
 import { useDocument } from '@nandorojo/swr-firestore';
 import { useRouter } from 'next/router';
-import { Context } from '@/context/storeContext';
-
-const { Text } = Typography;
 
 export default function HeaderClient() {
-	const { loadingUser, user } = useUser();
 	const { data: categories, error } = useDocument('misc/categories');
 	const router = useRouter();
-	const [state, dispatch] = useContext(Context);
 
 	const screens = Grid.useBreakpoint();
 
@@ -54,10 +47,7 @@ export default function HeaderClient() {
 
 	return (
 		<>
-			<Row
-				justify="space-around"
-				style={{ backgroundColor: '#fff' }}
-			>
+			<Row justify="space-around" style={{ backgroundColor: '#fff' }}>
 				<Col>{Categories}</Col>
 				<Col>
 					<Button type="link">Nossa Loja</Button>
