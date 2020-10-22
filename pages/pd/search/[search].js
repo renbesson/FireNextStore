@@ -54,7 +54,7 @@ export default function categoriesSearch() {
 
 	return (
 		<Card>
-			<Row justify="space-between">
+			<Row justify="space-between" gutter={[20, 20]}>
 				<Col>
 					<Title level={2} className={'m-0'}>
 						Searching for {search}
@@ -66,7 +66,7 @@ export default function categoriesSearch() {
 				</Col>
 			</Row>
 			<Divider />
-			<Row align="middle" gutter={[24, 24]}>
+			<Row align="middle" gutter={[20, 20]}>
 				{products && <ProductsList />}
 			</Row>
 		</Card>

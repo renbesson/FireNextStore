@@ -66,7 +66,9 @@ export default function App({ Component, pageProps }) {
 								</Link>
 							</Menu.Item>
 							<Menu.Item key="3" className={'p-0'} icon={<UserOutlined style={{ width: '64px' }} />}>
-								Option 3
+								<Link href="/admin/banners/">
+									<a>Banners</a>
+								</Link>
 							</Menu.Item>
 							<Menu.Item key="4" className={'p-0'} icon={<TeamOutlined style={{ width: '64px' }} />}>
 								Option 4
@@ -128,6 +130,7 @@ export default function App({ Component, pageProps }) {
 								margin: '24px',
 								alignSelf: 'center',
 								maxWidth: screens.xl ? '1200px' : '100vw',
+								width: '100vw',
 								minHeight: screens.xs ? '45vh' : '75vh',
 							}}
 						>

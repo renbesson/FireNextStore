@@ -56,7 +56,7 @@ export default function HeaderClient() {
 		<>
 			<Row
 				justify="space-around"
-				style={{ backgroundColor: '#fff', borderTop: '1px solid gray', borderBottom: '1px solid gray' }}
+				style={{ backgroundColor: '#fff' }}
 			>
 				<Col>{Categories}</Col>
 				<Col>

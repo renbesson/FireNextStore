@@ -7,7 +7,7 @@ const banner = {
 
 export default function MiddleCards() {
 	return (
-		<Row justify="space-around" align="middle" gutter={[16, 16]}>
+		<Row justify="space-around" align="middle">
 			<Col>
 				<Card bodyStyle={{padding: 0}} hoverable cover={<img src="/images/banner1.png" style={banner} />}></Card>
 			</Col>

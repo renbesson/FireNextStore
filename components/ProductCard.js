@@ -31,7 +31,7 @@ export default function ProductCard({ productData }) {
 		>
 			<Card hoverable style={{ width: 212 }} bodyStyle={{ padding: '1rem' }}>
 				<Button
-					style={{ position: 'absolute', zIndex: '1200' }}
+					style={{ position: 'absolute', left: 0, top: 0, zIndex: 1 }}
 					onClick={() => favoriteSet(productData, isFavorite, user && user.uid)}
 					type="link"
 					icon={

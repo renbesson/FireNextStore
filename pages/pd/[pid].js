@@ -24,7 +24,7 @@ export default function ProductPage({ pid }) {
 	if (product) {
 		return (
 			<>
-				<Row gutter={[24, 24]}>
+				<Row gutter={[20, 20]}>
 					<Col span={24}>
 						<Breadcrumbs category={product.category} />
 					</Col>
@@ -37,7 +37,7 @@ export default function ProductPage({ pid }) {
 						<PdSideCard productData={product} />
 					</Col>
 				</Row>
-				<Row gutter={[24, 24]}>
+				<Row gutter={[20, 20]}>
 					<Col span={24}>
 						<PdDescription productData={product} />
 					</Col>

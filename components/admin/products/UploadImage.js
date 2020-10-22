@@ -9,10 +9,6 @@ export default function UploadImage({ productId }) {
 
 	const [imageList, setImageList] = useState([]);
 
-	const onChange = ({ fileList: newFileList }) => {
-		setImageList(newFileList);
-	};
-
 	const onPreview = async (file) => {
 		let src = file.url;
 		if (!src) {

@@ -66,7 +66,7 @@ export default function HeaderClient() {
 	const SignInUpButton = (
 		<Menu mode="horizontal" theme="dark" style={{ backgroundColor: '#ec3237' }}>
 			<Menu.Item
-				key="setting:1"
+				key="0"
 				onClick={
 					user === null
 						? () => dispatch({ type: 'TOGGLE_BOOLEAN', boolean: 'signInDrawerOn' })
@@ -80,18 +80,18 @@ export default function HeaderClient() {
 	);
 
 	const ProfileButton = (
-		<Menu theme="dark" style={{ backgroundColor: '#ec3237' }}>
+		<Menu theme="dark" mode="horizontal" style={{ backgroundColor: '#ec3237' }}>
 			<SubMenu key="SubMenu" icon={<UserOutlined style={headerButtonIcon} />} title={user && user.displayName}>
-				<Menu.Item key="setting:1" onClick={() => router.push('/profile/account')}>
+				<Menu.Item key="1" onClick={() => router.push('/profile/account')}>
 					Account
 				</Menu.Item>
-				<Menu.Item key="setting:2" onClick={() => router.push('/profile/orders')}>
+				<Menu.Item key="2" onClick={() => router.push('/profile/orders')}>
 					Orders
 				</Menu.Item>
-				<Menu.Item key="setting:3" onClick={() => router.push('/profile/addresses')}>
+				<Menu.Item key="3" onClick={() => router.push('/profile/addresses')}>
 					Addresses
 				</Menu.Item>
-				<Menu.Item key="setting:4" onClick={onSignOut}>
+				<Menu.Item key="4" onClick={onSignOut}>
 					Sigh Out
 				</Menu.Item>
 			</SubMenu>
@@ -144,7 +144,14 @@ export default function HeaderClient() {
 			<NewAddressDrawer />
 			<Row align="bottom">
 				<Col xl={5}>
-					<Image width={100} style={{ cursor: 'pointer' }} alt="Logo" src="/images/logo.png" />
+					<Image
+						width={100}
+						style={{ cursor: 'pointer' }}
+						alt="Logo"
+						src="/images/logo.png"
+						preview={false}
+						onClick={() => router.push('/')}
+					/>
 				</Col>
 				<Col xl={10}>
 					<SearchBar />
