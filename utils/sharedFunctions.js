@@ -136,3 +136,33 @@ export const favoriteSet = (product, isFavorite, uid) => {
 		}
 	}
 };
+
+export const deleteImage = async (collection, path, imageInfo, docId, array) => {
+	const refProducts = firebase.firestore().collection(collection);
+	const refImages = firebase.storage().ref();
+	let hasError = null;
+	try {
+		refImages
+			.child(`${path}${imageInfo.fileName}`)
+			.delete()
+			.then(() => {
+				refProducts.doc(docId).update({
+					[array]: firebase.firestore.FieldValue.arrayRemove(imageInfo),
+				});
+			});
+	} catch (error) {
+		notification.error({
+			message: 'Error Deleting Image',
+			description: `${error.message}`,
+		});
+		console.error(error);
+		hasError = true;
+	} finally {
+		if (!hasError) {
+			notification.success({
+				message: 'Image Deleted Successfully',
+				description: `Image "${imageInfo.fileName}" has been deleted successfully.`,
+			});
+		}
+	}
+};

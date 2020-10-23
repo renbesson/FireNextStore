@@ -5,6 +5,7 @@ import { notification, Card } from 'antd';
 import UploadImage from './UploadImage';
 import CategoriesTreeSelect from '../shared/CategoriesTreeSelect';
 import { CloseCircleTwoTone } from '@ant-design/icons';
+import { deleteImage } from '@/utils/sharedFunctions';
 
 const imgStyle = {
 	display: 'table',
@@ -60,40 +61,12 @@ export default function EditProductDrawer({ productData, drawerOn, setdrawerOn }
 			>
 				<CloseCircleTwoTone
 					style={{ position: 'absolute', right: 0, top: 0, fontSize: '1.4rem' }}
-					onClick={() => deleteImage(image.fileName)}
+					onClick={() =>
+						deleteImage('products', `products/${productData.pid}/images/`, image, productData.pid, 'images')
+					}
 				/>
 			</Card>
 		));
-	};
-
-	const deleteImage = async (fileName) => {
-		let hasError = null;
-		const path = `products/${productData.pid}/images/${fileName}`;
-		try {
-			refImages
-				.child(path)
-				.delete()
-				.then(() => {
-					const imageItem = productData.images.find((image) => image.fileName === fileName);
-					refProducts.doc(productData.pid).update({
-						images: firebase.firestore.FieldValue.arrayRemove(imageItem),
-					});
-				});
-		} catch (error) {
-			notification.error({
-				message: 'Error Deleting Image',
-				description: `${error}`,
-			});
-			console.error(error);
-			hasError = true;
-		} finally {
-			if (!hasError) {
-				notification.success({
-					message: 'Image Deleted Successfully',
-					description: `Image "${fileName}" has been deleted successfully.`,
-				});
-			}
-		}
 	};
 
 	const deleteProduct = async () => {
@@ -235,7 +208,13 @@ export default function EditProductDrawer({ productData, drawerOn, setdrawerOn }
 				</Form.Item>
 				<Images />
 				<Form.Item>
-					<UploadImage productId={productData.pid} />
+					<UploadImage
+						aspect={1}
+						collection={'products'}
+						path={`products/${productData.pid}/images/`}
+						docId={productData.pid}
+						array={'images'}
+					/>
 				</Form.Item>
 
 				<Form.Item>

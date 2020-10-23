@@ -3,41 +3,26 @@ import { useState } from 'react';
 import { Upload, notification } from 'antd';
 import ImgCrop from 'antd-img-crop';
 
-export default function UploadImage({ productId }) {
-	const refProducts = firebase.firestore().collection('products');
+export default function UploadImage({ aspect, collection, path, docId, array }) {
+	const refProducts = collection && firebase.firestore().collection(collection);
 	const refImages = firebase.storage().ref();
 
 	const [imageList, setImageList] = useState([]);
 
-	const onPreview = async (file) => {
-		let src = file.url;
-		if (!src) {
-			src = await new Promise((resolve) => {
-				const reader = new FileReader();
-				reader.readAsDataURL(file.originFileObj);
-				reader.onload = () => resolve(reader.result);
-			});
-		}
-		const image = new Image();
-		image.src = src;
-		const imgWindow = window.open(src);
-		imgWindow.document.write(image.outerHTML);
-	};
-
 	const customUpload = async ({ file: originFileObj }) => {
-		const path = `products/${productId}/images/${originFileObj.name}`;
-		refImages.child(path);
+		const pathFinal = `${path}${originFileObj.name}`;
+		refImages.child(pathFinal);
 		let hasError = false;
 		try {
 			refImages
-				.child(path)
+				.child(pathFinal)
 				.put(originFileObj)
 				.then((snapshot) => {
 					snapshot.ref
 						.getDownloadURL()
 						.then((URL) => {
-							refProducts.doc(productId).update({
-								images: firebase.firestore.FieldValue.arrayUnion({
+							refProducts.doc(docId).update({
+								[array]: firebase.firestore.FieldValue.arrayUnion({
 									url: URL,
 									fileName: originFileObj.name,
 								}),
@@ -65,8 +50,8 @@ export default function UploadImage({ productId }) {
 
 	return (
 		<>
-			<ImgCrop rotate aspect={1}>
-				<Upload listType="picture-card" fileList={imageList} onPreview={onPreview} customRequest={customUpload}>
+			<ImgCrop rotate aspect={aspect}>
+				<Upload listType="picture-card" fileList={imageList} customRequest={customUpload}>
 					{imageList.length < 5 && '+ Upload'}
 				</Upload>
 			</ImgCrop>
