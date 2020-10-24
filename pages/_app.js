@@ -51,7 +51,6 @@ export default function App({ Component, pageProps }) {
 						<div className="logo" />
 						<Menu
 							theme="dark"
-							defaultSelectedKeys={['1']}
 							mode="inline"
 							style={{ paddingTop: '5vh', width: collapsed ? '64px' : null }}
 						>

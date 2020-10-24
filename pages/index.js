@@ -1,6 +1,6 @@
 import BestDeals from '@components/BestDeals';
 import ImageGallery from 'react-image-gallery';
-import MiddleCards from '@components/MiddleCards';
+import MiddleBanners from '@components/MiddleBanners';
 import NewsLetterGet from '@components/NewsLetterGet';
 import { Col, Row } from 'antd';
 import { useDocument } from '@nandorojo/swr-firestore';
@@ -31,9 +31,7 @@ export default function Home() {
 						/>
 					)}
 				</Col>
-				<Col span={24}>
-					<MiddleCards />
-				</Col>
+				<Col span={24}>{banners && <MiddleBanners middleBanners={banners.middleBanners} />}</Col>
 				<Col span={24}>
 					<BestDeals />
 				</Col>

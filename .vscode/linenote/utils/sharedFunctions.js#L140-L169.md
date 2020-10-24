@@ -1,1 +1,0 @@
-imageInfo is the object that contains fileName and url properties.
