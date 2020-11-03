@@ -10,7 +10,7 @@ const { Text, Title } = Typography;
 export default function pdMainCard({ productData }) {
 	const { user } = useUser();
 
-	const isFavorite = user.favorites.some((item) => item === productData.pid);
+	const isFavorite = user.favorites.some((item) => item === productData.sku);
 
 	const urlsArray =
 		productData && productData.images
@@ -74,7 +74,7 @@ export default function pdMainCard({ productData }) {
 							</Row>
 							<Row gutter={[20, 20]}>
 								<Col>
-									<Title level={3}>{productData.title}</Title>
+									<Title level={3}>{productData.name}</Title>
 								</Col>
 							</Row>
 						</Col>

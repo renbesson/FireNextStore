@@ -4,11 +4,13 @@ import { Row, Col, Card, Typography, InputNumber, Button, notification } from 'a
 import Form from 'antd/lib/form/Form';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import { useShoppingCart } from 'use-shopping-cart';
 
 const { Title, Text } = Typography;
 
 export default function ProductInCartCard({ productData, user }) {
-	const itemInCart = user.cart.find((item) => item.pid === productData.pid);
+	const { setItemQuantity, removeItem, cartDetails } = useShoppingCart();
+	const itemInCart = cartDetails[productData.sku];
 	const [quantity, setQuantity] = useState(itemInCart ? itemInCart.quantity : undefined);
 	const router = useRouter();
 
@@ -29,8 +31,8 @@ export default function ProductInCartCard({ productData, user }) {
 				<Col className={'m-2'}>
 					<Row>
 						<Col>
-							<Button className={'p-0'} type="link" onClick={() => router.push(`/pd/${productData.pid}`)}>
-								{productData.title}
+							<Button className={'p-0'} type="link" onClick={() => router.push(`/pd/${productData.sku}`)}>
+								{productData.name}
 							</Button>
 						</Col>
 					</Row>
@@ -43,7 +45,7 @@ export default function ProductInCartCard({ productData, user }) {
 						<Col>
 							<Title level={4}>
 								{new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(
-									productData.price
+									productData.priceCurrent
 								)}
 							</Title>
 						</Col>
@@ -53,26 +55,16 @@ export default function ProductInCartCard({ productData, user }) {
 								onChange={(value) => setQuantity(value)}
 								min={1}
 								max={10}
-								value={quantity}
-								defaultValue={quantity}
+								value={window !== undefined ? quantity : undefined}
+								defaultValue={window !== undefined ? quantity : undefined}
 							/>
 
-							<Button
-								onClick={() =>
-									updateToCart(productData, itemInCart.quantity, quantity, user && user.uid)
-								}
-							>
-								Update
-							</Button>
+							<Button onClick={() => setItemQuantity(productData.sku, quantity)}>Update</Button>
 						</Col>
 					</Row>
 					<Row>
 						<Col>
-							<Button
-								block
-								type="primary"
-								onClick={() => removeFromCart(productData, itemInCart, user && user.uid)}
-							>
+							<Button block type="primary" onClick={() => removeItem(productData.sku)}>
 								Remove from Cart
 							</Button>
 						</Col>

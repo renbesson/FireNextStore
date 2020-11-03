@@ -5,22 +5,6 @@ const Reducer = (state, action) => {
 				...state,
 				[action.boolean]: !state[action.boolean],
 			};
-		case 'SET_ITEM':
-			return {
-				...state,
-				products: action.payload,
-			};
-		case 'ADD_ITEM':
-			console.log(action);
-			return {
-				...state,
-				products: state.products.concat(action.product),
-			};
-		case 'REMOVE_ITEM':
-			return {
-				...state,
-				products: state.products.filter((item) => item.id !== action.payload),
-			};
 		case 'SET_ERROR':
 			return {
 				...state,

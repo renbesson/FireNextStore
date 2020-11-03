@@ -20,8 +20,10 @@ export default function EditAddressDrawer({ address }) {
 		form.setFieldsValue({
 			['addressNickname']: address.addressNickname,
 			['streetAddress']: address.streetAddress,
-			['city']: address.city,
 			['postalCode']: address.postalCode,
+			['city']: address.city,
+			['stateProvince']: address.stateProvince,
+			['country']: address.country,
 		});
 		return () => {};
 	}, [address]);
@@ -102,8 +104,6 @@ export default function EditAddressDrawer({ address }) {
 			onClose={() => dispatch({ type: 'TOGGLE_BOOLEAN', boolean: 'editAddressDrawerOn' })}
 			visible={state.editAddressDrawerOn}
 			width={screens.xs ? '80vw' : '30vw'}
-			forceRender={true}
-			destroyOnClose={true}
 			style={{ backgroundColor: 'rgba(255, 255, 255, .15)', backdropFilter: 'blur(5px)' }}
 		>
 			<Form layout="vertical" name="newProductForm" form={form} onFinish={editAddress}>
@@ -128,16 +128,6 @@ export default function EditAddressDrawer({ address }) {
 					/>
 				</Form.Item>
 				<Form.Item
-					label="City"
-					name="city"
-					rules={[{ required: true, message: 'Please input your username!' }]}
-				>
-					<Input
-						placeholder="Street Address"
-						onChange={(e) => setEditedAddress({ ...editedAddress, city: e.target.value })}
-					/>
-				</Form.Item>
-				<Form.Item
 					label="Postal Code"
 					name="postalCode"
 					rules={[{ required: true, message: 'Please input your username!' }]}
@@ -145,6 +135,36 @@ export default function EditAddressDrawer({ address }) {
 					<Input
 						placeholder="Postal Code"
 						onChange={(e) => setEditedAddress({ ...editedAddress, postalCode: e.target.value })}
+					/>
+				</Form.Item>
+				<Form.Item
+					label="City"
+					name="city"
+					rules={[{ required: true, message: 'Please input your username!' }]}
+				>
+					<Input
+						placeholder="City"
+						onChange={(e) => setEditedAddress({ ...editedAddress, city: e.target.value })}
+					/>
+				</Form.Item>
+				<Form.Item
+					label="State/Province"
+					name="stateProvince"
+					rules={[{ required: true, message: 'Please input your username!' }]}
+				>
+					<Input
+						placeholder="State/Province"
+						onChange={(e) => setEditedAddress({ ...editedAddress, stateProvince: e.target.value })}
+					/>
+				</Form.Item>
+				<Form.Item
+					label="Country"
+					name="country"
+					rules={[{ required: true, message: 'Please input your username!' }]}
+				>
+					<Input
+						placeholder="Country"
+						onChange={(e) => setEditedAddress({ ...editedAddress, country: e.target.value })}
 					/>
 				</Form.Item>
 				<Form.Item>

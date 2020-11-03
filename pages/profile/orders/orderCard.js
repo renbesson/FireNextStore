@@ -109,8 +109,8 @@ export default function OrderCard({ orderData }) {
 									<List.Item.Meta
 										avatar={<Avatar src={item.imageUrl} />}
 										title={
-											<Link href={`/pd/${item.pid}`}>
-												<a>{item.title}</a>
+											<Link href={`/pd/${item.sku}`}>
+												<a>{item.name}</a>
 											</Link>
 										}
 										description={`Quantity: ${item.quantity} | Price: ${new Intl.NumberFormat(

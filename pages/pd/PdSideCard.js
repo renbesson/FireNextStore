@@ -6,6 +6,7 @@ import { Button, Card, Col, Divider, Input, InputNumber, notification, Row, Typo
 import { ShoppingCartOutlined } from '@ant-design/icons';
 import NumberFormat from 'react-number-format';
 import { addToCart, updateToCart } from '@/utils/sharedFunctions';
+import { useShoppingCart } from 'use-shopping-cart';
 
 const { Text, Title } = Typography;
 
@@ -13,11 +14,12 @@ export default function PdSideCard({ productData }) {
 	const { user } = useUser();
 	const [quantity, setQuantity] = useState(1);
 	const { update } = useDocument(user && `users/${user.uid}`);
+	const { addItem, setItemQuantity, cartDetails, cartCount } = useShoppingCart();
 
-	const itemInCart = user && user.cart && user.cart.find(({ pid }) => pid === productData.pid);
+	const itemInCart = cartDetails && cartDetails[productData.sku];
 
 	const PriceTitles = () => {
-		if (productData.priceBase > productData.price) {
+		if (productData.priceBase > productData.priceCurrent) {
 			return (
 				<>
 					<Title className={'m-0'} level={4} delete>
@@ -27,7 +29,7 @@ export default function PdSideCard({ productData }) {
 					</Title>
 					<Title className={'m-0'} level={2}>
 						{`Now: ${new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(
-							productData.price
+							productData.priceCurrent
 						)}`}
 					</Title>
 				</>
@@ -36,7 +38,7 @@ export default function PdSideCard({ productData }) {
 			return (
 				<Title className={'m-0'} level={2}>
 					{`${new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(
-						productData.price
+						productData.priceCurrent
 					)}`}
 				</Title>
 			);
@@ -45,6 +47,7 @@ export default function PdSideCard({ productData }) {
 
 	return (
 		<Card style={{ height: '350px' }}>
+			<button onClick={() => console.log(cartDetails)}>dasda</button>
 			<Row>
 				<Col>
 					<PriceTitles />
@@ -86,10 +89,10 @@ export default function PdSideCard({ productData }) {
 								? itemInCart && itemInCart.quantity === quantity
 									? notification.warning({
 											message: 'Product Already in the Cart',
-											description: `Product "${productData.title}" is already in the cart with this quantity.`,
+											description: `Product "${productData.name}" is already in the cart with this quantity.`,
 									  })
-									: updateToCart(productData, itemInCart.quantity, quantity, user && user.uid)
-								: addToCart(productData, quantity, user && user.uid)
+									: setItemQuantity(productData.sku, quantity)
+								: addItem(productData, quantity)
 						}
 					>
 						<ShoppingCartOutlined />

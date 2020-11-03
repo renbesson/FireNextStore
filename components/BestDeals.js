@@ -25,7 +25,7 @@ export default function BestDeals() {
 					{products && (
 						<Carousel autoplay autoplaySpeed={2000} slidesToShow={screens.xl ? 4 : 2} arrows dots={false}>
 							{products.map((product) => (
-								<div key={product.pid}>
+								<div key={product.sku}>
 									<ProductCard productData={product} />
 								</div>
 							))}

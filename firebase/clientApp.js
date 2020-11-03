@@ -2,7 +2,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth'; // If you need it
 import 'firebase/firestore'; // If you need it
 import 'firebase/storage'; // If you need it
-import 'firebase/analytics'; // If you need it
+import 'firebase/functions'; // If you need it
 
 const clientCredentials = {
 	apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,

@@ -98,6 +98,17 @@ export default function NewAddressDrawer() {
 					/>
 				</Form.Item>
 				<Form.Item
+					label="Postal Code"
+					name="postalCode"
+					rules={[{ required: true, message: 'Please input your username!' }]}
+				>
+					<Input
+						placeholder="Postal Code"
+						value={newAddress.postalCode}
+						onChange={(e) => setNewAddress({ ...newAddress, postalCode: e.target.value })}
+					/>
+				</Form.Item>
+				<Form.Item
 					label="City"
 					name="city"
 					rules={[{ required: true, message: 'Please input your username!' }]}
@@ -109,14 +120,25 @@ export default function NewAddressDrawer() {
 					/>
 				</Form.Item>
 				<Form.Item
-					label="Postal Code"
-					name="postalCode"
+					label="State/Province"
+					name="stateProvince"
 					rules={[{ required: true, message: 'Please input your username!' }]}
 				>
 					<Input
-						placeholder="Postal Code"
-						value={newAddress.postalCode}
-						onChange={(e) => setNewAddress({ ...newAddress, postalCode: e.target.value })}
+						placeholder="State/Province"
+						value={newAddress.stateProvince}
+						onChange={(e) => setNewAddress({ ...newAddress, stateProvince: e.target.value })}
+					/>
+				</Form.Item>
+				<Form.Item
+					label="Country"
+					name="country"
+					rules={[{ required: true, message: 'Please input your username!' }]}
+				>
+					<Input
+						placeholder="Country"
+						value={newAddress.country}
+						onChange={(e) => setNewAddress({ ...newAddress, country: e.target.value })}
 					/>
 				</Form.Item>
 				<Form.Item>

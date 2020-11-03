@@ -1,8 +1,9 @@
 import { Grid, Row, Col, Button, Menu, Typography } from 'antd';
 import { AppstoreOutlined } from '@ant-design/icons';
-import SubMenu from 'antd/lib/menu/SubMenu';
 import { useDocument } from '@nandorojo/swr-firestore';
 import { useRouter } from 'next/router';
+
+const { SubMenu } = Menu;
 
 export default function HeaderClient() {
 	const { data: categories, error } = useDocument('misc/categories');

@@ -1,10 +1,11 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import firebase from '@/firebase/clientApp';
 import { useUser } from '@/context/userContext';
 import { Row, Col, Card, InputNumber, Button, Typography, Badge, notification, Image } from 'antd';
-import { HeartFilled, HeartOutlined, HeartTwoTone, ShoppingCartOutlined } from '@ant-design/icons';
+import { ConsoleSqlOutlined, HeartFilled, HeartOutlined, HeartTwoTone, ShoppingCartOutlined } from '@ant-design/icons';
 import { addToCart, favoriteSet, updateToCart } from '@/utils/sharedFunctions';
+import { useShoppingCart } from 'use-shopping-cart';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -12,9 +13,10 @@ export default function ProductCard({ productData }) {
 	const router = useRouter();
 	const { user } = useUser();
 	const [quantity, setQuantity] = useState(1);
+	const { addItem, setItemQuantity, cartDetails } = useShoppingCart();
 
-	const itemInCart = user && user.cart && user.cart.find(({ pid }) => pid === productData.pid);
-	const isFavorite = user && user.favorites && user.favorites.some((item) => item === productData.pid);
+	const itemInCart = cartDetails[productData.sku];
+	const isFavorite = user && user.favorites && user.favorites.some((item) => item === productData.sku);
 
 	return (
 		<Badge
@@ -52,13 +54,13 @@ export default function ProductCard({ productData }) {
 									? productData.images[0].url
 									: '/images/600px-No_image_available.png'
 							}
-							onClick={() => router.push(`/pd/${productData.pid}`)}
+							onClick={() => router.push(`/pd/${productData.sku}`)}
 						/>
 					</Col>
 				</Row>
 				<Row>
 					<Paragraph ellipsis={{ rows: 2 }} style={{ height: 44 }}>
-						{productData.title}
+						{productData.name}
 					</Paragraph>
 				</Row>
 				<Row justify="space-between">
@@ -87,16 +89,17 @@ export default function ProductCard({ productData }) {
 									? itemInCart && itemInCart.quantity === quantity
 										? notification.warning({
 												message: 'Product Already in the Cart',
-												description: `Product "${productData.title}" is already in the cart with this quantity.`,
+												description: `Product "${productData.name}" is already in the cart with this quantity.`,
 										  })
-										: updateToCart(productData, itemInCart.quantity, quantity, user && user.uid)
-									: addToCart(productData, quantity, user && user.uid)
+										: setItemQuantity(productData.sku, quantity)
+									: addItem(productData, quantity)
 							}
 						>
 							<ShoppingCartOutlined />
 						</Button>
 					</Col>
 				</Row>
+				<p onClick={() => firebase.firestore().collection('products').doc().set()}>dasdasdas</p>
 			</Card>
 		</Badge>
 	);

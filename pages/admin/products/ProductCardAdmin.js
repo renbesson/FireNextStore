@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Row, Col, Card, Typography, Badge } from 'antd';
-import EditProductDrawer from '@components/admin/products/EditProductDrawer';
+import EditProductDrawer from '@pages/admin/products/EditProductDrawer';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -50,9 +50,7 @@ export default function ProductCard({ productData }) {
 					onClick={() => setEditedProductDrawerOn(true)}
 				>
 					<Row>
-						<Paragraph ellipsis={{ rows: 2 }}>
-							{productData.title}
-						</Paragraph>
+						<Paragraph ellipsis={{ rows: 2 }}>{productData.name}</Paragraph>
 					</Row>
 					<Row className={'pt-2'}>
 						<Col>

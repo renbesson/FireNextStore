@@ -9,13 +9,13 @@ import BestDeals from '@components/BestDeals';
 
 ProductPage.getInitialProps = ({ query }) => {
 	return {
-		pid: query.pid,
+		sku: query.sku,
 	};
 };
 
-export default function ProductPage({ pid }) {
+export default function ProductPage({ sku }) {
 	const { user } = useUser();
-	const { data: product, error } = useDocument(`products/${pid}`);
+	const { data: product, error } = useDocument(`products/${sku}`);
 
 	if (error) {
 		return <h3>{error}</h3>;

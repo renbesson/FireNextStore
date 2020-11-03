@@ -8,16 +8,18 @@ import { SnippetsOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import SignInDrawer from '@/components/SignInDrawer';
 import SignUpDrawer from '@/components/SignUpDrawer';
 import NewAddressDrawer from '@pages/profile/addresses/NewAddressDrawer';
-import SubMenu from 'antd/lib/menu/SubMenu';
 import { useRouter } from 'next/router';
 import { Context } from '@/context/storeContext';
+import { useShoppingCart } from 'use-shopping-cart';
 
 const { Text } = Typography;
+const { SubMenu } = Menu;
 
 export default function HeaderClient() {
 	const { loadingUser, user } = useUser();
 	const router = useRouter();
 	const [state, dispatch] = useContext(Context);
+	const { cartCount, cartDetails } = useShoppingCart();
 
 	const screens = Grid.useBreakpoint();
 
@@ -95,7 +97,7 @@ export default function HeaderClient() {
 	);
 
 	const CartButton = (
-		<Badge count={user && user.cart && user.cart.length} offset={[-20, 5]} style={{ backgroundColor: '#52c41a' }}>
+		<Badge count={cartCount} offset={[-20, 5]} style={{ backgroundColor: '#52c41a' }}>
 			<div style={headerButton} onClick={() => router.push('/cart')}>
 				<ShoppingCartOutlined style={headerButtonIcon} />
 				<Text style={headerButtonText}>Cart</Text>
@@ -120,7 +122,13 @@ export default function HeaderClient() {
 	// -- Buttons ++
 
 	const Buttons = () => {
-		if (!user && !loadingUser) return <>{SignInUpButton}</>;
+		if (!user && !loadingUser)
+			return (
+				<>
+					{SignInUpButton}
+					{CartButton}
+				</>
+			);
 		else if (user && !loadingUser)
 			return (
 				<>

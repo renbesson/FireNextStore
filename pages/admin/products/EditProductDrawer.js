@@ -2,8 +2,8 @@ import { useState } from 'react';
 import firebase from '@/firebase/clientApp';
 import { Grid, Form, Input, InputNumber, Button, Drawer, Popconfirm } from 'antd';
 import { notification, Card } from 'antd';
-import UploadImage from './UploadImage';
-import CategoriesTreeSelect from '../shared/CategoriesTreeSelect';
+import UploadImage from '../../../components/admin/products/UploadImage';
+import CategoriesTreeSelect from '../../../components/admin/shared/CategoriesTreeSelect';
 import { CloseCircleTwoTone } from '@ant-design/icons';
 import { deleteImage } from '@/utils/sharedFunctions';
 
@@ -32,7 +32,7 @@ export default function EditProductDrawer({ productData, drawerOn, setdrawerOn }
 	const editProduct = async () => {
 		let hasError = null;
 		try {
-			await refProducts.doc(productData.pid).update(editedProduct);
+			await refProducts.doc(productData.sku).update(editedProduct);
 		} catch (error) {
 			notification.error({
 				message: 'Error Editing Product',
@@ -45,7 +45,7 @@ export default function EditProductDrawer({ productData, drawerOn, setdrawerOn }
 				setdrawerOn(false);
 				notification.success({
 					message: 'Product Edited Successfully',
-					description: `Product "${editedProduct.title}" has been edited successfully.`,
+					description: `Product "${editedProduct.name}" has been edited successfully.`,
 				});
 			}
 		}
@@ -62,7 +62,7 @@ export default function EditProductDrawer({ productData, drawerOn, setdrawerOn }
 				<CloseCircleTwoTone
 					style={{ position: 'absolute', right: 0, top: 0, fontSize: '1.4rem' }}
 					onClick={() =>
-						deleteImage('products', `products/${productData.pid}/images/`, image, productData.pid, 'images')
+						deleteImage('products', `products/${productData.sku}/images/`, image, productData.sku, 'images')
 					}
 				/>
 			</Card>
@@ -74,13 +74,13 @@ export default function EditProductDrawer({ productData, drawerOn, setdrawerOn }
 		try {
 			const refProducts = firebase.firestore().collection('products');
 			await refProducts
-				.doc(productData.pid)
+				.doc(productData.sku)
 				.delete()
 				.then(() => {
 					if (productData.images.length > 0) {
 						productData.images.forEach((image) => {
 							refImages
-								.child(`products/${productData.pid}/images/${image.fileName}`)
+								.child(`products/${productData.sku}/images/${image.fileName}`)
 								.delete()
 								.catch((error) => {
 									notification.error({
@@ -105,7 +105,7 @@ export default function EditProductDrawer({ productData, drawerOn, setdrawerOn }
 				await setdrawerOn(false);
 				notification.success({
 					message: 'Product Created Successfully',
-					description: `Product "${productData.title}" has been deleted successfully.`,
+					description: `Product "${productData.name}" has been deleted successfully.`,
 				});
 			}
 		}
@@ -125,11 +125,11 @@ export default function EditProductDrawer({ productData, drawerOn, setdrawerOn }
 				layout="vertical"
 				name="editProductForm"
 				initialValues={{
-					['title']: productData ? productData.title : '',
+					['name']: productData ? productData.name : '',
 					['description']: productData ? productData.description : '',
 					['priceBase']: productData ? productData.priceBase : '',
 					['price']: productData ? productData.price : '',
-					['quantity']: productData ? productData.quantity : '',
+					['quantityInStock']: productData ? productData.quantityInStock : '',
 					['sku']: productData ? productData.sku : '',
 					['category']: productData ? productData.category : [],
 					['images']: productData ? productData.images : [],
@@ -137,13 +137,13 @@ export default function EditProductDrawer({ productData, drawerOn, setdrawerOn }
 				onFinish={editProduct}
 			>
 				<Form.Item
-					label="Title"
-					name="title"
+					label="Name"
+					name="name"
 					rules={[{ required: true, message: 'Please input your username!' }]}
 				>
 					<Input
-						placeholder="Title"
-						onChange={(e) => setEditedProduct({ ...editedProduct, title: e.target.value })}
+						placeholder="Name"
+						onChange={(e) => setEditedProduct({ ...editedProduct, name: e.target.value })}
 					/>
 				</Form.Item>
 				<Form.Item
@@ -168,7 +168,7 @@ export default function EditProductDrawer({ productData, drawerOn, setdrawerOn }
 					/>
 				</Form.Item>
 				<Form.Item
-					label=" CurrentPrice"
+					label=" priceCurrent"
 					name="price"
 					rules={[{ required: true, message: 'Please input your username!' }]}
 				>
@@ -178,22 +178,19 @@ export default function EditProductDrawer({ productData, drawerOn, setdrawerOn }
 					/>
 				</Form.Item>
 				<Form.Item
-					label="Quantity"
-					name="quantity"
+					label="Quantity in Stock"
+					name="quantityInStock"
 					rules={[{ required: true, message: 'Please input your username!' }]}
 				>
 					<InputNumber
-						placeholder="Quantity"
-						onChange={(value) => setEditedProduct({ ...editedProduct, quantity: value })}
+						placeholder="Quantity in Stock"
+						onChange={(value) => setEditedProduct({ ...editedProduct, quantityInStock: value })}
 					/>
 				</Form.Item>
-				<Form.Item
-					label="Product Code"
-					name="sku"
-					rules={[{ required: true, message: 'Please input your username!' }]}
-				>
+				<Form.Item label="SKU" name="sku">
 					<Input
-						placeholder="Product Code"
+						disabled
+						placeholder="SKU"
 						onChange={(e) => setEditedProduct({ ...editedProduct, sku: e.target.value })}
 					/>
 				</Form.Item>
@@ -211,8 +208,8 @@ export default function EditProductDrawer({ productData, drawerOn, setdrawerOn }
 					<UploadImage
 						aspect={1}
 						collection={'products'}
-						path={`products/${productData.pid}/images/`}
-						docId={productData.pid}
+						path={`products/${productData.sku}/images/`}
+						docId={productData.sku}
 						array={'images'}
 					/>
 				</Form.Item>
@@ -223,7 +220,7 @@ export default function EditProductDrawer({ productData, drawerOn, setdrawerOn }
 					</Button>
 
 					<Popconfirm
-						title={`Are you sure delete this ${productData.title}?`}
+						title={`Are you sure delete this ${productData.name}?`}
 						onConfirm={deleteProduct}
 						// onCancel={}
 						okText="Yes"

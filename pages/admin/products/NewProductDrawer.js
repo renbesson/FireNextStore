@@ -2,7 +2,10 @@ import { useState } from 'react';
 import firebase from '@/firebase/clientApp';
 import { Grid, Form, Input, InputNumber, Button, Drawer } from 'antd';
 import { notification } from 'antd';
-import CategoriesTreeSelect from '../shared/CategoriesTreeSelect';
+import CategoriesTreeSelect from '../../../components/admin/shared/CategoriesTreeSelect';
+import { customAlphabet } from 'nanoid';
+
+const nanoid = customAlphabet('0123456789', 6);
 
 const imgStyle = {
 	display: 'table',
@@ -21,15 +24,17 @@ const imgStyle = {
 
 export default function NewProductDrawer({ drawerOn, setdrawerOn }) {
 	const [form] = Form.useForm();
+	const [newId, setNewId] = useState(nanoid());
 	const [newProduct, setNewProduct] = useState({
 		name: '',
 		description: '',
 		priceBase: null,
 		price: null,
-		quantity: null,
+		quantityInStock: null,
 		category: [],
-		sku: '',
+		sku: newId,
 		images: [],
+		currency: 'CAD',
 		dateCreated: firebase.firestore.Timestamp.now(),
 		dateModified: firebase.firestore.Timestamp.now(),
 	});
@@ -40,11 +45,7 @@ export default function NewProductDrawer({ drawerOn, setdrawerOn }) {
 		let hasError = null;
 		try {
 			const refProducts = firebase.firestore().collection('products');
-			await refProducts.add(newProduct).then((doc) => {
-				refProducts.doc(doc.id).update({
-					pid: doc.id,
-				});
-			});
+			await refProducts.doc(newId).set(newProduct);
 		} catch (error) {
 			notification.error({
 				message: 'Error Creating Product',
@@ -56,9 +57,10 @@ export default function NewProductDrawer({ drawerOn, setdrawerOn }) {
 			if (!hasError) {
 				form.resetFields();
 				setdrawerOn(false);
+				setNewId(nanoid());
 				notification.success({
 					message: 'Product Created Successfully',
-					description: `Product "${newProduct.title}" has been created successfully under the "${newProduct.category}" category.`,
+					description: `Product "${newProduct.name}" has been created successfully under the "${newProduct.category}" category.`,
 				});
 			}
 		}
@@ -66,24 +68,25 @@ export default function NewProductDrawer({ drawerOn, setdrawerOn }) {
 
 	return (
 		<Drawer
-			title="Register Product"
+			title={`Register Product SKU: ${newId}`}
 			placement="right"
-			closable={false}
-			onClose={() => setdrawerOn(false)}
+			closable={true}
+			onClose={() => setdrawerOn(false) || setNewId(nanoid())}
 			visible={drawerOn}
 			width={screens.xs ? '80vw' : '30vw'}
 			style={{ backgroundColor: 'rgba(255, 255, 255, .15)', backdropFilter: 'blur(5px)' }}
+			destroyOnClose
 		>
 			<Form layout="vertical" name="newProductForm" form={form} onFinish={createProduct}>
 				<Form.Item
-					label="Title"
-					name="title"
+					label="Name"
+					name="name"
 					rules={[{ required: true, message: 'Please input your username!' }]}
 				>
 					<Input
-						placeholder="Title"
-						value={newProduct.title}
-						onChange={(e) => setNewProduct({ ...newProduct, title: e.target.value })}
+						placeholder="Name"
+						value={newProduct.name}
+						onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
 					/>
 				</Form.Item>
 				<Form.Item
@@ -121,23 +124,19 @@ export default function NewProductDrawer({ drawerOn, setdrawerOn }) {
 					/>
 				</Form.Item>
 				<Form.Item
-					label="Quantity"
-					name="quantity"
+					label="Quantity in Stock"
+					name="quantityInStock"
 					rules={[{ required: true, message: 'Please input your username!' }]}
 				>
 					<InputNumber
-						placeholder="Quantity"
-						value={newProduct.quantity}
-						onChange={(value) => setNewProduct({ ...newProduct, quantity: value })}
+						placeholder="Quantity in Stock"
+						value={newProduct.quantityInStock}
+						onChange={(value) => setNewProduct({ ...newProduct, quantityInStock: value })}
 					/>
 				</Form.Item>
-				<Form.Item
-					label="Product Code"
-					name="sku"
-					rules={[{ required: true, message: 'Please input your username!' }]}
-				>
+				<Form.Item label="SKU" name="sku" rules={[{ min: 7, max: 7 }]}>
 					<Input
-						placeholder="Product Code"
+						placeholder="SKU - Leave blank to auto generate"
 						value={newProduct.sku}
 						onChange={(e) => setNewProduct({ ...newProduct, sku: e.target.value })}
 					/>

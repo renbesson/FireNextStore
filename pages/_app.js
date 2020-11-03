@@ -19,6 +19,9 @@ import StoreProvider from '@context/storeContext';
 
 import { Fuego, FuegoProvider } from '@nandorojo/swr-firestore';
 
+import { loadStripe } from '@stripe/stripe-js';
+import { CartProvider } from 'use-shopping-cart';
+
 const clientCredentials = {
 	apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
 	authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -30,6 +33,8 @@ const clientCredentials = {
 };
 
 const fuego = new Fuego(clientCredentials);
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
 const { Header, Footer, Sider, Content } = Layout;
 
@@ -96,57 +101,66 @@ export default function App({ Component, pageProps }) {
 	return (
 		<FuegoProvider fuego={fuego}>
 			<UserProvider>
-				<StoreProvider>
-					<Head>
-						<title>Next.js w/ Firebase Client-Side</title>
-						<link rel="icon" href="/favicon.ico" />
-					</Head>
-					<Layout>
-						<Header
-							style={{
-								alignSelf: 'center',
-								maxWidth: screens.xl ? '1200px' : '100vw',
-								width: '100vw',
-								minHeight: '90px',
-								borderRadius: '5px 5px 0 0',
-							}}
-						>
-							<HeaderClient />
-						</Header>
-						<Header
-							style={{
-								alignSelf: 'center',
-								maxWidth: screens.xl ? '1200px' : '100vw',
-								width: '100vw',
-								padding: '0px',
-							}}
-						>
-							<SubHeaderClient />
-						</Header>
-						<Content
-							style={{
-								padding: screens.xl ? '0' : '0 12px',
-								margin: '24px',
-								alignSelf: 'center',
-								maxWidth: screens.xl ? '1200px' : '100vw',
-								width: '100vw',
-								minHeight: screens.xs ? '45vh' : '75vh',
-							}}
-						>
-							<Component {...pageProps} />
-						</Content>
-						<Footer
-							style={{
-								padding: '0px',
-								alignSelf: 'center',
-								maxWidth: screens.xl ? '1200px' : '100vw',
-								width: '100vw',
-							}}
-						>
-							<ClientFooter />
-						</Footer>
-					</Layout>
-				</StoreProvider>
+				<CartProvider
+					mode="checkout-session"
+					stripe={stripePromise}
+					currency="CAD"
+					successUrl="http://localhost:3000/"
+					cancelUrl="http://localhost:3000/success"
+					allowedCountries={['US', 'CA']}
+				>
+					<StoreProvider>
+						<Head>
+							<title>Next.js w/ Firebase Client-Side</title>
+							<link rel="icon" href="/favicon.ico" />
+						</Head>
+						<Layout>
+							<Header
+								style={{
+									alignSelf: 'center',
+									maxWidth: screens.xl ? '1200px' : '100vw',
+									width: '100vw',
+									minHeight: '90px',
+									borderRadius: '5px 5px 0 0',
+								}}
+							>
+								<HeaderClient />
+							</Header>
+							<Header
+								style={{
+									alignSelf: 'center',
+									maxWidth: screens.xl ? '1200px' : '100vw',
+									width: '100vw',
+									padding: '0px',
+								}}
+							>
+								<SubHeaderClient />
+							</Header>
+							<Content
+								style={{
+									padding: screens.xl ? '0' : '0 12px',
+									margin: '24px',
+									alignSelf: 'center',
+									maxWidth: screens.xl ? '1200px' : '100vw',
+									width: '100vw',
+									minHeight: screens.xs ? '45vh' : '75vh',
+								}}
+							>
+								<Component {...pageProps} />
+							</Content>
+							<Footer
+								style={{
+									padding: '0px',
+									alignSelf: 'center',
+									maxWidth: screens.xl ? '1200px' : '100vw',
+									width: '100vw',
+								}}
+							>
+								<ClientFooter />
+							</Footer>
+						</Layout>
+					</StoreProvider>
+				</CartProvider>
 			</UserProvider>
 		</FuegoProvider>
 	);

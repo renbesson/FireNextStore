@@ -11,13 +11,13 @@ export default function favorites() {
 
 	const { data: products } = useCollection('products', {
 		listen: true,
-		where: ['pid', 'in', user && user.favorites],
+		where: ['sku', 'in', user && user.favorites],
 	});
 
 	const ProductsList = () => {
 		return products.map((product) => {
 			return (
-				<Col key={product.pid}>
+				<Col key={product.sku}>
 					<ProductCard productData={product} />
 				</Col>
 			);

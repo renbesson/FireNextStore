@@ -11,7 +11,7 @@ export default function categoriesSearch() {
 	const { data: products } = useCollection('products', {
 		listen: true,
 		where: [sField ? sField : 'category', 'array-contains', search],
-		orderBy: [oField ? oField : 'title', orderBy ? orderBy : 'asc'],
+		orderBy: [oField ? oField : 'name', orderBy ? orderBy : 'asc'],
 	});
 
 	const SelectSort = () => (
@@ -25,27 +25,27 @@ export default function categoriesSearch() {
 					case 'price-desc':
 						router.push(`/pd/search/${search}?sField=category&oField=price&orderBy=desc`);
 						break;
-					case 'title-asc':
-						router.push(`/pd/search/${search}?sField=category&oField=title&orderBy=asc`);
+					case 'name-asc':
+						router.push(`/pd/search/${search}?sField=category&oField=name&orderBy=asc`);
 						break;
-					case 'title-desc':
-						router.push(`/pd/search/${search}?sField=category&oField=title&orderBy=desc`);
-						`pd/search/Alimentos?sField=category&oField=title&orderBy=asc`;
+					case 'name-desc':
+						router.push(`/pd/search/${search}?sField=category&oField=name&orderBy=desc`);
+						`pd/search/Alimentos?sField=category&oField=name&orderBy=asc`;
 						break;
 				}
 			}}
 		>
 			<Option value="price-asc">Price: Low to High</Option>
 			<Option value="price-desc">Price: High to Low</Option>
-			<Option value="title-asc">Name: A to Z</Option>
-			<Option value="title-desc">Name: Z to A</Option>
+			<Option value="name-asc">Name: A to Z</Option>
+			<Option value="name-desc">Name: Z to A</Option>
 		</Select>
 	);
 
 	const ProductsList = () => {
 		return products.map((product) => {
 			return (
-				<Col key={product.pid}>
+				<Col key={product.sku}>
 					<ProductCard productData={product} />
 				</Col>
 			);

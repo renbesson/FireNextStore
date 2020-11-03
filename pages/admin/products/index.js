@@ -1,8 +1,5 @@
-import firebase from '@/firebase/clientApp';
-import { useState, useEffect } from 'react';
-import ProductListAdmin from '@/components/admin/products/ProductListAdmin';
+import ProductListAdmin from '@pages/admin/products/ProductListAdmin';
 import { Typography } from 'antd';
-import { useCollectionSnap } from 'hooks/firebaseHooks';
 import { useCollection } from '@nandorojo/swr-firestore';
 
 const { Title, Text } = Typography;

@@ -1,0 +1,44 @@
+[
+	{
+		"priceBase": 759,
+		"name": "Presunto Sadia Soltíssimo Fatiado 200Gr",
+		"price": 549,
+		"sku": "048880",
+		"category": ["Alimentos", "Frios", "Mortadelas, presuntos e apresuntados"]
+	},
+	{
+		"priceBase": 398,
+		"sku": "689150",
+		"category": ["Limpeza", "Produtos Liquidos", "Detergentes"],
+		"name": "Detergente liquid Ypê - Frasco 500ml",
+		"price": 199
+	},
+	{
+		"category": ["Alimentos", "Congelados", "Petiscos e salgados"],
+		"sku": "323701",
+		"price": 199,
+		"priceBase": 250,
+		"name": "Miojo Turma da Monica Sabor Galinha Caipira"
+	},
+	{
+		"price": 2099,
+		"name": "Arroz agulhinha tipo 1 Prato Fino - Pacote 5Kg",
+		"priceBase": 2299,
+		"category": ["Alimentos", "Molhos, temperos e condimentos", "Caldos e realçadores de sabor"],
+		"sku": "311480"
+	},
+	{
+		"name": "Feijão Carioca Tipo 1 CAMIL Pacote 1kg",
+		"price": 599,
+		"priceBase": 799,
+		"category": ["Alimentos", "Básico da despensa", "Grãos e cereais"],
+		"sku": "239831"
+	},
+	{
+		"priceBase": 399,
+		"category": ["Alimentos", "Biscoitos, salgadinhos e snacks", "Biscoitos e bolachas"],
+		"sku": "166751",
+		"name": "Biscoito Chocolicia 143g",
+		"price": 349
+	}
+]

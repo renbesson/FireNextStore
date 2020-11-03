@@ -1,11 +1,6 @@
 import firebase from '@/firebase/clientApp';
-import { useState, useContext } from 'react';
-import { useRouter } from 'next/router';
-import { useUser } from '@/context/userContext';
-import { useDocument } from '@nandorojo/swr-firestore';
-import { Row, Col, Card, InputNumber, Button, Typography, Badge, notification } from 'antd';
-import { ShoppingCartOutlined } from '@ant-design/icons';
-import { Context } from '@/context/storeContext';
+import { notification } from 'antd';
+
 
 export const addToCart = async (product, quantity, uid) => {
 	const userRef = firebase.firestore().doc(`users/${uid}`);
@@ -13,9 +8,10 @@ export const addToCart = async (product, quantity, uid) => {
 	let hasError = false;
 	try {
 		//when the product is not in the cart
+
 		await userRef.update({
 			cart: firebase.firestore.FieldValue.arrayUnion({
-				pid: product.pid,
+				sku: product.sku,
 				quantity,
 			}),
 		});
@@ -29,7 +25,7 @@ export const addToCart = async (product, quantity, uid) => {
 		if (!hasError) {
 			notification.success({
 				message: 'Product Successfully Added',
-				description: `Product "${product.title}" has been successfully added to the cart.`,
+				description: `Product "${product.name}" has been successfully added to the cart.`,
 			});
 		}
 	}
@@ -43,13 +39,13 @@ export const updateToCart = async (product, oldQuantity, newQuantity, uid) => {
 		try {
 			await userRef.update({
 				cart: firebase.firestore.FieldValue.arrayRemove({
-					pid: product.pid,
+					sku: product.sku,
 					quantity: oldQuantity,
 				}),
 			});
 			await userRef.update({
 				cart: firebase.firestore.FieldValue.arrayUnion({
-					pid: product.pid,
+					sku: product.sku,
 					quantity: newQuantity,
 				}),
 			});
@@ -63,14 +59,14 @@ export const updateToCart = async (product, oldQuantity, newQuantity, uid) => {
 			if (!hasError) {
 				notification.success({
 					message: 'Product Successfully Updated',
-					description: `Product "${product.title}" has been successfully updated to the cart.`,
+					description: `Product "${product.name}" has been successfully updated to the cart.`,
 				});
 			}
 		}
 	} else {
 		notification.warning({
 			message: 'Product Already in the Cart',
-			description: `Product "${product.title}" is already in the cart with this quantity.`,
+			description: `Product "${product.name}" is already in the cart with this quantity.`,
 		});
 	}
 };
@@ -85,7 +81,7 @@ export const removeFromCart = (product, itemInCart, uid) => {
 			.then(() => {
 				notification.success({
 					message: 'Cart Updated Successfully',
-					description: `Product "${product.title}" has been successfully removed from the cart.`,
+					description: `Product "${product.name}" has been successfully removed from the cart.`,
 				});
 			});
 	} catch (error) {
@@ -102,12 +98,12 @@ export const favoriteSet = (product, isFavorite, uid) => {
 		try {
 			userRef
 				.update({
-					favorites: firebase.firestore.FieldValue.arrayRemove(product.pid),
+					favorites: firebase.firestore.FieldValue.arrayRemove(product.sku),
 				})
 				.then(() => {
 					notification.success({
 						message: 'Product Unfavorited Successfully',
-						description: `Product "${product.title}" has been successfully removed from the favorites.`,
+						description: `Product "${product.name}" has been successfully removed from the favorites.`,
 					});
 				});
 		} catch (error) {
@@ -120,12 +116,12 @@ export const favoriteSet = (product, isFavorite, uid) => {
 		try {
 			userRef
 				.update({
-					favorites: firebase.firestore.FieldValue.arrayUnion(product.pid),
+					favorites: firebase.firestore.FieldValue.arrayUnion(product.sku),
 				})
 				.then(() => {
 					notification.success({
 						message: 'Product Favorited Successfully',
-						description: `Product "${product.title}" has been successfully added to the favorites.`,
+						description: `Product "${product.name}" has been successfully added to the favorites.`,
 					});
 				});
 		} catch (error) {

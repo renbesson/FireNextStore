@@ -3,15 +3,17 @@ import ProductInCartCard from '@pages/cart/ProductInCartCard';
 import { Row, Col, Card, Typography } from 'antd';
 import Summary from './Summary';
 import { useCollection } from '@nandorojo/swr-firestore';
+import { useShoppingCart } from 'use-shopping-cart';
 
 const { Title } = Typography;
 
 export default function cart() {
+	const { addItem, setItemQuantity, cartDetails, cartCount } = useShoppingCart();
 	const { user } = useUser();
-	const pids = user && user.cart ? user.cart.map(({ pid }) => pid) : undefined;
-	const { data: products, error } = useCollection(pids ? 'products' : null, {
+	const skus = cartDetails ? Object.keys(cartDetails) : undefined;
+	const { data: products, error } = useCollection(skus ? 'products' : null, {
 		listen: true,
-		where: [['pid', 'in', pids]],
+		where: [['sku', 'in', skus]],
 	});
 
 	return (
@@ -19,16 +21,11 @@ export default function cart() {
 			<Col xs={24} lg={16}>
 				<Row align="middle" gutter={[24, 24]}>
 					{products &&
-						products.map((product) => {
-							// The if statement prevent a console error since the product is first created and after is injected the id in the firebase document.
-							if (product.pid) {
-								return (
-									<Col span={24} key={product.pid}>
-										<ProductInCartCard productData={product} user={user} />
-									</Col>
-								);
-							} else return;
-						})}
+						products.map((product) => (
+							<Col span={24} key={product.sku}>
+								<ProductInCartCard productData={product} user={user} />
+							</Col>
+						))}
 				</Row>
 				{!products && (
 					<Col span={24}>
