@@ -11,8 +11,8 @@
     "@nandorojo/swr-firestore": "^0.14.1",
     "@next/bundle-analyzer": "^9.5.5",
     "@stripe/react-stripe-js": "^1.1.2",
-    "@stripe/stripe-js": "^1.10.0",
-    "antd": "^4.7.3",
+    "@stripe/stripe-js": "^1.11.0",
+    "antd": "^4.8.0",
     "antd-img-crop": "^3.13.1",
     "babel-plugin-import": "1.13.1",
     "body-parser": "^1.19.0",
@@ -30,7 +30,7 @@
     "react-image-gallery": "^1.0.8",
     "react-number-format": "^4.4.1",
     "reactfire": "^2.0.3",
-    "stripe": "^8.118.0",
+    "stripe": "^8.119.0",
     "use-shopping-cart": "^2.1.0"
   },
   "browser": {

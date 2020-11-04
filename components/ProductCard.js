@@ -29,7 +29,7 @@ export default function ProductCard({ productData }) {
 				lineHeight: '35px',
 				paddingLeft: '3px',
 			}}
-			count={`-${parseInt(((productData.priceBase - productData.price) / productData.priceBase) * 100)}%`}
+			count={`-${parseInt(((productData.priceBase - productData.priceCurrent) / productData.priceBase) * 100)}%`}
 		>
 			<Card hoverable style={{ width: 212 }} bodyStyle={{ padding: '1rem' }}>
 				<Button
@@ -67,7 +67,7 @@ export default function ProductCard({ productData }) {
 					<Col span={10} className={'m-0'}>
 						<Title level={4}>
 							{new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(
-								productData.price
+								productData.priceCurrent
 							)}
 						</Title>
 					</Col>
@@ -99,7 +99,6 @@ export default function ProductCard({ productData }) {
 						</Button>
 					</Col>
 				</Row>
-				<p onClick={() => firebase.firestore().collection('products').doc().set()}>dasdasdas</p>
 			</Card>
 		</Badge>
 	);

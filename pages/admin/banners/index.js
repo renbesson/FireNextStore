@@ -27,24 +27,6 @@ export default function indexBannersAdmin() {
 		transition: 'border-color 0.3s ease',
 	};
 
-	const Images = ({ bannerType }) => {
-		if (banners) {
-			return banners[bannerType].map((image) => (
-				<Card
-					bodyStyle={{ padding: 0 }}
-					style={imgStyle}
-					key={image.fileName}
-					cover={<img src={image.url} style={{ padding: 1 }} />}
-				>
-					<CloseCircleTwoTone
-						style={{ position: 'absolute', right: 0, top: 0, fontSize: '1.4rem' }}
-						onClick={() => deleteImage('misc', `misc/banners/${bannerType}/`, image, 'banners', bannerType)}
-					/>
-				</Card>
-			));
-		} else return <></>;
-	};
-
 	return (
 		<>
 			<Card>
@@ -77,6 +59,7 @@ export default function indexBannersAdmin() {
 								array={'mainBanners'}
 							/>
 						)}
+						{banners && banners.mainBanners.length >= 6 && <Text strong>Maximum banners reached! Delete any current banner to add a new one.</Text>}
 					</Col>
 				</Row>
 			</Card>
@@ -109,6 +92,7 @@ export default function indexBannersAdmin() {
 								array={'middleBanners'}
 							/>
 						)}
+						{banners && banners.mainBanners.length >= 3 && <Text strong>Maximum cards reached! Delete any current card to add a new one.</Text>}
 					</Col>
 				</Row>
 			</Card>

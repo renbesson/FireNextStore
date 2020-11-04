@@ -106,14 +106,20 @@ export default function HeaderClient() {
 	);
 
 	const FavoritesButton = (
-		<div style={headerButton} onClick={(value) => console.log(value)}>
-			<HeartOutlined style={headerButtonIcon} />
-			<Text style={headerButtonText}>Favorites</Text>
-		</div>
+		<Badge
+			count={user && user.favorites && user.favorites.length}
+			offset={[-20, 5]}
+			style={{ backgroundColor: '#52c41a' }}
+		>
+			<div style={headerButton} onClick={(value) => console.log(value)}>
+				<HeartOutlined style={headerButtonIcon} />
+				<Text style={headerButtonText}>Favorites</Text>
+			</div>
+		</Badge>
 	);
 
 	const ShoppingListButton = (
-		<div style={headerButton} onClick={(value) => console.log(value)}>
+		<div style={headerButton} onClick={() => alert('To be implemented!')}>
 			<SnippetsOutlined style={headerButtonIcon} />
 			<Text style={headerButtonText}>My Lists</Text>
 		</div>

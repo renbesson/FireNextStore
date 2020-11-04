@@ -1,11 +1,11 @@
-import { TreeSelect, Cascader } from 'antd';
+import { Tree } from 'antd';
 import { useState, useContext, useEffect } from 'react';
 import firebase from '@/firebase/clientApp';
 
 function createCategory(string, bool) {
 	if (typeof string === 'string') {
 		return {
-			label: string,
+			title: string,
 			value: string,
 			key: string,
 			disabled: bool ? bool : false,
@@ -44,6 +44,7 @@ export default function CategoriesTreeSelect({ value, onChange }) {
 						}
 					});
 					setTreeData(finalTreeData);
+					console.log(finalTreeData);
 				}
 			});
 
@@ -56,12 +57,14 @@ export default function CategoriesTreeSelect({ value, onChange }) {
 
 	return (
 		<>
-			<Cascader
-				size="large"
-				style={{ width: '100%' }}
+			<Tree
+				showIcon
+                showLine
+                selectable
+                showLeafIcon
 				showSearch={{ filter }}
 				value={value}
-				options={treeData}
+				treeData={treeData}
 				placeholder="Please select"
 				onChange={onChange}
 			/>

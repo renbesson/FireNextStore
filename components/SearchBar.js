@@ -10,7 +10,7 @@ export default function SearchBar() {
 		<Search
 			size="large"
 			style={{ padding: 0 }}
-			placeholder="input search text"
+			placeholder="What are you looking for?"
 			onSearch={(value) => router.push(`/pd/search/${value}?sField=category&oField=price&orderBy=asc`)}
 			enterButton
 		/>

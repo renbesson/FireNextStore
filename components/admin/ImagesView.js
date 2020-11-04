@@ -1,11 +1,9 @@
 import { CloseCircleTwoTone } from '@ant-design/icons';
-import { Card } from 'antd';
-import { useState } from 'react';
+import { Card, Image } from 'antd';
+
 import { deleteImage } from '@utils/sharedFunctions';
 
 export default function ImagesView({ collection, path, docId, array, images, width, height }) {
-	const [toggleDeleteButton, setToggleDeleteButton] = useState({});
-
 	const imgStyle = {
 		display: 'table',
 		float: 'left',
@@ -23,15 +21,13 @@ export default function ImagesView({ collection, path, docId, array, images, wid
 
 	return images.map((image) => (
 		<Card
-			// onMouseEnter={setToggleDeleteButton((prev) => ({ ...prev, [image.fileName]: true }))}
-			// onMouseLeave={setToggleDeleteButton((prev) => ({ ...prev, [image.fileName]: false }))}
 			bodyStyle={{ padding: 0 }}
 			style={imgStyle}
 			key={image.fileName}
-			cover={<img src={image.url} style={{ padding: 1 }} />}
+			cover={<Image src={image.url} style={{ padding: '10px', cursor: 'pointer' }} />}
 		>
 			<CloseCircleTwoTone
-				style={{ position: 'absolute', right: 0, top: 0, fontSize: '1.4rem' }}
+				style={{ position: 'absolute', right: 0, top: 0, fontSize: '2rem' }}
 				onClick={() => deleteImage(collection, path, image, docId, array)}
 			/>
 		</Card>
