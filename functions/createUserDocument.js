@@ -6,8 +6,9 @@ exports.createUserDocument = functions.auth.user().onCreate(async (user) => {
 	// +++ User object to insert to the new document ---
 	console.log(`User: ${JSON.stringify(user)}`);
 	const userObj = {
-		shoppingLists: [],
 		addresses: [],
+		favorites: [],
+		shoppingLists: [],
 	};
 	if (user.uid) userObj.uid = user.uid;
 	if (user.email) userObj.email = user.email;
