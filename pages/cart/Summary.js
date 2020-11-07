@@ -1,130 +1,57 @@
-import { Button, Card, Col, InputNumber, notification, Row, Select, Typography } from 'antd';
+import { Button, Card, notification, Select, Typography } from 'antd';
 import firebase from '@/firebase/clientApp';
 import { useState, useContext } from 'react';
 import Form from 'antd/lib/form/Form';
-import { useRouter } from 'next/router';
 import { Context } from '@/context/storeContext';
-import { customAlphabet } from 'nanoid';
 import { useShoppingCart } from 'use-shopping-cart';
-import CheckoutButton from '@components/CheckoutButton';
-
-const nanoid = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', 9);
 
 const { Title, Text } = Typography;
 
 const { Option } = Select;
 
 export default function Summary({ productsData, user }) {
-	const { redirectToCheckout, cartDetails, cartCount, formattedTotalPrice } = useShoppingCart();
-	const getQuantity = (sku) => user && user.cart && user.cart.find((item) => item.sku === sku).quantity;
+	const { cartDetails, clearCart, cartCount, formattedTotalPrice, redirectToCheckout } = useShoppingCart();
 	const [addressSelected, setAddressSelected] = useState(null);
-	const router = useRouter();
 	const [state, dispatch] = useContext(Context);
 
-	const placeOrder = () => {
-		const refUsers = firebase.firestore().collection('users');
+	const checkout = () => {
+		if (cartCount > 0) {
+			const createOrderAndSession = firebase.functions().httpsCallable('createOrderAndSession');
 
-		if (user && user.cart && user.cart.length > 0) {
-			refUsers
-				.doc(user.uid)
-				.update({
-					orders: firebase.firestore.FieldValue.arrayUnion({
-						orderNumber: nanoid(),
-						dates: {
-							createdOn: firebase.firestore.Timestamp.now(),
-							receivedOn: null,
-							preparedOn: null,
-							outForDeliveryOn: null,
-							deliveredOn: null,
-						},
-						status: 'processing',
-						step: 0,
-						deliveryAddress: {
-							addressNickname: user.addresses[addressSelected].addressNickname,
-							streetAddress: user.addresses[addressSelected].streetAddress,
-							city: user.addresses[addressSelected].city,
-							postalCode: user.addresses[addressSelected].postalCode,
-						},
-						items: productsData.map((product) => {
-							return {
-								name: product.name,
-								price: product.price,
-								sku: product.sku,
-								imageUrl: product.images[0].url,
-								quantity: getQuantity(product.sku),
-							};
-						}),
-					}),
-				})
-				.then(
+			createOrderAndSession({
+				cartDetails,
+				customerEmail: user.email,
+				clientId: user.uid,
+				deliveryAddress: user.addresses[addressSelected],
+				productsData,
+			})
+				.then((result) => {
 					notification.success({
-						message: 'Order Placed Successfully',
-						description: `Order "${'4521323'}" has been placed successfully.`,
-					})
-				)
+						message: 'Order Created Successfully',
+						description: `Order "${result.data.orderId}" has been created successfully. You are being redirected to the payment page`,
+					});
+					clearCart();
+					setTimeout(async () => {
+						await redirectToCheckout({
+							sessionId: result.data.sessionId,
+						}).then(function (result) {
+							console.log(`SessionIDError: ${result}`);
+							result.error.message;
+						});
+					}, 3000);
+				})
 				.catch((error) => {
 					notification.error({
 						message: 'Error Placing Order',
 						description: `${error}`,
 					});
 				});
-			refUsers.doc(user.uid).update({
-				cart: [],
-			});
 		} else {
 			notification.warning({
 				message: 'Cart Is Empty',
 				description: '',
 			});
 		}
-	};
-
-	const checkout = () => {
-		// Publishable Key from Stripe Dashboard
-		const stripe = window.Stripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
-		let sessionId;
-
-		fetch('https://us-central1-nextjs-ecommerce.cloudfunctions.net/createOrderAndSession/', {
-			method: 'POST',
-			// Adding the order data to payload
-			body: JSON.stringify({
-				cartDetails,
-				customerEmail: user.email,
-				clientId: user.uid,
-				shipping: {
-					name: user.addresses[addressSelected].addressNickname,
-					address: {
-						city: user.addresses[addressSelected].city,
-						line1: user.addresses[addressSelected].streetAddress,
-						postal_code: user.addresses[addressSelected].postalCode,
-						state: user.addresses[addressSelected].stateProvince,
-						country: user.addresses[addressSelected].country,
-					},
-				},
-			}),
-		})
-			.then((response) => {
-				console.log(`response: ${response}`);
-				return response.json();
-			})
-			.then((data) => {
-				// Getting the session id from firebase function
-				var body = JSON.parse(data.body);
-				var sessionId = body.sessionId;
-				return sessionId;
-			})
-			.then((sessionId) => {
-				// Redirecting to payment form page
-				console.log(`SessionID: ${sessionId}`);
-				stripe
-					.redirectToCheckout({
-						sessionId: sessionId,
-					})
-					.then(function (result) {
-						console.log(`SessionIDError: ${result}`);
-						result.error.message;
-					});
-			});
 	};
 
 	return (
@@ -162,19 +89,19 @@ export default function Summary({ productsData, user }) {
 					</Text>
 				</Form.Item>
 				<Form.Item>
-					<Text suppressHydrationWarning={true}>
+					<Text suppressHydrationWarning>
 						<b>Total Items: </b>
 						{cartCount}
 					</Text>
 				</Form.Item>
 				<Form.Item>
-					<Text suppressHydrationWarning={true}>
+					<Text suppressHydrationWarning>
 						<b>Total: </b>
 						{formattedTotalPrice}
 					</Text>
 				</Form.Item>
 				<Form.Item>
-					<Button type="primary" htmlType="submit">
+					<Button suppressHydrationWarning type="primary" htmlType="submit">
 						Checkout
 					</Button>
 				</Form.Item>

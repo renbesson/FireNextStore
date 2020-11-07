@@ -29,7 +29,9 @@ export default function ProductCard({ productData }) {
 					lineHeight: '35px',
 					paddingLeft: '3px',
 				}}
-				count={`-${parseInt(((productData.priceBase - productData.price) / productData.priceBase) * 100)}%`}
+				count={`-${parseInt(
+					((productData.priceBase - productData.priceCurrent) / productData.priceBase) * 100
+				)}%`}
 			>
 				<Card
 					hoverable
@@ -56,7 +58,7 @@ export default function ProductCard({ productData }) {
 						<Col>
 							<Title level={4}>
 								{new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(
-									productData.price
+									productData.priceCurrent
 								)}
 							</Title>
 						</Col>

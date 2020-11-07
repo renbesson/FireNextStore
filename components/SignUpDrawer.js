@@ -27,17 +27,6 @@ export default function SignInDrawer() {
 				res.user.updateProfile({
 					displayName: `${newUser.fName} ${newUser.lName}`,
 				});
-				const userObj = {
-					uid: res.user.uid,
-					displayName: `${newUser.fName} ${newUser.lName}`,
-					email: res.user.email,
-					phoneNumber: '',
-					shoppingLists: [],
-					cart: [],
-					orders: [],
-					addresses: [],
-				};
-				firebase.firestore().collection('users').doc(res.user.uid).set(userObj);
 				dispatch({ type: 'TOGGLE_BOOLEAN', boolean: 'signUpDrawerOn' });
 				notification.success({
 					message: 'Signed Up Successfully',

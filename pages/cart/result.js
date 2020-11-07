@@ -1,5 +1,7 @@
 import { Result, Button } from 'antd';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { useShoppingCart } from 'use-shopping-cart';
 
 success.getInitialProps = ({ query }) => {
 	return {
@@ -8,7 +10,12 @@ success.getInitialProps = ({ query }) => {
 };
 
 export default function success({ session_id }) {
+	const { clearCart } = useShoppingCart();
 	const router = useRouter();
+
+	useEffect(() => {
+		if (session_id) clearCart();
+	}, []);
 
 	return (
 		<Result
