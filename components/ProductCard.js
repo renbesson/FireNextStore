@@ -1,10 +1,9 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/router';
-import firebase from '@/firebase/clientApp';
 import { useUser } from '@/context/userContext';
 import { Row, Col, Card, InputNumber, Button, Typography, Badge, notification, Image } from 'antd';
-import { ConsoleSqlOutlined, HeartFilled, HeartOutlined, HeartTwoTone, ShoppingCartOutlined } from '@ant-design/icons';
-import { addToCart, favoriteSet, updateToCart } from '@/utils/sharedFunctions';
+import { HeartFilled, HeartOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import { favoriteSet } from '@/utils/sharedFunctions';
 import { useShoppingCart } from 'use-shopping-cart';
 
 const { Title, Text, Paragraph } = Typography;

@@ -7,45 +7,16 @@ const stripe = require('stripe')(
 	'sk_test_51HfovtLpuIUMARr9ITSvmnDid8zJ1V0sKPAbj5kE0qZ7ueA9NkYowHHlkGa5AKA1Sa35iHevylhNi1DjWe0NNdRo00UzF6OLGs'
 );
 
-const { customAlphabet } = require('nanoid');
-const nanoid = customAlphabet('0123456789', 6);
-
-// +++ Validate if cartDetails' info hasn't been changed ---
-const validateCartItems = (inventorySrc, cartDetails) => {
-	const validatedItems = [];
-	for (const sku in cartDetails) {
-		const product = cartDetails[sku];
-		const inventoryItem = inventorySrc.find((currentProduct) => currentProduct.sku === sku);
-		if (!inventoryItem) throw new Error(`Product ${sku} not found!`);
-		const item = {
-			name: inventoryItem.name,
-			amount: inventoryItem.price,
-			currency: inventoryItem.currency,
-			quantity: product.quantity,
-		};
-		if (inventoryItem.description) item.description = inventoryItem.description;
-		if (inventoryItem.image) item.images = [inventoryItem.image];
-		validatedItems.push(item);
-	}
-
-	return validatedItems;
-};
-// --- Validate of cartDetails' info hasn't been changed +++
-
-// +++ Creates a new order id with the YYYY + 6 random digit numbers ---
-var newId;
-// --- Creates a new order id +++
-
 // +++ Creates the order's info into firestore ---
 const createOrder = async (data, sessionId) => {
 	const refOrders = await db.collection('orders');
 
-	refOrders.doc(newId).set({
+	refOrders.doc(data.orderId).update({
 		sessionId,
 		owner: data.clientId,
 		dates: {
-			createdOn: firestore.Timestamp.now(),
-			receivedOn: null,
+            cancelledOn: firestore.Timestamp.now(),
+            createdOn: null,
 			preparedOn: null,
 			outForDeliveryOn: null,
 			deliveredOn: null,
@@ -76,9 +47,8 @@ const createOrder = async (data, sessionId) => {
 // --- Creates the order's info into firestore +++
 
 // +++ The function that get data from front-end and create a payment session ---
-exports.createOrderAndSession = functions.https.onCall(async (data, context) => {
+exports.cancelOrder = functions.https.onCall(async (data, context) => {
 	// +++ Collects inventory from firestore and compares with cartDetails ---
-	newId = `${new Date().getFullYear()}${nanoid()}`;
 	const productsRef = db.collection('products');
 	const snapshot = await productsRef.get();
 	const inventory = [];

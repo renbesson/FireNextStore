@@ -3,14 +3,19 @@ import { ShoppingCartOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import Avatar from 'antd/lib/avatar/avatar';
 import Link from 'next/link';
+import { useShoppingCart } from 'use-shopping-cart';
+import firebase from '@/firebase/clientApp';
 
 const { Title, Text } = Typography;
 const { Step } = Steps;
 
 export default function OrderCard({ orderData }) {
 	const screens = Grid.useBreakpoint();
+	const { redirectToCheckout } = useShoppingCart();
 	const [statsColorValue, setStatsColorValue] = useState('rgba(127, 127, 127)');
 	const [showItems, setShowItems] = useState(false);
+	const getSessionObj = firebase.functions().httpsCallable('retrieveStripeSession');
+	const [sessionObj, setSessionObj] = useState({});
 
 	useEffect(() => {
 		switch (orderData.status) {
@@ -30,19 +35,44 @@ export default function OrderCard({ orderData }) {
 		return () => {};
 	}, [orderData && orderData.status]);
 
+	useEffect(() => {
+		getSessionObj({ sessionId: orderData.sessionId }).then((result) => {
+			setSessionObj(result.data);
+		});
+	}, [orderData, orderData.sessionId]);
+
 	return (
 		<Card
-			hoverable
 			style={{ width: '100%', borderLeft: '10px solid', borderColor: statsColorValue }}
-			bodyStyle={{ padding: '0 1rem 1rem 1rem' }}
+			bodyStyle={{ padding: '1rem' }}
 		>
 			<Row justify="space-between">
 				<Col>
-					<Title level={3}>{`Order #${orderData.orderNumber}`}</Title>
+					<Title level={3}>{`Order #${orderData.id}`}</Title>
 				</Col>
 				<Col>
-					<Title level={3} className={'capitalize'}>
-						{orderData.status}
+					{sessionObj.payment_status === 'paid' && (
+						<Title level={3} className={'capitalize'}>
+							{orderData.status}
+						</Title>
+					)}
+				</Col>
+			</Row>
+			<Row justify="space-between">
+				<Col>{`Date: ${orderData.dates.createdOn.toDate()}`}</Col>
+				<Col>
+					<Title
+						level={4}
+						className={'capitalize'}
+						style={{ cursor: 'pointer' }}
+						onClick={() =>
+							redirectToCheckout({ sessionId: orderData.sessionId }).then(function (result) {
+								console.log(`SessionIDError: ${result}`);
+								result.error.message;
+							})
+						}
+					>
+						{sessionObj.payment_status === 'unpaid' && '(Click Here To Pay)'}
 					</Title>
 				</Col>
 			</Row>
@@ -62,7 +92,7 @@ export default function OrderCard({ orderData }) {
 							<Text strong>
 								{`${orderData.items.length} Itens - Total
 									${new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(
-										orderData.items.reduce((total, item) => item.price + total, 0)
+										orderData.items.reduce((total, item) => item.priceCurrent + total, 0)
 									)}`}
 							</Text>
 						</Col>
@@ -119,7 +149,7 @@ export default function OrderCard({ orderData }) {
 												style: 'currency',
 												currency: 'CAD',
 											}
-										).format(item.price)}`}
+										).format(item.priceCurrent)}`}
 									/>
 								</List.Item>
 							)}
