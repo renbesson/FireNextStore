@@ -1,11 +1,81 @@
+///// Requires /////
 const functions = require('firebase-functions');
+const admin = require('firebase-admin');
+admin.initializeApp();
 
-const { db, firestore } = require('./index');
+const db = admin.firestore();
+const firestore = admin.firestore;
 
 // Secret Key from Stripe Dashboard
 const stripe = require('stripe')(
 	'sk_test_51HfovtLpuIUMARr9ITSvmnDid8zJ1V0sKPAbj5kE0qZ7ueA9NkYowHHlkGa5AKA1Sa35iHevylhNi1DjWe0NNdRo00UzF6OLGs'
 );
+
+////// nextServer //////////
+
+const { default: next } = require('next');
+
+const isDev = process.env.NODE_ENV !== 'production';
+
+const server = next({
+	dev: isDev,
+	//location of .next generated after running -> yarn build
+	conf: { distDir: '.next' },
+});
+
+const nextjsHandle = server.getRequestHandler();
+exports.nextServer = functions.https.onRequest((req, res) => {
+	return server.prepare().then(() => nextjsHandle(req, res));
+});
+
+////// cancelOrder //////////
+
+// +++ Creates the order's info into firestore ---
+exports.cancelOrder = functions.https.onCall(async (data, context) => {
+	const refOrders = await db.collection('orders');
+	let result;
+
+	refOrders
+		.doc(data.orderId)
+		.update({
+			'dates.cancelledOn': firestore.Timestamp.now(),
+		})
+		.then(() => (result.success = true))
+		.catch((error) => ((result.error = error.message), (result.success = false)));
+	return result;
+});
+// --- Creates the order's info into firestore +++
+
+////// createUserDocument //////////
+
+exports.createUserDocument = functions.auth.user().onCreate(async (user) => {
+	// +++ User object to insert to the new document ---
+	console.log(`User: ${JSON.stringify(user)}`);
+	const userObj = {
+		addresses: [],
+		favorites: [],
+		shoppingLists: [],
+	};
+	if (user.uid) userObj.uid = user.uid;
+	if (user.email) userObj.email = user.email;
+	if (user.displayName) userObj.displayName = user.displayName;
+	if (user.phoneNumber) userObj.phoneNumber = user.phoneNumber;
+
+	// --- User object to insert to the new document +++
+
+	// +++ Creates the user document on firestore ---
+	db.collection('users').doc(user.uid).set(userObj);
+	// --- Creates the user document on firestore +++
+});
+
+////// retrieveStripeSession //////////
+
+exports.retrieveStripeSession = functions.https.onCall(async (data, context) => {
+	console.log(`DATA: ${JSON.stringify(data)}`);
+	return await stripe.checkout.sessions.retrieve(data.sessionId);
+});
+
+////////// createOrderAndSession  //////////
 
 const { customAlphabet } = require('nanoid');
 const nanoid = customAlphabet('0123456789', 6);

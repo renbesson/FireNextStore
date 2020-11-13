@@ -1,7 +1,7 @@
 {
 	"name": "ecommerce",
 	"version": "1.0.0",
-	"main": "./functions/index.js",
+	"main": "functions.js",
 	"private": true,
 	"scripts": {
 		"dev": "next",
