@@ -4,7 +4,7 @@
 /node_modules
 /.pnp
 .pnp.js
-/.history
+
 
 # testing
 /coverage
@@ -19,6 +19,8 @@
 # misc
 .DS_Store
 *.pem
+./vscode
+/.history
 
 # debug
 npm-debug.log*
@@ -33,3 +35,6 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# firebase
+/.firebase
