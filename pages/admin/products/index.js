@@ -1,4 +1,4 @@
-import ProductListAdmin from '@pages/admin/products/ProductListAdmin';
+import ProductListAdmin from '@/components/admin/products/ProductListAdmin';
 import { Typography } from 'antd';
 import { useCollection } from '@nandorojo/swr-firestore';
 

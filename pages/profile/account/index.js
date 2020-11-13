@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import firebase from '@/firebase/clientApp';
 import { useUser } from '@/context/userContext';
-import ProfileLayout from '@pages/profile/ProfileLayout';
+import ProfileLayout from '@/components/profile/ProfileLayout';
 import { Form, Input, Row, Col, Space, Button, notification, Typography } from 'antd';
 import NumberFormat from 'react-number-format';
 

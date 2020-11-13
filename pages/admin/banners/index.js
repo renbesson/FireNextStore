@@ -1,7 +1,7 @@
 import { CloseCircleTwoTone } from '@ant-design/icons';
-import UploadImage from '@components/admin/products/UploadImage';
+import UploadImage from '@/components/admin/products/UploadImage';
 import { useDocument } from '@nandorojo/swr-firestore';
-import { deleteImage } from '@utils/sharedFunctions';
+import { deleteImage } from '@/utils/sharedFunctions';
 import { Card, Col, Divider, Row, Typography } from 'antd';
 import ImagesView from '@/components/admin/ImagesView';
 

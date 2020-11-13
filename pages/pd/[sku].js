@@ -1,11 +1,11 @@
 import { useUser } from '@/context/userContext';
-import Breadcrumbs from '@pages/pd/PdBreadcrumbs';
+import Breadcrumbs from '@/components/pd/PdBreadcrumbs';
 import { Col, Row } from 'antd';
 import { useDocument } from '@nandorojo/swr-firestore';
-import PdMainCard from '@pages/pd/PdMainCard';
-import PdSideCard from './PdSideCard';
-import PdDescription from './PdDescription';
-import BestDeals from '@components/BestDeals';
+import PdMainCard from '@/components/pd/PdMainCard';
+import PdSideCard from '@/components/pd/PdSideCard';
+import PdDescription from '@/components/pd/PdDescription';
+import BestDeals from '@/components/index/BestDeals';
 
 ProductPage.getInitialProps = ({ query }) => {
 	return {

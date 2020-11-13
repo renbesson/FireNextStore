@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import ProductCardAdmin from '@pages/admin/products/ProductCardAdmin';
-import NewProductDrawer from '@pages/admin/products/NewProductDrawer';
+import ProductCardAdmin from '@/components/admin/products/ProductCardAdmin';
+import NewProductDrawer from '@/components/admin/products/NewProductDrawer';
 import { Row, Col, Card } from 'antd';
 import { PlusCircleTwoTone } from '@ant-design/icons';
 

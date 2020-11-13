@@ -44,8 +44,8 @@ const createOrder = async (data, sessionId) => {
 		sessionId,
 		owner: data.clientId,
 		dates: {
-			createdOn: firestore.Timestamp.now(),
-			receivedOn: null,
+			cancelledOn: null,
+			receivedOn: firestore.Timestamp.now(),
 			preparedOn: null,
 			outForDeliveryOn: null,
 			deliveredOn: null,
@@ -94,8 +94,8 @@ exports.createOrderAndSession = functions.https.onCall(async (data, context) => 
 	// +++ Create stripe's checkout session ---
 	const sessionId = await stripe.checkout.sessions
 		.create({
-			success_url: 'http://localhost:3000/cart/result?session_id={CHECKOUT_SESSION_ID}',
-			cancel_url: 'http://localhost:3000/cart/result?session_id={CHECKOUT_SESSION_ID}',
+			success_url: 'https://nextjs-ecommerce.web.app/cart/result?session_id={CHECKOUT_SESSION_ID}',
+			cancel_url: 'https://nextjs-ecommerce.web.app/cart/result?session_id={CHECKOUT_SESSION_ID}',
 			mode: 'payment',
 			payment_method_types: ['card'],
 			line_items,

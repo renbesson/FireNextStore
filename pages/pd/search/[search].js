@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import ProductCard from '@components/ProductCard';
+import ProductCard from '@/components/shared/ProductCard';
 import { Card, Col, Divider, Row, Select, Space, Switch, Typography } from 'antd';
 import { useCollection } from '@nandorojo/swr-firestore';
 

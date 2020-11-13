@@ -1,8 +1,8 @@
 import { useState, useContext } from 'react';
 import { useUser } from '@/context/userContext';
-import ProfileLayout from '@pages/profile/ProfileLayout';
-import { Button, Card, Col, Row, Typography } from 'antd';
-import EditAddressDrawer from '@pages/profile/addresses/EditAddressDrawer';
+import ProfileLayout from '@/components/profile/ProfileLayout';
+import { Card, Col, Row, Typography } from 'antd';
+import EditAddressDrawer from '@/components/profile/addresses/EditAddressDrawer';
 import { HomeTwoTone, PlusCircleTwoTone } from '@ant-design/icons';
 import { Context } from '@/context/storeContext';
 

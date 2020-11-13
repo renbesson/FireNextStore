@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Row, Col, Card, Typography, Badge } from 'antd';
-import EditProductDrawer from '@pages/admin/products/EditProductDrawer';
+import EditProductDrawer from '@/components/admin/products/EditProductDrawer';
 
 const { Title, Text, Paragraph } = Typography;
 

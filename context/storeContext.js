@@ -1,5 +1,5 @@
 import React, { createContext, useReducer } from 'react';
-import reducers from '@context/reducers';
+import reducers from '@/context/reducers';
 
 const initialState = {
 	signInDrawerOn: false,

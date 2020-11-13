@@ -1,7 +1,7 @@
 import { CloseCircleTwoTone } from '@ant-design/icons';
 import { Card, Image } from 'antd';
 
-import { deleteImage } from '@utils/sharedFunctions';
+import { deleteImage } from '@/utils/sharedFunctions';
 
 export default function ImagesView({ collection, path, docId, array, images, width, height }) {
 	const imgStyle = {

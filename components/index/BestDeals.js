@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { Grid, Row, Col, Typography, Layout, Carousel, Button, Card } from 'antd';
-import ProductCard from '@/components/ProductCard';
+import ProductCard from '@/components/shared/ProductCard';
 import { useCollection } from '@nandorojo/swr-firestore';
 
 const { Title } = Typography;

@@ -1,5 +1,5 @@
 import firebase from '@/firebase/clientApp';
-import { removeFromCart, updateToCart } from '@utils/sharedFunctions';
+import { removeFromCart, updateToCart } from '@/utils/sharedFunctions';
 import { Row, Col, Card, Typography, InputNumber, Button, notification } from 'antd';
 import Form from 'antd/lib/form/Form';
 import { useState } from 'react';

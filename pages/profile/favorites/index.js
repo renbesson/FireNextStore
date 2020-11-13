@@ -1,8 +1,8 @@
 import { useCollection } from '@nandorojo/swr-firestore';
-import ProfileLayout from '@pages/profile/ProfileLayout';
+import ProfileLayout from '@/components/profile/ProfileLayout';
 import { Col, Row, Typography } from 'antd';
 import { useUser } from '@/context/userContext';
-import ProductCard from '@components/ProductCard';
+import ProductCard from '@/components/shared/ProductCard';
 
 const { Text, Title } = Typography;
 

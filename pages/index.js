@@ -1,7 +1,7 @@
-import BestDeals from '@components/BestDeals';
+import BestDeals from '@/components/index/BestDeals';
+import MiddleBanners from '@/components/index/MiddleBanners';
+import NewsLetterGet from '@/components/index/NewsLetterGet';
 import ImageGallery from 'react-image-gallery';
-import MiddleBanners from '@components/MiddleBanners';
-import NewsLetterGet from '@components/NewsLetterGet';
 import { Col, Row } from 'antd';
 import { useDocument } from '@nandorojo/swr-firestore';
 

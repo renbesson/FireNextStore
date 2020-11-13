@@ -1,4 +1,4 @@
-import ProfileLayout from '@pages/profile/ProfileLayout';
+import ProfileLayout from '@/components/profile/ProfileLayout';
 
 export default function profileIndex() {
 	return (

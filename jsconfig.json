@@ -2,12 +2,13 @@
 	"compilerOptions": {
 		"baseUrl": ".",
 		"paths": {
-			"@*": ["*"],
+			"@/*": ["*"],
 			"@/components/*": ["components/*"],
 			"@/pages/*": ["pages/*"],
 			"@/context/*": ["context/*"],
 			"@/firebase/*": ["firebase/*"],
-			"@/utils/*": ["utils/*"]
+			"@/utils/*": ["utils/*"],
+			"@/functions/*": ["functions/*"]
 		}
 	}
 }

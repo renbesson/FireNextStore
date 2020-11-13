@@ -1,6 +1,6 @@
 import { Typography, Row, Col, Collapse } from 'antd';
-import ProfileLayout from '@pages/profile/ProfileLayout';
-import OrderCard from '@pages/profile/orders/orderCard';
+import ProfileLayout from '@/components/profile/ProfileLayout';
+import OrderCard from '@/components/profile/orders/orderCard';
 import { useUser } from '@/context/userContext';
 import { useCollection } from '@nandorojo/swr-firestore';
 

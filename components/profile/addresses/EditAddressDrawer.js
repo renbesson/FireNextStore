@@ -5,7 +5,7 @@ import { Form, Input, Button, notification, Drawer, Grid } from 'antd';
 import { Context } from '@/context/storeContext';
 
 export default function EditAddressDrawer({ address }) {
-	const { loadingUser, user } = useUser();
+	const { user } = useUser();
 	const [form] = Form.useForm();
 	const [editedAddress, setEditedAddress] = useState(address);
 	const refUsers = firebase.firestore().collection('users');

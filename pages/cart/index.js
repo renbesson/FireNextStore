@@ -1,14 +1,14 @@
 import { useUser } from '@/context/userContext';
-import ProductInCartCard from '@pages/cart/ProductInCartCard';
+import ProductInCartCard from '@/components/cart/ProductInCartCard';
 import { Row, Col, Card, Typography } from 'antd';
-import Summary from './Summary';
+import Summary from '@/components/cart/Summary';
 import { useCollection } from '@nandorojo/swr-firestore';
 import { useShoppingCart } from 'use-shopping-cart';
 
 const { Title } = Typography;
 
 export default function cart() {
-	const { addItem, setItemQuantity, cartDetails, cartCount } = useShoppingCart();
+	const { cartDetails } = useShoppingCart();
 	const { user } = useUser();
 	const skus = cartDetails ? Object.keys(cartDetails) : undefined;
 	const { data: products, error } = useCollection(skus ? 'products' : null, {

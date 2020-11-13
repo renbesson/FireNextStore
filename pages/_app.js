@@ -4,7 +4,7 @@ import '../styles/vars.css';
 import '../styles/global.css';
 import 'react-image-gallery/styles/css/image-gallery.css';
 import Link from 'next/link';
-import ClientFooter from '@/components/ClientFooter';
+import ClientFooter from '@/components/index/ClientFooter';
 
 import UserProvider from '@/context/userContext';
 import Head from 'next/head';
@@ -13,9 +13,9 @@ import { useState } from 'react';
 import { Grid, Layout, Menu, Breadcrumb } from 'antd';
 import { DesktopOutlined, PieChartOutlined, FileOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons';
 
-import HeaderClient from '@/components/HeaderClient';
-import SubHeaderClient from '@/components/SubHeaderClient';
-import StoreProvider from '@context/storeContext';
+import HeaderClient from '@/components/index/HeaderClient';
+import SubHeaderClient from '@/components/index/SubHeaderClient';
+import StoreProvider from '@/context/storeContext';
 
 import { Fuego, FuegoProvider } from '@nandorojo/swr-firestore';
 

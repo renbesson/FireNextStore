@@ -15,25 +15,15 @@ export default function OrderCard({ orderData }) {
 	const [statsColorValue, setStatsColorValue] = useState('rgba(127, 127, 127)');
 	const [showItems, setShowItems] = useState(false);
 	const getSessionObj = firebase.functions().httpsCallable('retrieveStripeSession');
+	const cancelOrder = firebase.functions().httpsCallable('cancelOrder');
 	const [sessionObj, setSessionObj] = useState({});
 
 	useEffect(() => {
-		switch (orderData.status) {
-			case 'canceled':
-				setStatsColorValue('rgba(240, 50, 50)');
-				break;
-			case 'processing':
-				setStatsColorValue('rgba(255, 192, 0)');
-				break;
-			case 'delivered':
-				setStatsColorValue('rgba(35, 200, 100)');
-				break;
-			default:
-				setStatsColorValue('rgba(0, 0, 0)');
-				break;
-		}
+		if (orderData.dates.cancelledOn) setStatsColorValue('rgba(240, 50, 50)');
+		else if (orderData.dates.deliveredOn) setStatsColorValue('rgba(35, 200, 100)');
+		else setStatsColorValue('rgba(255, 192, 0)');
 		return () => {};
-	}, [orderData && orderData.status]);
+	}, [orderData]);
 
 	useEffect(() => {
 		getSessionObj({ sessionId: orderData.sessionId }).then((result) => {
@@ -53,28 +43,40 @@ export default function OrderCard({ orderData }) {
 				<Col>
 					{sessionObj.payment_status === 'paid' && (
 						<Title level={3} className={'capitalize'}>
-							{orderData.status}
+							paid
+						</Title>
+					)}
+					{sessionObj.payment_status === 'unpaid' && orderData.dates.cancelledOn === null && (
+						<Title
+							level={3}
+							className={'capitalize'}
+							style={{ cursor: 'pointer', color: 'red' }}
+							onClick={() =>
+								redirectToCheckout({ sessionId: orderData.sessionId }).then(function (result) {
+									console.log(`SessionIDError: ${result}`);
+									result.error.message;
+								})
+							}
+						>
+							unpaid '(Click Here To Pay)'
+						</Title>
+					)}
+					{sessionObj.payment_status === 'unpaid' && orderData.dates.cancelledOn && (
+						<Title level={3} className={'capitalize'} style={{ color: 'red' }}>
+							Cancelled
 						</Title>
 					)}
 				</Col>
 			</Row>
 			<Row justify="space-between">
-				<Col>{`Date: ${orderData.dates.createdOn.toDate()}`}</Col>
-				<Col>
-					<Title
-						level={4}
-						className={'capitalize'}
-						style={{ cursor: 'pointer' }}
-						onClick={() =>
-							redirectToCheckout({ sessionId: orderData.sessionId }).then(function (result) {
-								console.log(`SessionIDError: ${result}`);
-								result.error.message;
-							})
-						}
-					>
-						{sessionObj.payment_status === 'unpaid' && '(Click Here To Pay)'}
-					</Title>
-				</Col>
+				<Col>{`Date: ${orderData.dates.receivedOn.toDate().toLocaleString('en-US')}`}</Col>
+				{sessionObj.payment_status === 'unpaid' && orderData.dates.cancelledOn === null && (
+					<Col>
+						<Button onClick={() => cancelOrder({ orderId: orderData.id })}>
+							Cancel Order
+						</Button>
+					</Col>
+				)}
 			</Row>
 			<Divider />
 			<Row>
@@ -104,19 +106,31 @@ export default function OrderCard({ orderData }) {
 					<Steps current={orderData.step} progressDot direction={screens.xs ? 'vertical' : 'horizontal'}>
 						<Step
 							title="Order Received"
-							// description={orderData.dates.receivedOn.toDate().toLocaleString('en-US')}
+							description={
+								orderData.dates.receivedOn &&
+								orderData.dates.receivedOn.toDate().toLocaleString('en-US')
+							}
 						/>
 						<Step
 							title="Preparing"
-							// description={orderData.dates.preparedOn.toDate().toLocaleString('en-US')}
+							description={
+								orderData.dates.preparedOn &&
+								orderData.dates.preparedOn.toDate().toLocaleString('en-US')
+							}
 						/>
 						<Step
 							title="Out For Delivery"
-							// description={orderData.dates.outForDeliveryOn.toDate().toLocaleString('en-US')}
+							description={
+								orderData.dates.outForDeliveryOn &&
+								orderData.dates.outForDeliveryOn.toDate().toLocaleString('en-US')
+							}
 						/>
 						<Step
 							title="Delivered"
-							// description={orderData.dates.deliveredOn.toDate().toLocaleString('en-US')}
+							description={
+								orderData.dates.deliveredOn &&
+								orderData.dates.deliveredOn.toDate().toLocaleString('en-US')
+							}
 						/>
 					</Steps>
 				</Col>

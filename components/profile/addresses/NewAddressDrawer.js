@@ -1,12 +1,11 @@
 import { useState, useContext } from 'react';
 import firebase from '@/firebase/clientApp';
-import { Grid, Form, Input, InputNumber, Button, Drawer } from 'antd';
-import { notification } from 'antd';
+import { Grid, Form, Input, Button, Drawer, notification } from 'antd';
 import { useUser } from '@/context/userContext';
 import { Context } from '@/context/storeContext';
 
 export default function NewAddressDrawer() {
-	const { loadingUser, user } = useUser();
+	const { user } = useUser();
 	const [form] = Form.useForm();
 	const [state, dispatch] = useContext(Context);
 	const [newAddress, setNewAddress] = useState({

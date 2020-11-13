@@ -16,6 +16,7 @@ export default function success({ session_id }) {
 	const getSessionObj = firebase.functions().httpsCallable('retrieveStripeSession');
 	const router = useRouter();
 	const [sessionObj, setSessionObj] = useState({});
+	const cancelOrder = firebase.functions().httpsCallable('cancelOrder');
 	const { data: orderData, error } = useCollection('orders', {
 		listen: true,
 		where: [['sessionId', '==', session_id]],
@@ -54,11 +55,24 @@ export default function success({ session_id }) {
 				title="We have not received you payment!"
 				subTitle={orderData && `Order number: ${orderData[0].id}.`}
 				extra={[
-					<Button type="primary" key="console" onClick={() => redirectToCheckout({ sessionId: session_id })}>
+					<Button type="primary" key="tryAgain" onClick={() => redirectToCheckout({ sessionId: session_id })}>
 						Try Again
+					</Button>,
+					<Button
+						key="cancelOrder"
+						onClick={() =>
+							cancelOrder({ orderId: orderData[0].id }).then(
+								(result) =>
+									(result.success = false
+										? router.push('/profile/orders')
+										: console.error(result.message))
+							)
+						}
+					>
+						Cancel Order
 					</Button>,
 				]}
 			/>
 		);
-	} else return <></>;
+	} else return <Result status="info" title="Loading..." />;
 }

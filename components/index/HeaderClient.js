@@ -1,13 +1,13 @@
 import { useContext } from 'react';
 import firebase from '@/firebase/clientApp';
-import { useUser } from '../context/userContext';
+import { useUser } from '../../context/userContext';
 import { Grid, Row, Col, notification, Badge, Menu, Typography, Image } from 'antd';
-import SearchBar from '@/components/SearchBar';
+import SearchBar from '@/components/index/SearchBar';
 import { UserOutlined, HeartOutlined } from '@ant-design/icons';
 import { SnippetsOutlined, ShoppingCartOutlined } from '@ant-design/icons';
-import SignInDrawer from '@/components/SignInDrawer';
-import SignUpDrawer from '@/components/SignUpDrawer';
-import NewAddressDrawer from '@pages/profile/addresses/NewAddressDrawer';
+import SignInDrawer from '@/components/shared/SignInDrawer';
+import SignUpDrawer from '@/components/shared/SignUpDrawer';
+import NewAddressDrawer from '@/components/profile/addresses/NewAddressDrawer';
 import { useRouter } from 'next/router';
 import { Context } from '@/context/storeContext';
 import { useShoppingCart } from 'use-shopping-cart';
@@ -111,7 +111,7 @@ export default function HeaderClient() {
 			offset={[-20, 5]}
 			style={{ backgroundColor: '#52c41a' }}
 		>
-			<div style={headerButton} onClick={(value) => console.log(value)}>
+			<div style={headerButton} onClick={() => router.push('/profile/favorites')}>
 				<HeartOutlined style={headerButtonIcon} />
 				<Text style={headerButtonText}>Favorites</Text>
 			</div>
